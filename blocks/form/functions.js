@@ -199,17 +199,17 @@ function setFieldText(fieldName, text, disabled) {
  * @return {string}
  */
 function startResendTimer(timerFieldName) {
-  if (window.otpTimerInterval) {
-    clearInterval(window.otpTimerInterval);
+  if (globalThis.otpTimerInterval) {
+    clearInterval(globalThis.otpTimerInterval);
   }
 
   let remaining = 21;
   setFieldText(timerFieldName, `Resend OTP in: ${remaining} secs`, true);
 
-  window.otpTimerInterval = setInterval(() => {
+  globalThis.otpTimerInterval = setInterval(() => {
     remaining -= 1;
     if (remaining <= 0) {
-      clearInterval(window.otpTimerInterval);
+      clearInterval(globalThis.otpTimerInterval);
       setFieldText(timerFieldName, 'Resend OTP', false);
     } else {
       setFieldText(timerFieldName, `Resend OTP in: ${remaining} secs`, true);
