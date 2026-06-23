@@ -50,5 +50,6 @@ module.exports = {
       range: 19
     }],
     'xwalk/no-orphan-collapsible-fields': 'off', // Disable until enhancement is done for Forms properties
+    'no-unused-vars': ['error', { vars: 'all', args: 'after-used', argsIgnorePattern: '^_' }],
   },
 };
