@@ -292,7 +292,7 @@ function initiateCustomerOTP(mobileNo, identifierName, identifierValue) {
     saveJourneyField('identifierName', identifierName);
     saveJourneyField('mobileNo', mobileNo);
     generateOTP();
-    window.location.href = '/content/forms/af/lakshmi-forms-capstone/personal-loan-otp';
+    window.location.href = '/personal-loan-otp';
     return 'success';
   } catch (e) {
     return 'Something went wrong. Please try again.';

@@ -180,7 +180,7 @@ function initLoanJourneyHandlers() {
       data.mobileNo = mobile;
       data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
-      window.location.href = '/content/forms/af/lakshmi-forms-capstone/personal-loan-otp';
+      window.location.href = '/personal-loan-otp';
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('[Journey] Failed to initiate:', err);
