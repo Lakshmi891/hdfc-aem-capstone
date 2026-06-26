@@ -140,8 +140,9 @@ function loadDelayed() {
 
 function initLoanJourneyHandlers() {
   document.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[name="view_loan_eligibility_button"]');
+    const btn = e.target.closest('button');
     if (!btn) return;
+    if (!btn.textContent.trim().toLowerCase().includes('view loan eligibility')) return;
     e.preventDefault();
     e.stopPropagation();
 
