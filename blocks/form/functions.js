@@ -292,7 +292,10 @@ function initiateCustomerOTP(mobileNo, identifierName, identifierValue) {
     saveJourneyField('identifierName', identifierName);
     saveJourneyField('mobileNo', mobileNo);
     generateOTP();
-    window.location.href = '/personal-loan-otp';
+    const isAuthor = window.location.hostname.includes('adobeaemcloud.com');
+    window.location.href = isAuthor
+      ? 'https://otp-login--hdfc-aem-capstone--lakshmi891.aem.page/personal-loan-otp'
+      : '/personal-loan-otp';
     return 'success';
   } catch (e) {
     return 'Something went wrong. Please try again.';

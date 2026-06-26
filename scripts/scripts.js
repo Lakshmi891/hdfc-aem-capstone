@@ -180,7 +180,10 @@ function initLoanJourneyHandlers() {
       data.mobileNo = mobile;
       data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
-      window.location.href = '/personal-loan-otp';
+      const isAuthor = window.location.hostname.includes('adobeaemcloud.com');
+      window.location.href = isAuthor
+        ? 'https://otp-login--hdfc-aem-capstone--lakshmi891.aem.page/personal-loan-otp'
+        : '/personal-loan-otp';
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('[Journey] Failed to initiate:', err);
