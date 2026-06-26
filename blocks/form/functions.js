@@ -276,10 +276,9 @@ function resendOTP(timerFieldName, attemptsFieldName) {
  * @param {string} mobileNo
  * @param {string} identifierName PAN_NO or DOB
  * @param {string} identifierValue
- * @param {scope} globals
  * @return {string} 'success' or an error message
  */
-function initiateCustomerOTP(mobileNo, identifierName, identifierValue, _globals) {
+function initiateCustomerOTP(mobileNo, identifierName, identifierValue) {
   const journeyId = `PJ_${Date.now()}`;
   try {
     if (!validateMobile(mobileNo)) {
@@ -305,10 +304,9 @@ function initiateCustomerOTP(mobileNo, identifierName, identifierValue, _globals
  * Loads offer data on success and navigates to offer page.
  * @name verifyCustomerOTP
  * @param {string} otp The 6-digit OTP entered by the user
- * @param {scope} globals
  * @return {string} 'success' or an error message
  */
-function verifyCustomerOTP(otp, attemptsFieldName, _globals) {
+function verifyCustomerOTP(otp, attemptsFieldName) {
   const journeyId = getJourneyField('partnerJourneyID');
   try {
     const storedOTP = getJourneyField('mockOTP');
@@ -383,10 +381,9 @@ function proceedToPreview(loanAmount, tenureMonths, _globals) {
 /**
  * Submits the final loan application and navigates to thank-you page on success.
  * @name submitLoanApp
- * @param {scope} globals
  * @return {string}
  */
-function submitLoanApp(_globals) {
+function submitLoanApp() {
   const journeyId = getJourneyField('partnerJourneyID');
   try {
     const ackId = `14${Math.floor(Math.random() * 9000000 + 1000000)}`;
