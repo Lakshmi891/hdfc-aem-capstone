@@ -279,7 +279,7 @@ function resendOTP(timerFieldName, attemptsFieldName) {
  * @param {scope} globals
  * @return {string} 'success' or an error message
  */
-async function initiateCustomerOTP(mobileNo, identifierName, identifierValue, _globals) {
+function initiateCustomerOTP(mobileNo, identifierName, identifierValue, _globals) {
   const journeyId = `PJ_${Date.now()}`;
   try {
     if (!validateMobile(mobileNo)) {
@@ -288,21 +288,14 @@ async function initiateCustomerOTP(mobileNo, identifierName, identifierValue, _g
     if (identifierName === 'PAN_NO' && !validatePAN(identifierValue)) {
       return 'Please enter a valid PAN (e.g. ABCDE1234F).';
     }
-
-    await new Promise((r) => setTimeout(r, 500));
-
     saveJourneyField('partnerJourneyID', journeyId);
     saveJourneyField('bankJourneyID', `BJ_${Date.now()}`);
     saveJourneyField('identifierName', identifierName);
     saveJourneyField('mobileNo', mobileNo);
     generateOTP();
-
-    console.info(`[Journey: ${journeyId}] InitiateCustomerIdentification success`);
-
     window.location.href = '/personal-loan-otp';
     return 'success';
   } catch (e) {
-    console.error(`[Journey: ${journeyId}] InitiateCustomerIdentification error:`, e.message);
     return 'Something went wrong. Please try again.';
   }
 }
@@ -315,11 +308,9 @@ async function initiateCustomerOTP(mobileNo, identifierName, identifierValue, _g
  * @param {scope} globals
  * @return {string} 'success' or an error message
  */
-async function verifyCustomerOTP(otp, attemptsFieldName, _globals) {
+function verifyCustomerOTP(otp, attemptsFieldName, _globals) {
   const journeyId = getJourneyField('partnerJourneyID');
   try {
-    await new Promise((r) => setTimeout(r, 500));
-
     const storedOTP = getJourneyField('mockOTP');
     if ((otp || '').toString().trim() !== storedOTP) {
       const left = Math.max(0, parseInt(getJourneyField('otpAttemptsLeft') || '3', 10) - 1);
@@ -395,11 +386,9 @@ function proceedToPreview(loanAmount, tenureMonths, _globals) {
  * @param {scope} globals
  * @return {string}
  */
-async function submitLoanApp(_globals) {
+function submitLoanApp(_globals) {
   const journeyId = getJourneyField('partnerJourneyID');
   try {
-    await new Promise((r) => setTimeout(r, 800));
-
     const ackId = `14${Math.floor(Math.random() * 9000000 + 1000000)}`;
     saveJourneyField('acknowledgementId', ackId);
 
