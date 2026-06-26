@@ -277,7 +277,7 @@ function resendOTP(timerFieldName, attemptsFieldName) {
  * @param {string} identifierName PAN_NO or DOB
  * @param {string} identifierValue
  * @param {scope} globals
- * @return {Promise<string>} 'success' or an error message
+ * @return {string} 'success' or an error message
  */
 async function initiateCustomerOTP(mobileNo, identifierName, identifierValue, _globals) {
   const journeyId = `PJ_${Date.now()}`;
@@ -313,7 +313,7 @@ async function initiateCustomerOTP(mobileNo, identifierName, identifierValue, _g
  * @name verifyCustomerOTP
  * @param {string} otp The 6-digit OTP entered by the user
  * @param {scope} globals
- * @return {Promise<string>} 'success' or an error message
+ * @return {string} 'success' or an error message
  */
 async function verifyCustomerOTP(otp, attemptsFieldName, _globals) {
   const journeyId = getJourneyField('partnerJourneyID');
@@ -393,7 +393,7 @@ function proceedToPreview(loanAmount, tenureMonths, _globals) {
  * Submits the final loan application and navigates to thank-you page on success.
  * @name submitLoanApp
  * @param {scope} globals
- * @return {Promise<string>}
+ * @return {string}
  */
 async function submitLoanApp(_globals) {
   const journeyId = getJourneyField('partnerJourneyID');
