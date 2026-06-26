@@ -191,11 +191,147 @@ function initLoanJourneyHandlers() {
   });
 }
 
+const EDS_PREVIEW_BASE = 'https://otp-login--hdfc-aem-capstone--lakshmi891.aem.page';
+
+function getEDSUrl(path) {
+  return window.location.hostname.includes('adobeaemcloud.com')
+    ? `${EDS_PREVIEW_BASE}${path}`
+    : path;
+}
+
+let otpTimerActive = false;
+let otpTimerInterval = null;
+
+function initOTPPageHandlers() {
+  if (!window.location.pathname.includes('personal-loan-otp')) return;
+
+  const MOCK_OFFER = {
+    customerFirstName: 'Ankit',
+    customerLastName: 'Enterprises',
+    customerAddress1: '1301, Barkha',
+    customerCity: 'Mumbai',
+    customerState: 'Maharashtra',
+    zipCode: '400016',
+    emailAddress: 'ankit@gmail.com',
+    offerAmount: '1000000.00',
+    tenure: '36',
+    rateOfInterest: '10.20',
+    kycFlag: 'Y',
+    accountNumber: 'XX50151',
+    customerID: 'XX12345',
+  };
+
+  function getJourneyData() {
+    return JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+  }
+
+  function startOTPTimer(timerEl) {
+    if (otpTimerActive) return;
+    otpTimerActive = true;
+    let remaining = 21;
+    // eslint-disable-next-line no-param-reassign
+    timerEl.textContent = `Resend OTP in: ${remaining} secs`;
+    // eslint-disable-next-line no-param-reassign
+    timerEl.disabled = true;
+    otpTimerInterval = setInterval(() => {
+      remaining -= 1;
+      if (remaining <= 0) {
+        clearInterval(otpTimerInterval);
+        otpTimerActive = false;
+        // eslint-disable-next-line no-param-reassign
+        timerEl.textContent = 'Resend OTP';
+        // eslint-disable-next-line no-param-reassign
+        timerEl.disabled = false;
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        timerEl.textContent = `Resend OTP in: ${remaining} secs`;
+      }
+    }, 1000);
+  }
+
+  function populateOTPPage() {
+    const data = getJourneyData();
+    const mobileEl = document.querySelector('input[name="otp_mobile_display"]');
+    const otpEl = document.querySelector('input[name="otp_value"]');
+    const timerEl = document.querySelector('button[name="resend_otp_timer"]');
+    const attemptsEl = document.querySelector('input[name="attempts_left"]');
+
+    if (mobileEl && data.mobileNo && !mobileEl.value) {
+      mobileEl.value = `*****${data.mobileNo.toString().substring(5)}`;
+    }
+    if (otpEl && data.mockOTP && !otpEl.value) {
+      otpEl.value = data.mockOTP;
+    }
+    if (timerEl && !otpTimerActive) {
+      startOTPTimer(timerEl);
+    }
+    if (attemptsEl && !attemptsEl.value) {
+      attemptsEl.value = `${data.otpAttemptsLeft || 3}/3 attempt(s) left`;
+    }
+    return !!(mobileEl || otpEl || timerEl);
+  }
+
+  let retries = 0;
+  const poll = setInterval(() => {
+    retries += 1;
+    if (populateOTPPage() || retries >= 20) clearInterval(poll);
+  }, 300);
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+
+    if (btn.name === 'resend_otp_timer' && !btn.disabled) {
+      const data = getJourneyData();
+      data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      data.otpAttemptsLeft = '3';
+      sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+      const otpEl = document.querySelector('input[name="otp_value"]');
+      if (otpEl) otpEl.value = data.mockOTP;
+      const attemptsEl = document.querySelector('input[name="attempts_left"]');
+      if (attemptsEl) attemptsEl.value = '3/3 attempt(s) left';
+      clearInterval(otpTimerInterval);
+      otpTimerActive = false;
+      startOTPTimer(btn);
+      return;
+    }
+
+    if (!btn.textContent.trim().toLowerCase().includes('submit')) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const data = getJourneyData();
+    const entered = (document.querySelector('input[name="otp_value"]')?.value || '').trim();
+    const stored = data.mockOTP || '';
+
+    if (entered !== stored) {
+      const left = Math.max(0, parseInt(data.otpAttemptsLeft || '3', 10) - 1);
+      data.otpAttemptsLeft = left.toString();
+      sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+      const attemptsEl = document.querySelector('input[name="attempts_left"]');
+      if (attemptsEl) attemptsEl.value = `${left}/3 attempt(s) left`;
+      const errEl = document.querySelector('input[name="otp_error"]');
+      if (errEl) errEl.value = left === 0 ? 'No attempts left. Please resend OTP.' : 'Invalid OTP. Please try again.';
+      // eslint-disable-next-line no-console
+      console.info(`[Journey: ${data.partnerJourneyID}] OTP verification failed, ${left} attempt(s) left`);
+      return;
+    }
+
+    data.offerDemogDetails = MOCK_OFFER;
+    data.customerName = `${MOCK_OFFER.customerFirstName} ${MOCK_OFFER.customerLastName}`;
+    sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+    // eslint-disable-next-line no-console
+    console.info(`[Journey: ${data.partnerJourneyID}] OTP verified, offer loaded`);
+    window.location.href = getEDSUrl('/personal-loan-offer');
+  });
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
   initLoanJourneyHandlers();
+  initOTPPageHandlers();
 }
 
 loadPage();

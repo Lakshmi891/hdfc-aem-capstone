@@ -91,7 +91,7 @@ function computeEMI(principal, annualRate, tenureMonths) {
   const n = parseInt(tenureMonths, 10) || 0;
   if (!P || !rate || !n) return 0;
   const r = rate / (12 * 100);
-  const powered = Math.pow(1 + r, n);
+  const powered = (1 + r) ** n;
   return Math.round((P * r * powered) / (powered - 1));
 }
 
@@ -199,17 +199,17 @@ function setFieldText(fieldName, text, disabled) {
  * @return {string}
  */
 function startResendTimer(timerFieldName) {
-  if (globalThis.otpTimerInterval) {
-    clearInterval(globalThis.otpTimerInterval);
+  if (window.otpTimerInterval) {
+    clearInterval(window.otpTimerInterval);
   }
 
   let remaining = 21;
   setFieldText(timerFieldName, `Resend OTP in: ${remaining} secs`, true);
 
-  globalThis.otpTimerInterval = setInterval(() => {
+  window.otpTimerInterval = setInterval(() => {
     remaining -= 1;
     if (remaining <= 0) {
-      clearInterval(globalThis.otpTimerInterval);
+      clearInterval(window.otpTimerInterval);
       setFieldText(timerFieldName, 'Resend OTP', false);
     } else {
       setFieldText(timerFieldName, `Resend OTP in: ${remaining} secs`, true);
@@ -269,6 +269,14 @@ function resendOTP(timerFieldName, attemptsFieldName) {
 
 // ─── Journey Navigation Functions ─────────────────────────────────────────────
 
+const EDS_BASE = 'https://otp-login--hdfc-aem-capstone--lakshmi891.aem.page';
+
+function getPageUrl(path) {
+  return window.location.hostname.includes('adobeaemcloud.com')
+    ? `${EDS_BASE}${path}`
+    : path;
+}
+
 /**
  * Initiates customer identification and navigates to OTP page on success.
  * Generates a random OTP (not fixed) and stores mobile number in session.
@@ -292,10 +300,7 @@ function initiateCustomerOTP(mobileNo, identifierName, identifierValue) {
     saveJourneyField('identifierName', identifierName);
     saveJourneyField('mobileNo', mobileNo);
     generateOTP();
-    const isAuthor = window.location.hostname.includes('adobeaemcloud.com');
-    window.location.href = isAuthor
-      ? 'https://otp-login--hdfc-aem-capstone--lakshmi891.aem.page/personal-loan-otp'
-      : '/personal-loan-otp';
+    window.location.href = getPageUrl('/personal-loan-otp');
     return 'success';
   } catch (e) {
     return 'Something went wrong. Please try again.';
@@ -342,7 +347,7 @@ function verifyCustomerOTP(otp, attemptsFieldName) {
     sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
 
     console.info(`[Journey: ${journeyId}] OTP verified, offer loaded`);
-    window.location.href = '/personal-loan-offer';
+    window.location.href = getPageUrl('/personal-loan-offer');
     return 'success';
   } catch (e) {
     console.error(`[Journey: ${journeyId}] VerifyOTP error:`, e.message);
@@ -373,7 +378,7 @@ function proceedToPreview(loanAmount, tenureMonths, _globals) {
 
     console.info(`[Journey: ${data.partnerJourneyID || ''}] Proceeding to preview`);
 
-    window.location.href = '/personal-loan-preview';
+    window.location.href = getPageUrl('/personal-loan-preview');
     return 'success';
   } catch (e) {
     console.error('[Journey] proceedToPreview error:', e.message);
@@ -393,7 +398,7 @@ function submitLoanApp() {
     saveJourneyField('acknowledgementId', ackId);
 
     console.info(`[Journey: ${journeyId}] Loan application submitted`);
-    window.location.href = '/personal-loan-thankyou';
+    window.location.href = getPageUrl('/personal-loan-thankyou');
     return 'success';
   } catch (e) {
     console.error(`[Journey: ${journeyId}] Submit error:`, e.message);
