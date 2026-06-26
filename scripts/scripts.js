@@ -138,10 +138,49 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+function initLoanJourneyHandlers() {
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[name="view_loan_eligibility_button"]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const mobile = (document.querySelector('input[name="aadhaar_mobile_number"]')?.value || '').trim();
+    const pan = (document.querySelector('input[name="pan_card_number"]')?.value || '').trim().toUpperCase();
+
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
+      if (errEl) errEl.value = 'Please enter a valid 10-digit mobile number.';
+      return;
+    }
+    if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
+      const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
+      if (errEl) errEl.value = 'Please enter a valid PAN (e.g. ABCDE1234F).';
+      return;
+    }
+
+    try {
+      const journeyId = `PJ_${Date.now()}`;
+      const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+      data.partnerJourneyID = journeyId;
+      data.bankJourneyID = `BJ_${Date.now()}`;
+      data.identifierName = 'PAN_NO';
+      data.mobileNo = mobile;
+      data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+      window.location.href = '/personal-loan-otp';
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('[Journey] Failed to initiate:', err);
+    }
+  });
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
+  initLoanJourneyHandlers();
 }
 
 loadPage();
