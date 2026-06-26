@@ -146,16 +146,26 @@ function initLoanJourneyHandlers() {
     e.stopPropagation();
 
     const mobile = (document.querySelector('input[name="aadhaar_mobile_number"]')?.value || '').trim();
+    const idTypeEl = document.querySelector('input[name="id_type"]:checked');
+    const idType = idTypeEl ? idTypeEl.value : 'Pan Card';
     const pan = (document.querySelector('input[name="pan_card_number"]')?.value || '').trim().toUpperCase();
+    const dob = (document.querySelector('input[name="dob_input"]')?.value || '').trim();
 
     if (!/^[6-9]\d{9}$/.test(mobile)) {
       const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
       if (errEl) errEl.value = 'Please enter a valid 10-digit mobile number.';
       return;
     }
-    if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
+
+    if (idType === 'Pan Card' && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
       const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
       if (errEl) errEl.value = 'Please enter a valid PAN (e.g. ABCDE1234F).';
+      return;
+    }
+
+    if (idType === 'Date of Birth' && !dob) {
+      const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
+      if (errEl) errEl.value = 'Please enter your Date of Birth.';
       return;
     }
 
@@ -164,7 +174,8 @@ function initLoanJourneyHandlers() {
       const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
       data.partnerJourneyID = journeyId;
       data.bankJourneyID = `BJ_${Date.now()}`;
-      data.identifierName = 'PAN_NO';
+      data.identifierName = idType === 'Pan Card' ? 'PAN_NO' : 'DOB';
+      data.identifierValue = idType === 'Pan Card' ? pan : dob;
       data.mobileNo = mobile;
       data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
