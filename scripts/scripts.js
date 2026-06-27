@@ -138,6 +138,14 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+const AEM_AUTHOR_FORMS_BASE = '/content/forms/af/lakshmi-forms-capstone';
+
+function getEDSUrl(path) {
+  return window.location.hostname.includes('adobeaemcloud.com')
+    ? `${AEM_AUTHOR_FORMS_BASE}${path}.html`
+    : path;
+}
+
 function initLoanJourneyHandlers() {
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
@@ -180,23 +188,12 @@ function initLoanJourneyHandlers() {
       data.mobileNo = mobile;
       data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
-      const isAuthor = window.location.hostname.includes('adobeaemcloud.com');
-      window.location.href = isAuthor
-        ? 'https://otp-login--hdfc-aem-capstone--lakshmi891.aem.page/personal-loan-otp'
-        : '/personal-loan-otp';
+      window.location.href = getEDSUrl('/personal-loan-otp');
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('[Journey] Failed to initiate:', err);
     }
   });
-}
-
-const EDS_PREVIEW_BASE = 'https://otp-login--hdfc-aem-capstone--lakshmi891.aem.page';
-
-function getEDSUrl(path) {
-  return window.location.hostname.includes('adobeaemcloud.com')
-    ? `${EDS_PREVIEW_BASE}${path}`
-    : path;
 }
 
 let otpTimerActive = false;

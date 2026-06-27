@@ -269,11 +269,11 @@ function resendOTP(timerFieldName, attemptsFieldName) {
 
 // ─── Journey Navigation Functions ─────────────────────────────────────────────
 
-const EDS_BASE = 'https://otp-login--hdfc-aem-capstone--lakshmi891.aem.page';
+const AEM_AUTHOR_FORMS_BASE = '/content/forms/af/lakshmi-forms-capstone';
 
 function getPageUrl(path) {
   return window.location.hostname.includes('adobeaemcloud.com')
-    ? `${EDS_BASE}${path}`
+    ? `${AEM_AUTHOR_FORMS_BASE}${path}.html`
     : path;
 }
 
