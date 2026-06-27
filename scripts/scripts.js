@@ -375,7 +375,8 @@ function initOTPPageHandlers() {
 }
 
 function initOfferPageHandlers() {
-  if (!window.location.pathname.includes('personal-loan-offer')) return;
+  const { pathname } = window.location;
+  if (!pathname.includes('personal-loan-offer') && !pathname.includes('offer-display')) return;
 
   // eslint-disable-next-line no-console
   console.info('[Journey] Offer page handler active');
