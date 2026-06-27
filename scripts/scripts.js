@@ -251,15 +251,23 @@ function initOTPPageHandlers() {
 
   function populateOTPPage() {
     const data = getJourneyData();
+    if (!data.mockOTP) {
+      data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      data.otpAttemptsLeft = '3';
+      sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+    }
+    // eslint-disable-next-line no-console
+    console.info(`[Journey] Test OTP: ${data.mockOTP}`);
+
     const mobileEl = document.querySelector('input[name="otp_mobile_display"]');
-    const otpEl = document.querySelector('input[name="otp_value"]');
+    const otpEl = document.querySelector('input[name="otp_code"]');
     const timerEl = document.querySelector('button[name="resend_otp_timer"]');
     const attemptsEl = document.querySelector('input[name="attempts_left"]');
 
     if (mobileEl && data.mobileNo && !mobileEl.value) {
       mobileEl.value = `*****${data.mobileNo.toString().substring(5)}`;
     }
-    if (otpEl && data.mockOTP && !otpEl.value) {
+    if (otpEl && !otpEl.value) {
       otpEl.value = data.mockOTP;
     }
     if (timerEl && !otpTimerActive) {
@@ -268,7 +276,7 @@ function initOTPPageHandlers() {
     if (attemptsEl && !attemptsEl.value) {
       attemptsEl.value = `${data.otpAttemptsLeft || 3}/3 attempt(s) left`;
     }
-    return !!(mobileEl || otpEl || timerEl);
+    return !!(otpEl && otpEl.value);
   }
 
   let retries = 0;
@@ -286,7 +294,7 @@ function initOTPPageHandlers() {
       data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
       data.otpAttemptsLeft = '3';
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
-      const otpEl = document.querySelector('input[name="otp_value"]');
+      const otpEl = document.querySelector('input[name="otp_code"]');
       if (otpEl) otpEl.value = data.mockOTP;
       const attemptsEl = document.querySelector('input[name="attempts_left"]');
       if (attemptsEl) attemptsEl.value = '3/3 attempt(s) left';
@@ -298,10 +306,10 @@ function initOTPPageHandlers() {
 
     if (!btn.textContent.trim().toLowerCase().includes('submit')) return;
     e.preventDefault();
-    e.stopPropagation();
+    e.stopImmediatePropagation();
 
     const data = getJourneyData();
-    const entered = (document.querySelector('input[name="otp_value"]')?.value || '').trim();
+    const entered = (document.querySelector('input[name="otp_code"]')?.value || '').trim();
     const stored = data.mockOTP || '';
 
     if (entered !== stored) {
@@ -323,7 +331,7 @@ function initOTPPageHandlers() {
     // eslint-disable-next-line no-console
     console.info(`[Journey: ${data.partnerJourneyID}] OTP verified, offer loaded`);
     window.location.href = getEDSUrl('/personal-loan-offer');
-  });
+  }, true);
 }
 
 async function loadPage() {

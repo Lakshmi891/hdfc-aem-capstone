@@ -5,7 +5,7 @@
 export function calculateEMI(P, annualRate, n) {
   if (!P || !annualRate || !n || n === 0) return 0;
   const r = annualRate / (12 * 100);
-  const powered = Math.pow(1 + r, n);
+  const powered = (1 + r) ** n;
   return Math.round((P * r * powered) / (powered - 1));
 }
 
