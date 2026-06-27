@@ -483,11 +483,18 @@ function initPreviewPageHandlers() {
     const rate = parseFloat(data.selectedRate) || parseFloat(offer.rateOfInterest) || 10.20;
     const emi = parseInt(data.selectedEMI, 10) || 0;
     const processingFee = Math.round(P * 0.02);
-    const address = [
-      offer.customerAddress1, offer.customerCity, offer.customerState, offer.zipCode,
-    ].filter(Boolean).join(', ');
+    const fullName = data.customerName
+      || [offer.customerFirstName, offer.customerLastName].filter(Boolean).join(' ')
+      || 'Ankit Enterprises';
+    const mobile = data.mobileNo || '';
     const pan = data.identifierName === 'PAN_NO' ? (data.identifierValue || '') : '';
     const dob = data.identifierName === 'DOB' ? (data.identifierValue || '') : '';
+    const address = [
+      offer.customerAddress1 || '1301, Barkha',
+      offer.customerCity || 'Mumbai',
+      offer.customerState || 'Maharashtra',
+      offer.zipCode || '400016',
+    ].join(', ');
 
     setVal('preview_loan_amount', `₹ ${P.toLocaleString('en-IN')}`);
     setVal('preview_emi', `₹ ${emi.toLocaleString('en-IN')}`);
@@ -496,8 +503,8 @@ function initPreviewPageHandlers() {
     setVal('preview_rate', `${rate}%`);
     setVal('preview_employer_name', offer.employerName || 'Apollo Services');
     setVal('preview_loan_type', 'Fresh Loan');
-    setVal('preview_full_name', data.customerName || offer.customerFirstName || '');
-    setVal('preview_mobile', data.mobileNo ? `+91 ${data.mobileNo}` : '');
+    setVal('preview_full_name', fullName);
+    setVal('preview_mobile', mobile ? `+91 ${mobile}` : '');
     setVal('preview_dob', dob);
     setVal('preview_pan', pan ? maskPAN(pan) : '');
     setVal('preview_address', address);
