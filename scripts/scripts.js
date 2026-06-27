@@ -216,6 +216,8 @@ function initOTPPageHandlers() {
     kycFlag: 'Y',
     accountNumber: 'XX50151',
     customerID: 'XX12345',
+    employerName: 'Apollo Services',
+    residenceType: 'Owned by Parents',
   };
 
   function getJourneyData() {
@@ -453,6 +455,76 @@ function initOfferPageHandlers() {
   }, true);
 }
 
+function initPreviewPageHandlers() {
+  if (!window.location.pathname.includes('personal-loan-preview')) return;
+  // eslint-disable-next-line no-console
+  console.info('[Journey] Preview page handler active');
+
+  function setVal(name, value) {
+    const el = document.querySelector(`[name="${name}"]`);
+    if (!el) return;
+    const inp = (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')
+      ? el : el.querySelector('input, textarea');
+    if (!inp) return;
+    // eslint-disable-next-line no-param-reassign
+    inp.value = value;
+  }
+
+  function maskPAN(pan) {
+    if (!pan || pan.length < 10) return pan || '';
+    return `***** *${pan.substring(5, 9)} ${pan.substring(9)}`;
+  }
+
+  function populatePreview() {
+    const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+    const offer = data.offerDemogDetails || {};
+    const P = parseFloat(data.selectedLoanAmount) || parseFloat(offer.offerAmount) || 1000000;
+    const n = parseInt(data.selectedTenure, 10) || parseInt(offer.tenure, 10) || 36;
+    const rate = parseFloat(data.selectedRate) || parseFloat(offer.rateOfInterest) || 10.20;
+    const emi = parseInt(data.selectedEMI, 10) || 0;
+    const processingFee = Math.round(P * 0.02);
+    const address = [
+      offer.customerAddress1, offer.customerCity, offer.customerState, offer.zipCode,
+    ].filter(Boolean).join(', ');
+    const pan = data.identifierName === 'PAN_NO' ? (data.identifierValue || '') : '';
+    const dob = data.identifierName === 'DOB' ? (data.identifierValue || '') : '';
+
+    setVal('preview_loan_amount', `₹ ${P.toLocaleString('en-IN')}`);
+    setVal('preview_emi', `₹ ${emi.toLocaleString('en-IN')}`);
+    setVal('preview_tenure', `${n} months`);
+    setVal('preview_processing_fee', `₹ ${processingFee.toLocaleString('en-IN')}`);
+    setVal('preview_rate', `${rate}%`);
+    setVal('preview_employer_name', offer.employerName || 'N/A');
+    setVal('preview_loan_type', 'Fresh Loan');
+    setVal('preview_full_name', data.customerName || '');
+    setVal('preview_mobile', data.mobileNo ? `+91 ${data.mobileNo}` : '');
+    setVal('preview_dob', dob);
+    setVal('preview_pan', pan ? maskPAN(pan) : '');
+    setVal('preview_address', address);
+    setVal('preview_residence_type', offer.residenceType || '');
+  }
+
+  setTimeout(populatePreview, 2000);
+  setTimeout(populatePreview, 4000);
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const txt = btn.textContent.trim().toLowerCase();
+    if (!txt.includes('confirm') && !txt.includes('submit')) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+    const ackId = `14${Math.floor(Math.random() * 9000000 + 1000000)}`;
+    data.acknowledgementId = ackId;
+    sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+    // eslint-disable-next-line no-console
+    console.info(`[Journey] Loan submitted, ackId: ${ackId}`);
+    window.location.href = getEDSUrl('/personal-loan-thankyou');
+  }, true);
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
@@ -460,6 +532,7 @@ async function loadPage() {
   initLoanJourneyHandlers();
   initOTPPageHandlers();
   initOfferPageHandlers();
+  initPreviewPageHandlers();
 }
 
 loadPage();
