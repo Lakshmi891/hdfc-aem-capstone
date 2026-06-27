@@ -400,7 +400,10 @@ function initOfferPageHandlers() {
     if (!el) return;
     const inp = (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')
       ? el : el.querySelector('input, textarea');
-    if (inp) inp.value = value; // eslint-disable-line no-param-reassign
+    if (!inp) return;
+    // eslint-disable-next-line no-param-reassign
+    inp.value = value;
+    inp.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   function updateOfferDisplay() {
@@ -413,14 +416,9 @@ function initOfferPageHandlers() {
     setVal('taxes', String(Math.round(P * 0.02 * 0.18)));
   }
 
-  let retries = 0;
-  const poll = setInterval(() => {
-    retries += 1;
-    if (getVal('loan_amount') !== null || retries >= 30) {
-      clearInterval(poll);
-      updateOfferDisplay();
-    }
-  }, 300);
+  // AEM Forms resets fields during its own init — wait for it to finish
+  setTimeout(updateOfferDisplay, 2000);
+  setTimeout(updateOfferDisplay, 4000);
 
   document.addEventListener('input', (e) => {
     if (e.target.closest('[name="loan_amount"]') || e.target.closest('[name="tenure_months"]')) {
