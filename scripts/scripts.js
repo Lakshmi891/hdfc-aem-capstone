@@ -374,12 +374,80 @@ function initOTPPageHandlers() {
   }, true);
 }
 
+function initOfferPageHandlers() {
+  if (!window.location.pathname.includes('personal-loan-offer')) return;
+
+  function calcEMI(P, n) {
+    if (!P || !n) return 0;
+    const r = 10.20 / (12 * 100);
+    const powered = (1 + r) ** n;
+    return Math.round((P * r * powered) / (powered - 1));
+  }
+
+  function updateOfferDisplay() {
+    const loanEl = document.querySelector('[name="loan_amount"]');
+    const tenureEl = document.querySelector('[name="tenure_months"]');
+    if (!loanEl || !tenureEl) return;
+    const P = parseFloat(loanEl.value) || 1000000;
+    const n = parseInt(tenureEl.value, 10) || 36;
+    const emiEl = document.querySelector('[name="emi_display"]');
+    const rateEl = document.querySelector('[name="rate_of_interest"]');
+    const taxEl = document.querySelector('[name="taxes"]');
+    if (emiEl) emiEl.value = String(calcEMI(P, n));
+    if (rateEl) rateEl.value = '10.20';
+    if (taxEl) taxEl.value = String(Math.round(P * 0.02 * 0.18));
+  }
+
+  let retries = 0;
+  const poll = setInterval(() => {
+    retries += 1;
+    if (document.querySelector('[name="loan_amount"]') || retries >= 30) {
+      clearInterval(poll);
+      updateOfferDisplay();
+    }
+  }, 300);
+
+  document.addEventListener('input', (e) => {
+    if (e.target.name === 'loan_amount' || e.target.name === 'tenure_months') {
+      updateOfferDisplay();
+    }
+  });
+  document.addEventListener('change', (e) => {
+    if (e.target.name === 'loan_amount' || e.target.name === 'tenure_months') {
+      updateOfferDisplay();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    if (!btn.textContent.trim().toLowerCase().includes('proceed')) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    const loanEl = document.querySelector('[name="loan_amount"]');
+    const tenureEl = document.querySelector('[name="tenure_months"]');
+    const P = parseFloat(loanEl?.value) || 1000000;
+    const n = parseInt(tenureEl?.value, 10) || 36;
+
+    const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+    data.selectedLoanAmount = P;
+    data.selectedTenure = n;
+    data.selectedEMI = calcEMI(P, n);
+    data.selectedRate = 10.20;
+    sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+
+    window.location.href = getEDSUrl('/personal-loan-preview');
+  }, true);
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
   initLoanJourneyHandlers();
   initOTPPageHandlers();
+  initOfferPageHandlers();
 }
 
 loadPage();
