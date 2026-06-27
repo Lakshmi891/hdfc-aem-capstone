@@ -486,9 +486,9 @@ function initPreviewPageHandlers() {
     const fullName = data.customerName
       || [offer.customerFirstName, offer.customerLastName].filter(Boolean).join(' ')
       || 'Ankit Enterprises';
-    const mobile = data.mobileNo || '9876543210';
-    const pan = data.identifierName === 'PAN_NO' ? (data.identifierValue || 'ATIPA5141K') : 'ATIPA5141K';
-    const dob = data.identifierName === 'DOB' ? (data.identifierValue || '01/01/1985') : '01/01/1985';
+    const mobile = data.mobileNo || '';
+    const pan = data.identifierName === 'PAN_NO' ? (data.identifierValue || '') : '';
+    const dob = data.identifierName === 'DOB' ? (data.identifierValue || '') : '';
     const address = [
       offer.customerAddress1 || '1301, Barkha',
       offer.customerCity || 'Mumbai',
