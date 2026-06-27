@@ -237,21 +237,25 @@ function initOTPPageHandlers() {
     }
   }
 
-  // Finds the timer element by name attribute first, then by text content
+  function elText(el) {
+    return ((el.tagName === 'INPUT' ? el.value : el.textContent) || '').trim();
+  }
+
+  // Finds timer element by name first, then by visible text / input value
   function findTimerEl() {
     return (
       document.querySelector('button[name="resend_otp_timer"], input[name="resend_otp_timer"]')
-      || [...document.querySelectorAll('p, span, button, div')]
-        .find((el) => el.childElementCount === 0 && /resend\s+otp/i.test(el.textContent.trim()))
+      || [...document.querySelectorAll('p, span, button, div, input, label')]
+        .find((el) => el.childElementCount === 0 && /resend\s+otp/i.test(elText(el)))
     );
   }
 
-  // Finds the attempts element by name attribute first, then by text content
+  // Finds attempts element by name first, then by visible text / input value
   function findAttemptsEl() {
     return (
       document.querySelector('input[name="attempts_left"]')
-      || [...document.querySelectorAll('p, span, div, label')]
-        .find((el) => el.childElementCount === 0 && /attempt.*left/i.test(el.textContent.trim()))
+      || [...document.querySelectorAll('p, span, div, label, input')]
+        .find((el) => el.childElementCount === 0 && /attempt.*left/i.test(elText(el)))
     );
   }
 
