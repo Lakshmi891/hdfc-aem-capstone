@@ -494,14 +494,14 @@ function initPreviewPageHandlers() {
     setVal('preview_tenure', `${n} months`);
     setVal('preview_processing_fee', `₹ ${processingFee.toLocaleString('en-IN')}`);
     setVal('preview_rate', `${rate}%`);
-    setVal('preview_employer_name', offer.employerName || 'N/A');
+    setVal('preview_employer_name', offer.employerName || 'Apollo Services');
     setVal('preview_loan_type', 'Fresh Loan');
-    setVal('preview_full_name', data.customerName || '');
+    setVal('preview_full_name', data.customerName || offer.customerFirstName || '');
     setVal('preview_mobile', data.mobileNo ? `+91 ${data.mobileNo}` : '');
     setVal('preview_dob', dob);
     setVal('preview_pan', pan ? maskPAN(pan) : '');
     setVal('preview_address', address);
-    setVal('preview_residence_type', offer.residenceType || '');
+    setVal('preview_residence_type', offer.residenceType || 'Owned by Parents');
   }
 
   setTimeout(populatePreview, 2000);
