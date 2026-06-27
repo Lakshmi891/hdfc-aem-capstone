@@ -377,6 +377,9 @@ function initOTPPageHandlers() {
 function initOfferPageHandlers() {
   if (!window.location.pathname.includes('personal-loan-offer')) return;
 
+  // eslint-disable-next-line no-console
+  console.info('[Journey] Offer page handler active');
+
   function calcEMI(P, n) {
     if (!P || !n) return 0;
     const r = 10.20 / (12 * 100);
@@ -384,36 +387,48 @@ function initOfferPageHandlers() {
     return Math.round((P * r * powered) / (powered - 1));
   }
 
+  function getVal(name) {
+    const el = document.querySelector(`[name="${name}"]`);
+    if (!el) return null;
+    const inp = (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')
+      ? el : el.querySelector('input, textarea');
+    return inp ? inp.value : null;
+  }
+
+  function setVal(name, value) {
+    const el = document.querySelector(`[name="${name}"]`);
+    if (!el) return;
+    const inp = (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')
+      ? el : el.querySelector('input, textarea');
+    if (inp) inp.value = value; // eslint-disable-line no-param-reassign
+  }
+
   function updateOfferDisplay() {
-    const loanEl = document.querySelector('[name="loan_amount"]');
-    const tenureEl = document.querySelector('[name="tenure_months"]');
-    if (!loanEl || !tenureEl) return;
-    const P = parseFloat(loanEl.value) || 1000000;
-    const n = parseInt(tenureEl.value, 10) || 36;
-    const emiEl = document.querySelector('[name="emi_display"]');
-    const rateEl = document.querySelector('[name="rate_of_interest"]');
-    const taxEl = document.querySelector('[name="taxes"]');
-    if (emiEl) emiEl.value = String(calcEMI(P, n));
-    if (rateEl) rateEl.value = '10.20';
-    if (taxEl) taxEl.value = String(Math.round(P * 0.02 * 0.18));
+    const P = parseFloat(getVal('loan_amount')) || 1000000;
+    const n = parseInt(getVal('tenure_months'), 10) || 36;
+    // eslint-disable-next-line no-console
+    console.info(`[Journey] EMI calc: P=${P} n=${n}`);
+    setVal('emi_display', String(calcEMI(P, n)));
+    setVal('rate_of_interest', '10.20');
+    setVal('taxes', String(Math.round(P * 0.02 * 0.18)));
   }
 
   let retries = 0;
   const poll = setInterval(() => {
     retries += 1;
-    if (document.querySelector('[name="loan_amount"]') || retries >= 30) {
+    if (getVal('loan_amount') !== null || retries >= 30) {
       clearInterval(poll);
       updateOfferDisplay();
     }
   }, 300);
 
   document.addEventListener('input', (e) => {
-    if (e.target.name === 'loan_amount' || e.target.name === 'tenure_months') {
+    if (e.target.closest('[name="loan_amount"]') || e.target.closest('[name="tenure_months"]')) {
       updateOfferDisplay();
     }
   });
   document.addEventListener('change', (e) => {
-    if (e.target.name === 'loan_amount' || e.target.name === 'tenure_months') {
+    if (e.target.closest('[name="loan_amount"]') || e.target.closest('[name="tenure_months"]')) {
       updateOfferDisplay();
     }
   });
@@ -425,10 +440,8 @@ function initOfferPageHandlers() {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    const loanEl = document.querySelector('[name="loan_amount"]');
-    const tenureEl = document.querySelector('[name="tenure_months"]');
-    const P = parseFloat(loanEl?.value) || 1000000;
-    const n = parseInt(tenureEl?.value, 10) || 36;
+    const P = parseFloat(getVal('loan_amount')) || 1000000;
+    const n = parseInt(getVal('tenure_months'), 10) || 36;
 
     const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
     data.selectedLoanAmount = P;
