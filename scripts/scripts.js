@@ -225,26 +225,57 @@ function initOTPPageHandlers() {
     return JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
   }
 
+  // Sets text on <input>/<textarea> via .value, or on any other element via .textContent
+  function setElText(el, text) {
+    if (!el) return;
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+      // eslint-disable-next-line no-param-reassign
+      el.value = text;
+    } else {
+      // eslint-disable-next-line no-param-reassign
+      el.textContent = text;
+    }
+  }
+
+  // Finds the timer element by name attribute first, then by text content
+  function findTimerEl() {
+    return (
+      document.querySelector('button[name="resend_otp_timer"], input[name="resend_otp_timer"]')
+      || [...document.querySelectorAll('p, span, button, div')]
+        .find((el) => el.childElementCount === 0 && /resend\s+otp/i.test(el.textContent.trim()))
+    );
+  }
+
+  // Finds the attempts element by name attribute first, then by text content
+  function findAttemptsEl() {
+    return (
+      document.querySelector('input[name="attempts_left"]')
+      || [...document.querySelectorAll('p, span, div, label')]
+        .find((el) => el.childElementCount === 0 && /attempt.*left/i.test(el.textContent.trim()))
+    );
+  }
+
   function startOTPTimer(timerEl) {
     if (otpTimerActive) return;
     otpTimerActive = true;
     let remaining = 21;
-    // eslint-disable-next-line no-param-reassign
-    timerEl.textContent = `Resend OTP in: ${remaining} secs`;
-    // eslint-disable-next-line no-param-reassign
-    timerEl.disabled = true;
+    setElText(timerEl, `Resend OTP in: ${remaining} secs`);
+    if (timerEl.tagName === 'BUTTON' || timerEl.tagName === 'INPUT') {
+      // eslint-disable-next-line no-param-reassign
+      timerEl.disabled = true;
+    }
     otpTimerInterval = setInterval(() => {
       remaining -= 1;
       if (remaining <= 0) {
         clearInterval(otpTimerInterval);
         otpTimerActive = false;
-        // eslint-disable-next-line no-param-reassign
-        timerEl.textContent = 'Resend OTP';
-        // eslint-disable-next-line no-param-reassign
-        timerEl.disabled = false;
+        setElText(timerEl, 'Resend OTP');
+        if (timerEl.tagName === 'BUTTON' || timerEl.tagName === 'INPUT') {
+          // eslint-disable-next-line no-param-reassign
+          timerEl.disabled = false;
+        }
       } else {
-        // eslint-disable-next-line no-param-reassign
-        timerEl.textContent = `Resend OTP in: ${remaining} secs`;
+        setElText(timerEl, `Resend OTP in: ${remaining} secs`);
       }
     }, 1000);
   }
@@ -259,22 +290,17 @@ function initOTPPageHandlers() {
     // eslint-disable-next-line no-console
     console.info(`[Journey] Test OTP: ${data.mockOTP}`);
 
-    const mobileEl = document.querySelector('input[name="otp_mobile_display"]');
     const otpEl = document.querySelector('input[name="otp_code"]');
-    const timerEl = document.querySelector('button[name="resend_otp_timer"]');
-    const attemptsEl = document.querySelector('input[name="attempts_left"]');
+    const timerEl = findTimerEl();
+    const attemptsEl = findAttemptsEl();
 
-    if (mobileEl && data.mobileNo && !mobileEl.value) {
-      mobileEl.value = `*****${data.mobileNo.toString().substring(5)}`;
-    }
-    if (otpEl && !otpEl.value) {
-      otpEl.value = data.mockOTP;
-    }
-    if (timerEl && !otpTimerActive) {
-      startOTPTimer(timerEl);
-    }
-    if (attemptsEl && !attemptsEl.value) {
-      attemptsEl.value = `${data.otpAttemptsLeft || 3}/3 attempt(s) left`;
+    if (otpEl && !otpEl.value) otpEl.value = data.mockOTP;
+    if (timerEl && !otpTimerActive) startOTPTimer(timerEl);
+    if (attemptsEl) {
+      const cur = attemptsEl.value || attemptsEl.textContent || '';
+      if (!cur.includes('attempt')) {
+        setElText(attemptsEl, `${data.otpAttemptsLeft || 3}/3 attempt(s) left`);
+      }
     }
     return !!(otpEl && otpEl.value);
   }
@@ -287,23 +313,27 @@ function initOTPPageHandlers() {
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
-    if (!btn) return;
+    const timerTarget = e.target.closest('[name="resend_otp_timer"]');
 
-    if (btn.name === 'resend_otp_timer' && !btn.disabled) {
+    if ((btn && btn.name === 'resend_otp_timer') || timerTarget) {
+      if (otpTimerActive) return;
+      e.preventDefault();
       const data = getJourneyData();
       data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
       data.otpAttemptsLeft = '3';
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
       const otpEl = document.querySelector('input[name="otp_code"]');
       if (otpEl) otpEl.value = data.mockOTP;
-      const attemptsEl = document.querySelector('input[name="attempts_left"]');
-      if (attemptsEl) attemptsEl.value = '3/3 attempt(s) left';
+      const timerEl = findTimerEl();
+      const attemptsEl = findAttemptsEl();
+      if (attemptsEl) setElText(attemptsEl, '3/3 attempt(s) left');
       clearInterval(otpTimerInterval);
       otpTimerActive = false;
-      startOTPTimer(btn);
+      if (timerEl) startOTPTimer(timerEl);
       return;
     }
 
+    if (!btn) return;
     if (!btn.textContent.trim().toLowerCase().includes('submit')) return;
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -316,12 +346,16 @@ function initOTPPageHandlers() {
       const left = Math.max(0, parseInt(data.otpAttemptsLeft || '3', 10) - 1);
       data.otpAttemptsLeft = left.toString();
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
-      const attemptsEl = document.querySelector('input[name="attempts_left"]');
-      if (attemptsEl) attemptsEl.value = `${left}/3 attempt(s) left`;
+      const attemptsEl = findAttemptsEl();
+      if (attemptsEl) setElText(attemptsEl, `${left}/3 attempt(s) left`);
       const errEl = document.querySelector('input[name="otp_error"]');
-      if (errEl) errEl.value = left === 0 ? 'No attempts left. Please resend OTP.' : 'Invalid OTP. Please try again.';
+      if (errEl) {
+        errEl.value = left === 0
+          ? 'No attempts left. Please resend OTP.'
+          : 'Invalid OTP. Please try again.';
+      }
       // eslint-disable-next-line no-console
-      console.info(`[Journey: ${data.partnerJourneyID}] OTP verification failed, ${left} attempt(s) left`);
+      console.info(`[Journey: ${data.partnerJourneyID}] OTP mismatch, ${left} attempt(s) left`);
       return;
     }
 
