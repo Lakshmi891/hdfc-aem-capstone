@@ -96,6 +96,18 @@ function computeEMI(principal, annualRate, tenureMonths) {
 }
 
 /**
+ * Computes GST taxes on processing fee (2% of principal, 18% GST)
+ * @name computeTax
+ * @param {number} principal Loan amount in INR
+ * @return {number} Tax amount rounded to nearest rupee
+ */
+function computeTax(principal) {
+  const P = parseFloat(principal) || 0;
+  const processingFee = P * 0.02;
+  return Math.round(processingFee * 0.18);
+}
+
+/**
  * Reads a value from the loan journey session state
  * @name getJourneyField
  * @param {string} fieldKey
@@ -415,6 +427,7 @@ export {
   validateMobile,
   validatePAN,
   computeEMI,
+  computeTax,
   getJourneyField,
   saveJourneyField,
   getStoredOTP,
