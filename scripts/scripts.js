@@ -225,15 +225,20 @@ function initOTPPageHandlers() {
     return JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
   }
 
-  // Sets text on <input>/<textarea> via .value, or on any other element via .textContent
+  // Sets text on the element: prefers inner <input> if the target is a wrapper,
+  // then falls back to .value for inputs or .textContent for everything else.
   function setElText(el, text) {
     if (!el) return;
-    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+    const inner = el.tagName !== 'INPUT' && el.tagName !== 'BUTTON'
+      ? el.querySelector('input, textarea')
+      : null;
+    const target = inner || el;
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
       // eslint-disable-next-line no-param-reassign
-      el.value = text;
+      target.value = text;
     } else {
       // eslint-disable-next-line no-param-reassign
-      el.textContent = text;
+      target.textContent = text;
     }
   }
 
@@ -241,19 +246,19 @@ function initOTPPageHandlers() {
     return ((el.tagName === 'INPUT' ? el.value : el.textContent) || '').trim();
   }
 
-  // Finds timer element by name first, then by visible text / input value
+  // Finds timer element: any element type with that name, then text-content fallback
   function findTimerEl() {
     return (
-      document.querySelector('button[name="resend_otp_timer"], input[name="resend_otp_timer"]')
+      document.querySelector('[name="resend_otp_timer"]')
       || [...document.querySelectorAll('p, span, button, div, input, label')]
         .find((el) => el.childElementCount === 0 && /resend\s+otp/i.test(elText(el)))
     );
   }
 
-  // Finds attempts element by name first, then by visible text / input value
+  // Finds attempts element: any element type with that name, then text-content fallback
   function findAttemptsEl() {
     return (
-      document.querySelector('input[name="attempts_left"]')
+      document.querySelector('[name="attempts_left"]')
       || [...document.querySelectorAll('p, span, div, label, input')]
         .find((el) => el.childElementCount === 0 && /attempt.*left/i.test(elText(el)))
     );
