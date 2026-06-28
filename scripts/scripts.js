@@ -269,6 +269,7 @@ function initOTPPageHandlers() {
     customerID: 'XX12345',
     employerName: 'Apollo Services',
     residenceType: 'Owned by Parents',
+    dateOfBirth: '1990-05-15',
   };
 
   function getJourneyData() {
@@ -564,9 +565,12 @@ function initPreviewPageHandlers() {
       || [offer.customerFirstName, offer.customerLastName].filter(Boolean).join(' ')
       || 'Ankit Enterprises';
     const mobile = data.mobileNo || '';
-    // Read pan/dob saved directly; fall back to identifierValue for older sessions
+    // Read pan/dob saved directly; fall back to identifierValue, then mock offer data
     const pan = data.pan || (data.identifierName === 'PAN_NO' ? (data.identifierValue || '') : '');
-    const dob = data.dob || (data.identifierName === 'DOB' ? (data.identifierValue || '') : '');
+    const dob = data.dob
+      || (data.identifierName === 'DOB' ? (data.identifierValue || '') : '')
+      || offer.dateOfBirth
+      || '';
     const address = [
       offer.customerAddress1 || '1301, Barkha',
       offer.customerCity || 'Mumbai',
