@@ -190,12 +190,19 @@ function initLoanJourneyHandlers() {
     ).trim().toUpperCase();
     const dob = (
       document.querySelector('input[name="dob_input"]')?.value
+      || document.querySelector('input[name*="dob" i]')?.value
+      || document.querySelector('input[name*="birth" i]')?.value
+      || document.querySelector('input[name*="date" i]:not([name*="pan" i])')?.value
       || document.querySelector('input[type="date"]')?.value
-      || getByLabel(['date of birth', 'dob', 'birth'])
+      || getByLabel(['date of birth', 'birth date', 'dob', 'birth', 'date'])
       || ''
     ).trim();
+
+    // Debug: log every input on the form so we can see field names/labels/values
     // eslint-disable-next-line no-console
-    console.info('[Journey] Login fields captured — mobile:', mobile ? '✓' : '✗', 'idType:', idType, 'pan:', pan ? '✓' : '✗', 'dob:', dob ? '✓' : '✗');
+    console.info('[Journey] All form inputs:', [...document.querySelectorAll('main .form input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"])')].map((i) => `${i.type}|name=${i.name}|label=${i.closest('.field-wrapper')?.querySelector('label')?.textContent?.trim()}|val=${i.value}`));
+    // eslint-disable-next-line no-console
+    console.info('[Journey] Login fields captured — mobile:', mobile || '✗', 'isPan:', /pan/i.test(idType), 'pan:', pan || '✗', 'dob:', dob || '✗');
 
     if (!/^[6-9]\d{9}$/.test(mobile)) {
       const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
