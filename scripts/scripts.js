@@ -203,13 +203,16 @@ function initLoanJourneyHandlers() {
       return;
     }
 
-    if (idType === 'Pan Card' && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
+    // Radio value varies by AEM form config — match loosely
+    const isPan = /pan/i.test(idType);
+
+    if (isPan && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
       const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
       if (errEl) errEl.value = 'Please enter a valid PAN (e.g. ABCDE1234F).';
       return;
     }
 
-    if (idType === 'Date of Birth' && !dob) {
+    if (!isPan && !dob) {
       const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
       if (errEl) errEl.value = 'Please enter your Date of Birth.';
       return;
@@ -220,10 +223,14 @@ function initLoanJourneyHandlers() {
       const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
       data.partnerJourneyID = journeyId;
       data.bankJourneyID = `BJ_${Date.now()}`;
-      data.identifierName = idType === 'Pan Card' ? 'PAN_NO' : 'DOB';
-      data.identifierValue = idType === 'Pan Card' ? pan : dob;
+      data.identifierName = isPan ? 'PAN_NO' : 'DOB';
+      data.identifierValue = isPan ? pan : dob;
+      data.pan = pan;
+      data.dob = dob;
       data.mobileNo = mobile;
       data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
+      // eslint-disable-next-line no-console
+      console.info('[Journey] Saving — mobileNo:', mobile, 'isPan:', isPan, 'pan:', pan, 'dob:', dob);
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
       window.location.href = getEDSUrl('/personal-loan-otp');
     } catch (err) {
@@ -550,8 +557,9 @@ function initPreviewPageHandlers() {
       || [offer.customerFirstName, offer.customerLastName].filter(Boolean).join(' ')
       || 'Ankit Enterprises';
     const mobile = data.mobileNo || '';
-    const pan = data.identifierName === 'PAN_NO' ? (data.identifierValue || '') : '';
-    const dob = data.identifierName === 'DOB' ? (data.identifierValue || '') : '';
+    // Read pan/dob saved directly; fall back to identifierValue for older sessions
+    const pan = data.pan || (data.identifierName === 'PAN_NO' ? (data.identifierValue || '') : '');
+    const dob = data.dob || (data.identifierName === 'DOB' ? (data.identifierValue || '') : '');
     const address = [
       offer.customerAddress1 || '1301, Barkha',
       offer.customerCity || 'Mumbai',
