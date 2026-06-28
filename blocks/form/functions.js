@@ -310,6 +310,7 @@ function initiateCustomerOTP(mobileNo, identifierName, identifierValue) {
     saveJourneyField('partnerJourneyID', journeyId);
     saveJourneyField('bankJourneyID', `BJ_${Date.now()}`);
     saveJourneyField('identifierName', identifierName);
+    saveJourneyField('identifierValue', identifierValue);
     saveJourneyField('mobileNo', mobileNo);
     generateOTP();
     window.location.href = getPageUrl('/personal-loan-otp');

@@ -154,9 +154,29 @@ function initLoanJourneyHandlers() {
     e.preventDefault();
     e.stopPropagation();
 
+    // Find a form input by searching label text — works regardless of AEM field names
+    function getByLabel(keywords) {
+      const wrappers = [...document.querySelectorAll('.field-wrapper')];
+      let found = '';
+      wrappers.some((wrapper) => {
+        const label = wrapper.querySelector('label');
+        if (!label) return false;
+        const txt = label.textContent.trim().toLowerCase();
+        if (keywords.some((k) => txt.includes(k))) {
+          const inp = wrapper.querySelector(
+            'input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"])',
+          );
+          if (inp && inp.value) { found = inp.value; return true; }
+        }
+        return false;
+      });
+      return found;
+    }
+
     const mobile = (
       document.querySelector('input[name="aadhaar_mobile_number"]')?.value
       || document.querySelector('input[type="tel"]')?.value
+      || getByLabel(['mobile', 'aadhaar'])
       || ''
     ).trim();
     const idTypeEl = document.querySelector('input[name="id_type"]:checked')
@@ -165,13 +185,17 @@ function initLoanJourneyHandlers() {
     const pan = (
       document.querySelector('input[name="pan_card_number"]')?.value
       || document.querySelector('input[name*="pan" i]')?.value
+      || getByLabel(['pan'])
       || ''
     ).trim().toUpperCase();
     const dob = (
       document.querySelector('input[name="dob_input"]')?.value
       || document.querySelector('input[type="date"]')?.value
+      || getByLabel(['date of birth', 'dob', 'birth'])
       || ''
     ).trim();
+    // eslint-disable-next-line no-console
+    console.info('[Journey] Login fields captured — mobile:', mobile ? '✓' : '✗', 'idType:', idType, 'pan:', pan ? '✓' : '✗', 'dob:', dob ? '✓' : '✗');
 
     if (!/^[6-9]\d{9}$/.test(mobile)) {
       const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
@@ -481,6 +505,8 @@ function initPreviewPageHandlers() {
     if (!inp) return false;
     // eslint-disable-next-line no-param-reassign
     inp.value = value;
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+    inp.dispatchEvent(new Event('change', { bubbles: true }));
     return true;
   }
 
@@ -498,6 +524,8 @@ function initPreviewPageHandlers() {
         if (inp) {
           // eslint-disable-next-line no-param-reassign
           inp.value = value;
+          inp.dispatchEvent(new Event('input', { bubbles: true }));
+          inp.dispatchEvent(new Event('change', { bubbles: true }));
           return true;
         }
       }
@@ -552,8 +580,10 @@ function initPreviewPageHandlers() {
     setVal('preview_residence_type', offer.residenceType || 'Owned by Parents');
   }
 
+  setTimeout(populatePreview, 1000);
   setTimeout(populatePreview, 2000);
   setTimeout(populatePreview, 4000);
+  setTimeout(populatePreview, 6000);
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
