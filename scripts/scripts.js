@@ -475,12 +475,34 @@ function initPreviewPageHandlers() {
 
   function setVal(name, value) {
     const el = document.querySelector(`[name="${name}"]`);
-    if (!el) return;
+    if (!el) return false;
     const inp = (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')
       ? el : el.querySelector('input, textarea');
-    if (!inp) return;
+    if (!inp) return false;
     // eslint-disable-next-line no-param-reassign
     inp.value = value;
+    return true;
+  }
+
+  // Finds a field by its visible label text and sets its value.
+  // Used as fallback when AEM field names differ from expected.
+  function setValByLabel(labelKeywords, value) {
+    if (!value) return false;
+    const wrappers = [...document.querySelectorAll('.field-wrapper')];
+    return wrappers.some((wrapper) => {
+      const label = wrapper.querySelector('label');
+      if (!label) return false;
+      const txt = label.textContent.trim().toLowerCase();
+      if (labelKeywords.some((k) => txt.includes(k))) {
+        const inp = wrapper.querySelector('input:not([type="hidden"]):not([type="radio"]):not([type="checkbox"]), textarea');
+        if (inp) {
+          // eslint-disable-next-line no-param-reassign
+          inp.value = value;
+          return true;
+        }
+      }
+      return false;
+    });
   }
 
   function maskPAN(pan) {
@@ -517,9 +539,15 @@ function initPreviewPageHandlers() {
     setVal('preview_employer_name', offer.employerName || 'Apollo Services');
     setVal('preview_loan_type', 'Fresh Loan');
     setVal('preview_full_name', fullName);
-    setVal('preview_mobile', mobile ? `+91 ${mobile}` : '');
-    setVal('preview_dob', dob);
-    setVal('preview_pan', pan ? maskPAN(pan) : '');
+    if (!setVal('preview_mobile', mobile ? `+91 ${mobile}` : '')) {
+      setValByLabel(['mobile'], mobile ? `+91 ${mobile}` : '');
+    }
+    if (!setVal('preview_dob', dob)) {
+      setValByLabel(['date of birth', 'dob'], dob);
+    }
+    if (!setVal('preview_pan', pan ? maskPAN(pan) : '')) {
+      setValByLabel(['pan'], pan ? maskPAN(pan) : '');
+    }
     setVal('preview_address', address);
     setVal('preview_residence_type', offer.residenceType || 'Owned by Parents');
   }
