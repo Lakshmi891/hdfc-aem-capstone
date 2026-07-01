@@ -164,14 +164,15 @@ function getStoredOTP() {
 
 /**
  * Returns the masked mobile number to display on the OTP page.
- * e.g. *****94837
+ * e.g. 98765****0  (first 5 digits visible, 4 masked, last digit visible)
  * @name getMaskedMobileForDisplay
  * @return {string}
  */
 function getMaskedMobileForDisplay() {
   const mobile = getJourneyField('mobileNo');
   if (!mobile) return '';
-  return `${'*'.repeat(5)}${mobile.toString().substring(5)}`;
+  const m = mobile.toString().trim();
+  return m.length >= 6 ? `${m.substring(0, 5)}${'*'.repeat(4)}${m.slice(-1)}` : m;
 }
 
 /**

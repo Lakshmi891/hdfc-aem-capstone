@@ -247,9 +247,6 @@ function initLoanJourneyHandlers() {
   });
 }
 
-let otpTimerActive = false;
-let otpTimerInterval = null;
-
 function initOTPPageHandlers() {
   if (!window.location.pathname.includes('personal-loan-otp')) return;
 
@@ -297,47 +294,152 @@ function initOTPPageHandlers() {
     return ((el.tagName === 'INPUT' ? el.value : el.textContent) || '').trim();
   }
 
-  // Finds timer element: any element type with that name, then text-content fallback
-  function findTimerEl() {
-    return (
-      document.querySelector('[name="resend_otp_timer"]')
-      || [...document.querySelectorAll('p, span, button, div, input, label')]
-        .find((el) => el.childElementCount === 0 && /resend\s+otp/i.test(elText(el)))
-    );
-  }
-
-  // Finds attempts element: any element type with that name, then text-content fallback
+  // Finds attempts element.
+  // CSS class field-attempts-left comes from toClassName('attempts_left').
   function findAttemptsEl() {
     return (
       document.querySelector('[name="attempts_left"]')
-      || [...document.querySelectorAll('p, span, div, label, input')]
+      || document.querySelector('.field-attempts-left p')
+      || document.querySelector('.field-attempts-left input')
+      || [...document.querySelectorAll('p, span, label')]
         .find((el) => el.childElementCount === 0 && /attempt.*left/i.test(elText(el)))
     );
   }
 
-  function startOTPTimer(timerEl) {
-    if (otpTimerActive) return;
-    otpTimerActive = true;
-    let remaining = 21;
-    setElText(timerEl, `Resend OTP in: ${remaining} secs`);
-    if (timerEl.tagName === 'BUTTON' || timerEl.tagName === 'INPUT') {
-      // eslint-disable-next-line no-param-reassign
-      timerEl.disabled = true;
+  // Finds the timer/resend plain-text <p> element.
+  // CSS class field-resend-otp-timer from toClassName('resend_otp_timer').
+  function getTimerP() {
+    const wrapper = document.querySelector('.field-resend-otp-timer');
+    if (wrapper) return wrapper.querySelector('p') || wrapper;
+    return [...document.querySelectorAll('p')]
+      .find((el) => /resend\s+otp\s+in/i.test(el.textContent)) || null;
+  }
+
+  // Replaces the masked mobile text in the page with the actual value from session.
+  // Format: XXXXX****X (first 5 visible, 4 asterisks, last digit visible)
+  function updateMaskedMobile(mobileNo) {
+    if (!mobileNo) return;
+    const m = mobileNo.toString().trim();
+    if (m.length < 6) return;
+    const masked = `${m.substring(0, 5)}${'*'.repeat(4)}${m.slice(-1)}`;
+    // Try a named field first (if form has one)
+    const namedEl = document.querySelector('[name="mobile_display"],[name="otp_mobile"],[name="masked_mobile"]');
+    if (namedEl) { setElText(namedEl, masked); return; }
+    // Fallback: walk text nodes and replace any existing masked-mobile pattern
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    const nodes = [];
+    let node = walker.nextNode();
+    while (node) {
+      if (/\*{3,}\d+/.test(node.textContent)) nodes.push(node);
+      node = walker.nextNode();
     }
-    otpTimerInterval = setInterval(() => {
-      remaining -= 1;
-      if (remaining <= 0) {
-        clearInterval(otpTimerInterval);
-        otpTimerActive = false;
-        setElText(timerEl, 'Resend OTP');
-        if (timerEl.tagName === 'BUTTON' || timerEl.tagName === 'INPUT') {
-          // eslint-disable-next-line no-param-reassign
-          timerEl.disabled = false;
-        }
-      } else {
-        setElText(timerEl, `Resend OTP in: ${remaining} secs`);
+    nodes.forEach((n) => {
+      // eslint-disable-next-line no-param-reassign
+      n.textContent = n.textContent.replace(/\*{3,}\d+/, masked);
+    });
+  }
+
+  // resend_otp_timer is a plain-text field — no <button> exists on EDS.
+  // After countdown we transform the same <p> into a clickable "Resend OTP" element.
+  let timerStarted = false;
+  let otpResendEl = null; // the <p> used for both countdown text and resend trigger
+
+  function doResendOTP() {
+    const data = getJourneyData();
+    const left = Math.max(0, parseInt(data.otpAttemptsLeft || '3', 10) - 1);
+    data.otpAttemptsLeft = left.toString();
+    data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+
+    const otpEl = document.querySelector('input[name="otp_code"]');
+    if (otpEl) otpEl.value = data.mockOTP;
+    const attEl = findAttemptsEl();
+    if (attEl) setElText(attEl, `${left}/3 attempt(s) left`);
+
+    if (left <= 0) {
+      // No more resend attempts — hide the element
+      if (otpResendEl) {
+        const wrap = otpResendEl.closest('.field-wrapper') || otpResendEl.parentElement;
+        if (wrap) wrap.style.display = 'none';
       }
-    }, 1000);
+      return;
+    }
+
+    // Reset the <p> back to countdown text and restart
+    if (otpResendEl) {
+      otpResendEl.textContent = 'Resend OTP in: 21 secs';
+      otpResendEl.style.cssText = '';
+      otpResendEl.removeAttribute('role');
+      otpResendEl.removeAttribute('tabindex');
+    }
+    timerStarted = false;
+    // Arrow wrapper avoids no-use-before-define since startOTPTimer is declared below
+    // eslint-disable-next-line no-use-before-define
+    setTimeout(() => { startOTPTimer(); }, 0);
+  }
+
+  function startOTPTimer() {
+    if (timerStarted) return;
+    timerStarted = true;
+
+    let waitTicks = 0;
+    function setup() {
+      const timerP = getTimerP();
+      if (!timerP && waitTicks < 15) {
+        waitTicks += 1;
+        setTimeout(setup, 200);
+        return;
+      }
+
+      otpResendEl = timerP || null;
+
+      // Reset element to plain countdown state
+      if (otpResendEl) {
+        otpResendEl.style.cssText = '';
+        otpResendEl.removeAttribute('role');
+        otpResendEl.removeAttribute('tabindex');
+      }
+
+      function setTimerText(secs) {
+        if (!otpResendEl) return;
+        const bold = otpResendEl.querySelector('strong, b');
+        if (bold) { bold.textContent = `${secs} secs`; } else {
+          otpResendEl.textContent = `Resend OTP in: ${secs} secs`;
+        }
+      }
+
+      let remaining = 21;
+      setTimerText(remaining);
+
+      function tick() {
+        remaining -= 1;
+        if (remaining <= 0) {
+          timerStarted = false;
+          // Transform the plain-text <p> into a clickable "Resend OTP" element
+          if (otpResendEl) {
+            const data = getJourneyData();
+            if (parseInt(data.otpAttemptsLeft || '3', 10) <= 0) return;
+            otpResendEl.textContent = 'Resend OTP';
+            otpResendEl.style.cursor = 'pointer';
+            otpResendEl.style.color = '#1473e6';
+            otpResendEl.style.fontWeight = 'bold';
+            otpResendEl.setAttribute('role', 'button');
+            otpResendEl.setAttribute('tabindex', '0');
+            otpResendEl.addEventListener('click', doResendOTP, { once: true });
+          }
+          // Also reveal an actual button if present (AEM cloud)
+          const actualBtn = document.querySelector('[name="resend_otp_timer"]');
+          if (actualBtn) {
+            (actualBtn.closest('.field-wrapper') || actualBtn).style.display = 'block';
+          }
+        } else {
+          setTimerText(remaining);
+          setTimeout(tick, 1000);
+        }
+      }
+      setTimeout(tick, 1000);
+    }
+    setup();
   }
 
   function populateOTPPage() {
@@ -351,17 +453,12 @@ function initOTPPageHandlers() {
     console.info(`[Journey] Test OTP: ${data.mockOTP}`);
 
     const otpEl = document.querySelector('input[name="otp_code"]');
-    const timerEl = findTimerEl();
     const attemptsEl = findAttemptsEl();
 
     if (otpEl && !otpEl.value) otpEl.value = data.mockOTP;
-    if (timerEl && !otpTimerActive) startOTPTimer(timerEl);
-    if (attemptsEl) {
-      const cur = attemptsEl.value || attemptsEl.textContent || '';
-      if (!cur.includes('attempt')) {
-        setElText(attemptsEl, `${data.otpAttemptsLeft || 3}/3 attempt(s) left`);
-      }
-    }
+    startOTPTimer();
+    if (attemptsEl) setElText(attemptsEl, `${data.otpAttemptsLeft || 3}/3 attempt(s) left`);
+    updateMaskedMobile(data.mobileNo);
     return !!(otpEl && otpEl.value);
   }
 
@@ -373,27 +470,15 @@ function initOTPPageHandlers() {
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
-    const timerTarget = e.target.closest('[name="resend_otp_timer"]');
+    if (!btn) return;
 
-    if ((btn && btn.name === 'resend_otp_timer') || timerTarget) {
-      if (otpTimerActive) return;
+    // Resend OTP button (AEM cloud actual button) — delegate to doResendOTP
+    if (btn.name === 'resend_otp_timer' || /^resend.*otp$/i.test(btn.textContent.trim())) {
       e.preventDefault();
-      const data = getJourneyData();
-      data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
-      data.otpAttemptsLeft = '3';
-      sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
-      const otpEl = document.querySelector('input[name="otp_code"]');
-      if (otpEl) otpEl.value = data.mockOTP;
-      const timerEl = findTimerEl();
-      const attemptsEl = findAttemptsEl();
-      if (attemptsEl) setElText(attemptsEl, '3/3 attempt(s) left');
-      clearInterval(otpTimerInterval);
-      otpTimerActive = false;
-      if (timerEl) startOTPTimer(timerEl);
+      doResendOTP();
       return;
     }
 
-    if (!btn) return;
     if (!btn.textContent.trim().toLowerCase().includes('submit')) return;
     e.preventDefault();
     e.stopImmediatePropagation();
