@@ -592,6 +592,10 @@ main .form form .wizard .wizard-button-wrapper .field-wrapper{
     grid-column: span 12;
 }
 
+main div.form-wrapper:has(.field-header-test) .wizard-menu-items {
+    display: none;
+}
+
 main .form form .wizard .wizard-menu-item {
   counter-increment: wizard-step-counter;
 }
@@ -822,6 +826,15 @@ main .form form select[multiple] {
 }
 
 /* ─── HDFC Header bar ────────────────────────────────────────────────────────── */
+
+/* All pages with header fragment: remove gap above header */
+main > .section:has(.field-header-test) {
+    margin-top: 0;
+}
+
+main div.form-wrapper:has(.field-header-test) {
+    padding-top: 0;
+}
 
 /* Section/wrapper overrides: only when it is a standalone header form (no inputs/buttons) */
 main > .section:has(.field-header-test):not(:has(input, button, select, textarea)) {
