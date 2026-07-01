@@ -941,10 +941,6 @@ main .form form .field-personal-loan-offer-introduction .field-dob-input {
     margin-top: -6rem;
 }
 
-main .form form .field-personal-loan-offer-introduction .field-dob-input {
-    margin-top: -6rem;
-}
-
 main .form form .field-personal-loan-offer-introduction .field-income-source {
     grid-column: 3 !important;
     grid-row: 2 / span 2 !important;
@@ -991,5 +987,136 @@ main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"
     main .form form .field-personal-loan-offer-introduction > * {
         grid-column: 1 !important;
         grid-row: auto !important;
+    }
+}
+
+/* ─── Personal Loan OTP Page (Help us confirm this is you) ──────────────── */
+
+main .form form .field-help-us-confirm-this-is-you {
+    max-width: 560px;
+    row-gap: 8px;
+}
+
+main .form form fieldset.panel-wrapper.field-help-us-confirm-this-is-you > legend {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 0.25rem;
+    padding: 0;
+    width: 100%;
+    float: none;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-instruction p {
+    margin: 0 0 0.25rem;
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-instruction u {
+    color: #1473e6;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-enter-otp-heading p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #131313;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code {
+    max-width: 380px;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code input[name="otp_code"] {
+    width: 100%;
+    height: 48px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    padding: 0 44px 0 16px;
+    font-size: 1.4rem;
+    letter-spacing: 2rem;
+    text-align: left;
+    background: #fff;
+    box-shadow: none;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-eye-toggle {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: #666;
+    width: auto;
+    border-radius: 0;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-eye-toggle:hover {
+    color: #131313;
+    background: none;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code input[name="otp_code"]:focus {
+    border-color: #1473e6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(20 115 230 / 15%);
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
+    max-width: 380px;
+    border: none;
+    /* padding: 0.25rem 0 1.25rem; */
+    margin-top: -2rem;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-resend-otp-timer p,
+main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-attempts-left p {
+    font-size: 0.8125rem;
+    margin: 0;
+    color: #555;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-attempts-left {
+    text-align: right;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button {
+    width: auto;
+    min-width: 150px;
+    padding: 0.65em 2em;
+    background-color: #1473e6;
+    color: #fff;
+    border: none;
+    border-radius: 2.4em;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button:hover {
+    background-color: #0d66d0;
+}
+
+@media (width <= 768px) {
+    main .form form .field-help-us-confirm-this-is-you {
+        max-width: 100%;
+    }
+
+    main .form form .field-help-us-confirm-this-is-you .field-otp-code,
+    main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-input-container,
+    main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
+        max-width: 100%;
     }
 }
