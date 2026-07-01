@@ -255,3 +255,8 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* HDFC loan journey pages use the header form instead of EDS nav — zero out the nav spacer */
+body:has(.form-wrapper .image-wrapper) {
+  --nav-height: 0px;
+}
