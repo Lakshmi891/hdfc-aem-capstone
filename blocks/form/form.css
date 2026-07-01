@@ -792,3 +792,47 @@ main div.form-wrapper {
 main .form form select[multiple] {
     height: calc(42px + 50px);
 }
+
+/* ─── HDFC Header bar (form with only images, no inputs/buttons) ─────────────── */
+main > .section:has(div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea))) {
+    margin: 0;
+}
+
+main > .section:has(div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea))) > div {
+    max-width: 100%;
+    padding: 0;
+}
+
+main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) {
+    background: #002855;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    width: 100%;
+    max-width: 100%;
+}
+
+main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .form.block {
+    background: #002855;
+    max-width: 100%;
+    padding: 0;
+}
+
+main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .form.block form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    gap: 0;
+}
+
+main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .image-wrapper {
+    margin: 0;
+    grid-column: unset;
+    background: transparent;
+    border: none;
+    padding: 0;
+    height: 44px;
+    display: flex;
+    align-items: center;
+}
