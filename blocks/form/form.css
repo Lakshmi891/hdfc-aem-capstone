@@ -197,7 +197,7 @@ main .form input[type='radio'] {
     width: 16px;
     height: 16px;
     flex: none;
-    margin: 0;
+    margin: 6px 0 0;
     position: static;
     z-index: 1;
 }
@@ -263,7 +263,7 @@ main .form form p {
 main .form form .checkbox-wrapper, main .form form .radio-wrapper {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     margin: 0;
     gap: 8px;
 }
@@ -893,4 +893,103 @@ main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper 
     padding: 0;
     display: flex;
     align-items: center;
+}
+
+/* ─── Personal Loan Offer Introduction (OTP-Login Fragment) Layout ─────── */
+
+/* Overrides AEM 12-col grid with a clean 3-column layout.
+   !important is required on grid-column/row to beat AEM's inline grid-area styles. */
+main .form form .field-personal-loan-offer-introduction {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 0.5rem 2rem;
+    align-items: start;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-welcome-title {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-mobileno {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-otp-instruction {
+    grid-column: 1;
+    grid-row: 3;
+    font-size: 0.875rem;
+    color: #555;
+    margin-top: -2.5rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-id-type {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    align-self: start;
+    margin-top: -1rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-pan-card-number,
+main .form form .field-personal-loan-offer-introduction .field-dob-input {
+    grid-column: 2;
+    grid-row: 3;
+    width: 100%;
+    margin-top: -6rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-dob-input {
+    margin-top: -6rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-income-source {
+    grid-column: 3 !important;
+    grid-row: 2 / span 2 !important;
+    align-self: start;
+    margin-top: -1rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-income-source.horizontal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-income-verification-note {
+    display: none;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-consent-data-collection,
+main .form form .field-personal-loan-offer-introduction .field-consent-marketing,
+main .form form .field-personal-loan-offer-introduction .field-terms-privacy-text,
+main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-dob-input {
+    display: none;
+}
+
+main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"][value="dob"]:checked) .field-dob-input {
+    display: block;
+}
+
+main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"][value="dob"]:checked) .field-pan-card-number {
+    display: none;
+}
+
+@media (width <= 768px) {
+    main .form form .field-personal-loan-offer-introduction {
+        grid-template-columns: 1fr;
+        row-gap: 1rem;
+    }
+
+    main .form form .field-personal-loan-offer-introduction > * {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+    }
 }
