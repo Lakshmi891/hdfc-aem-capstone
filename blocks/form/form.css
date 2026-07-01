@@ -381,13 +381,6 @@ main .form .form-image-wrapper img {
     height: auto;
   }
 
-/* Header form image sizing - must precede cards img rule (higher specificity) */
-main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .image-wrapper img {
-    height: 22px;
-    width: auto;
-    max-width: none;
-}
-
 /* For cards with icons or images */
 main .form form fieldset.cards > .radio-wrapper > label > img,
 main .form form fieldset.cards > .checkbox-wrapper > label > img {
@@ -396,8 +389,15 @@ main .form form fieldset.cards > .checkbox-wrapper > label > img {
     object-fit: contain;
 }
 
+/* Header form image sizing */
+main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper img {
+    height: 22px;
+    width: auto;
+    max-width: none;
+}
+
 /* Safe badge (last image) has transparent padding — boost height to match logo visually */
-main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .image-wrapper:last-child img {
+main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper:last-child img {
     height: 38px;
     width: auto;
     max-width: none;
@@ -650,7 +650,7 @@ main .form form .repeat-wrapper{
     gap: var(--form-field-vert-gap) var(--form-field-horz-gap);
 }
 
-main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .panel-wrapper {
+main div.form-wrapper:has(.field-header-test) .field-header-test {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -663,7 +663,7 @@ main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textar
     background: transparent;
 }
 
-main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .panel-wrapper > legend {
+main div.form-wrapper:has(.field-header-test) .field-header-test > legend {
     display: none;
 }
 
@@ -824,23 +824,18 @@ main .form form select[multiple] {
     height: calc(42px + 50px);
 }
 
-/* ─── HDFC Header bar (form with only images, no inputs/buttons) ─────────────── */
+/* ─── HDFC Header bar (.field-header-test panel present) ────────────────────── */
 
-/* Collapse the EDS nav header placeholder when the HDFC header form is on the page */
-body:has(div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea))) header {
-    height: 0;
-}
-
-main > .section:has(div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea))) {
+main > .section:has(.field-header-test) {
     margin: 0;
 }
 
-main > .section:has(div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea))) > div {
+main > .section:has(.field-header-test) > div {
     max-width: 100%;
     padding: 0;
 }
 
-main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) {
+main div.form-wrapper:has(.field-header-test) {
     background: #001a40;
     padding: 0;
     border-radius: 0;
@@ -849,13 +844,13 @@ main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textar
     max-width: 100%;
 }
 
-main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .form.block {
+main div.form-wrapper:has(.field-header-test) .form.block {
     background: #001a40;
     max-width: 100%;
     padding: 0;
 }
 
-main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .form.block form {
+main div.form-wrapper:has(.field-header-test) .form.block form {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -863,7 +858,7 @@ main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textar
     gap: 0;
 }
 
-main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .image-wrapper {
+main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper {
     margin: 0;
     grid-column: unset;
     background: transparent;

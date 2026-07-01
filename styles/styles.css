@@ -257,6 +257,6 @@ main .section.highlight {
 }
 
 /* HDFC loan journey pages use the header form instead of EDS nav — zero out the nav spacer */
-body:has(.form-wrapper .image-wrapper) {
+body:has(.field-header-test) {
   --nav-height: 0px;
 }
