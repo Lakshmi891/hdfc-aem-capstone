@@ -383,7 +383,7 @@ main .form .form-image-wrapper img {
 
 /* Header form image sizing - must precede cards img rule (higher specificity) */
 main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .image-wrapper img {
-    height: 32px;
+    height: 22px;
     width: auto;
     display: block;
     max-width: none;
@@ -830,7 +830,7 @@ main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textar
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 34px 16px 22px;
+    padding: 9px 62px 37px;
     gap: 0;
 }
 
