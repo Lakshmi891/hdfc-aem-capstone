@@ -381,6 +381,14 @@ main .form .form-image-wrapper img {
     height: auto;
   }
 
+/* Header form image sizing - must precede cards img rule (higher specificity) */
+main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .image-wrapper img {
+    height: 32px;
+    width: auto;
+    display: block;
+    max-width: none;
+}
+
 /* For cards with icons or images */
 main .form form fieldset.cards > .radio-wrapper > label > img,
 main .form form fieldset.cards > .checkbox-wrapper > label > img {
@@ -804,7 +812,7 @@ main > .section:has(div.form-wrapper:has(.image-wrapper):not(:has(input, button,
 }
 
 main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) {
-    background: #002855;
+    background: #001a40;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
@@ -813,7 +821,7 @@ main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textar
 }
 
 main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .form.block {
-    background: #002855;
+    background: #001a40;
     max-width: 100%;
     padding: 0;
 }
@@ -832,7 +840,6 @@ main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textar
     background: transparent;
     border: none;
     padding: 0;
-    height: 44px;
     display: flex;
     align-items: center;
 }
