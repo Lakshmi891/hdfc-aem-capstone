@@ -154,11 +154,24 @@ function initLoanJourneyHandlers() {
     e.preventDefault();
     e.stopPropagation();
 
-    const mobile = (document.querySelector('input[name="aadhaar_mobile_number"]')?.value || '').trim();
-    const idTypeEl = document.querySelector('input[name="id_type"]:checked');
-    const idType = idTypeEl ? idTypeEl.value : 'Pan Card';
-    const pan = (document.querySelector('input[name="pan_card_number"]')?.value || '').trim().toUpperCase();
-    const dob = (document.querySelector('input[name="dob_input"]')?.value || '').trim();
+    const mobile = (
+      document.querySelector('input[name="aadhaar_mobile_number"]')?.value
+      || document.querySelector('input[type="tel"]')?.value
+      || ''
+    ).trim();
+    const idTypeEl = document.querySelector('input[name="id_type"]:checked')
+      || document.querySelector('fieldset.radio-group-wrapper input[type="radio"]:checked');
+    const idType = idTypeEl ? idTypeEl.value : 'Date of Birth';
+    const pan = (
+      document.querySelector('input[name="pan_card_number"]')?.value
+      || document.querySelector('input[name*="pan" i]')?.value
+      || ''
+    ).trim().toUpperCase();
+    const dob = (
+      document.querySelector('input[name="dob_input"]')?.value
+      || document.querySelector('input[type="date"]')?.value
+      || ''
+    ).trim();
 
     if (!/^[6-9]\d{9}$/.test(mobile)) {
       const errEl = document.querySelector('input[name="otp_instruction"]') || document.querySelector('[name="otp_instruction"]');
@@ -532,14 +545,38 @@ function initPreviewPageHandlers() {
   }, true);
 }
 
+function initWelcomePageLayout() {
+  if (!window.location.pathname.includes('otp-login')) return;
+  function applyLayout() {
+    const form = document.querySelector('main .form form');
+    if (!form) return;
+    const mobileWrapper = form.querySelector('input[type="tel"], input[name*="mobile"]')?.closest('.field-wrapper');
+    const radioGroups = [...form.querySelectorAll('fieldset.radio-group-wrapper')];
+    if (!mobileWrapper || radioGroups.length < 2) return;
+
+    mobileWrapper.style.gridColumn = '1 / span 4';
+    mobileWrapper.style.gridRow = '2';
+    radioGroups[0].style.gridColumn = '5 / span 4';
+    radioGroups[0].style.gridRow = '2';
+    radioGroups[1].style.gridColumn = '9 / span 4';
+    radioGroups[1].style.gridRow = '2';
+  }
+  applyLayout();
+  setTimeout(applyLayout, 800);
+  setTimeout(applyLayout, 2000);
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
+  const slug = window.location.pathname.split('/').pop().replace('.html', '');
+  if (slug) document.body.classList.add(`page-${slug}`);
   initLoanJourneyHandlers();
   initOTPPageHandlers();
   initOfferPageHandlers();
   initPreviewPageHandlers();
+  initWelcomePageLayout();
 }
 
 loadPage();
