@@ -667,6 +667,7 @@ function initPreviewPageHandlers() {
   }
 
   function populatePreview() {
+    document.querySelector('main .form form')?.classList.add('preview-form');
     const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
     const offer = data.offerDemogDetails || {};
     const P = parseFloat(data.selectedLoanAmount) || parseFloat(offer.offerAmount) || 1000000;

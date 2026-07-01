@@ -825,7 +825,6 @@ main .form form select[multiple] {
     height: calc(42px + 50px);
 }
 
-/* ─── HDFC Header bar ────────────────────────────────────────────────────────── */
 
 /* All pages with header fragment: full width, no gap above */
 main > .section:has(.field-header-test) {
@@ -895,7 +894,6 @@ main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper 
     align-items: center;
 }
 
-/* ─── Personal Loan Offer Introduction (OTP-Login Fragment) Layout ─────── */
 
 /* Overrides AEM 12-col grid with a clean 3-column layout.
    !important is required on grid-column/row to beat AEM's inline grid-area styles. */
@@ -990,7 +988,6 @@ main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"
     }
 }
 
-/* ─── Personal Loan OTP Page (Help us confirm this is you) ──────────────── */
 
 main .form form .field-help-us-confirm-this-is-you {
     max-width: 560px;
@@ -1076,7 +1073,7 @@ main .form form .field-help-us-confirm-this-is-you .field-otp-code input[name="o
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
     max-width: 380px;
     border: none;
-    /* padding: 0.25rem 0 1.25rem; */
+    padding: 0;
     margin-top: -2rem;
 }
 
@@ -1118,5 +1115,573 @@ main .form form .field-help-us-confirm-this-is-you .field-submit-otp button:hove
     main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-input-container,
     main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
         max-width: 100%;
+    }
+}
+
+/* ─── Offer Display Fragment ─────────────────────────────────────────────── */
+
+main .form form fieldset.panel-wrapper.field-offer-display-fragment > legend,
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-highlight-banner > legend,
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-content > legend,
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics > legend,
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary > legend {
+    display: none;
+}
+
+main .form form .field-offer-display-fragment div.plain-text-wrapper.field-offer-display-intro p {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: #131313;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-highlight-banner {
+    background: #ebf5fb;
+    border: 1px solid #aed6f1;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-highlight-banner div.plain-text-wrapper.field-offer-highlight-text {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-highlight-banner div.plain-text-wrapper.field-offer-highlight-text::before {
+    content: "💰";
+    font-size: 2.5rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+main .form form .field-offer-display-fragment .field-offer-highlight-banner div.plain-text-wrapper.field-offer-highlight-text p {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #131313;
+    margin: 0;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-content {
+    align-items: start;
+    column-gap: 2rem;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-enter-loan-amount-tenure > legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 0.5rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-content div.number-wrapper.field-loan-amount label,
+main .form form .field-offer-display-fragment .field-offer-content div.number-wrapper.field-tenure-months label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #555;
+}
+
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"] {
+    background-image: linear-gradient(
+        to right,
+        #f5a623 calc(100% * var(--current-steps) / var(--total-steps)),
+        #e0e0e0 calc(100% * var(--current-steps) / var(--total-steps))
+    );
+}
+
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"]::-webkit-slider-thumb {
+    border-color: #1473e6;
+    background: #fff;
+}
+
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated .range-bubble {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    padding-bottom: 6px;
+}
+
+main .form form .field-offer-display-fragment div.submit-wrapper.field-proceed-btn button {
+    background-color: #1473e6;
+    color: #fff;
+    border: none;
+    border-radius: 2.4em;
+    padding: 0.65em 2em;
+    font-size: 1rem;
+    font-weight: 500;
+    width: auto;
+    cursor: pointer;
+}
+
+main .form form .field-offer-display-fragment div.submit-wrapper.field-proceed-btn button:hover {
+    background-color: #0d66d0;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary {
+    background: #fffce8;
+    border: none;
+    border-radius: 10px;
+    padding: 1.25rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header p:last-child {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #131313;
+    margin-top: 0.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed #d4a017;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics {
+    gap: 0;
+    padding-top: 0.75rem;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics input[type="text"] {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0.25rem 0 0;
+    height: auto;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    pointer-events: none;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary fieldset.panel-wrapper.field-offer-summary-metrics label {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 400;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-emi-display {
+    padding-right: 1rem;
+    padding-bottom: 0.75rem;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-rate-of-interest {
+    padding-left: 1rem;
+    padding-bottom: 0.75rem;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-taxes {
+    border-top: 1px dashed #d4a017;
+    padding-top: 0.75rem;
+    margin-top: 0;
+    grid-column: 1 / -1;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer {
+    background: #fff3cd;
+    border: none;
+    border-radius: 6px;
+    padding: 0.75rem 1rem 0.75rem 2.25rem;
+    position: relative;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer::before {
+    content: "ⓘ";
+    position: absolute;
+    left: 0.65rem;
+    top: 0.7rem;
+    font-size: 1rem;
+    color: #f5a623;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+@media (width <= 768px) {
+    main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-enter-loan-amount-tenure,
+    main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary {
+        grid-column: 1 / -1 !important;
+    }
+}
+
+/* Personal Loan Preview Page (body class `page-personal-loan-preview` set by loadPage) */
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details {
+    background: #fff;
+    border: 1px solid #dde0f5;
+    border-radius: 10px;
+    padding: 0;
+    gap: 0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend {
+    background: #eef0fb;
+    border-radius: 10px 10px 0 0;
+    padding: 0.875rem 1.25rem;
+    margin-bottom: 0;
+    width: 100%;
+    float: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend::before {
+    content: "🛡";
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend::after {
+    content: "∧";
+    margin-left: auto;
+    font-size: 1rem;
+    color: #555;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-loan-amount,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-emi,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-tenure,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-processing-fee,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-rate,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-employer-name,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-loan-type {
+    grid-column: span 3;
+    padding: 1rem 1.25rem;
+    margin: 0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-full-name,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-mobile,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-dob,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-pan,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-residence-type {
+    grid-column: span 3;
+    padding: 1rem 1.25rem;
+    margin: 0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-address {
+    grid-column: span 12;
+    padding: 1rem 1.25rem;
+    margin: 0;
+    border-top: 1px solid #f0f0f0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-rate,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-employer-name,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-loan-type {
+    border-top: 1px solid #f0f0f0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-residence-type {
+    border-top: 1px solid #f0f0f0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper label,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper label {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper input[type="text"],
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper input[type="text"] {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #131313;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+body.page-personal-loan-preview main .form form.preview-form div.submit-wrapper button:not([disabled]) {
+    background-color: #1473e6;
+    color: #fff;
+    border: none;
+    border-radius: 2.4em;
+    padding: 0.65em 2em;
+    font-size: 1rem;
+    font-weight: 500;
+    width: auto;
+    cursor: pointer;
+}
+
+body.page-personal-loan-preview main .form form.preview-form div.submit-wrapper button:not([disabled]):hover {
+    background-color: #0d66d0;
+}
+
+@media (width <= 768px) {
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper,
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper {
+        grid-column: span 6;
+    }
+
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-address {
+        grid-column: span 12;
+    }
+}
+
+/* Personal Loan Thank You Page (body class `page-personal-loan-thankyou` set by loadPage) */
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel {
+    grid-template-columns: 1fr 280px;
+    gap: 1rem 1.5rem;
+    align-items: start;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel > legend {
+    display: none;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel > .field-wrapper {
+    grid-column: 1;
+    margin: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel > fieldset.panel-wrapper.field-additional-services-panel {
+    grid-column: 2;
+    grid-row: 1 / span 20;
+    align-self: start;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    border: none;
+    padding: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-kyc-verification-info {
+    background: #fffde7;
+    border: 1px solid #e8d89d;
+    border-radius: 6px;
+    padding: 0.875rem 1.25rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-kyc-verification-info p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #444;
+    line-height: 1.5;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1.25rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel > legend {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+    float: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel > legend::before {
+    content: "📋";
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-application-number p {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #131313;
+    margin: 0.25rem 0 0;
+    line-height: 1.2;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-contact-info-note p {
+    font-size: 0.8125rem;
+    color: #888;
+    margin: 0 0 1rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-xpress-personal-loan-summary-panel {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    padding: 1rem 0 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-xpress-personal-loan-summary-panel > legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 0.5rem;
+    float: none;
+    width: 100%;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin: 0;
+    border-left: 3px solid #5f8dda;
+    padding: 0.2rem 0 0.2rem 0.75rem;
+    background: transparent;
+    line-height: 1.5;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-disbursal-note {
+    background: #ebedff;
+    border-radius: 6px;
+    padding: 0.875rem 1.25rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-disbursal-note p {
+    font-size: 0.8125rem;
+    color: #3d52d5;
+    margin: 0;
+    line-height: 1.5;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel {
+    grid-template-columns: 1fr;
+    gap: 0;
+    border: 1px solid #dde0f5;
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel > legend {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 0;
+    float: none;
+    width: 100%;
+    background: #eef0fb;
+    padding: 0.875rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel > legend::before {
+    content: "📋";
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-download-app-info {
+    border-top: 1px solid #dde0f5;
+    padding: 0.875rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-download-app-info::after {
+    content: "›";
+    font-size: 1.25rem;
+    color: #555;
+    flex-shrink: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-download-app-info p {
+    font-size: 0.875rem;
+    color: #131313;
+    margin: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-more-services-note p {
+    font-size: 0.8125rem;
+    color: #555;
+    margin: 0.25rem 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-open-recurring-deposit,
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance {
+    background: #ede8ff;
+    border-radius: 10px;
+    padding: 1.25rem;
+    position: relative;
+    min-height: 140px;
+    margin: 0;
+    grid-column: 1;
+    overflow: hidden;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-open-recurring-deposit::before {
+    content: "💰";
+    font-size: 3.5rem;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    line-height: 1;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance {
+    background: #fce8f3;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance::before {
+    content: "❤️";
+    font-size: 3.5rem;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    line-height: 1;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-open-recurring-deposit p,
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance p {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #131313;
+    margin: auto 0 0;
+    line-height: 1.4;
+    max-width: 58%;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-open-recurring-deposit p::first-line,
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance p::first-line {
+    color: #6b4ff6;
+    font-weight: 400;
+    font-size: 0.8125rem;
+}
+
+@media (width <= 768px) {
+    body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel {
+        grid-template-columns: 1fr;
+    }
+
+    body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel > fieldset.panel-wrapper.field-additional-services-panel {
+        grid-column: 1;
+        grid-row: auto;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
