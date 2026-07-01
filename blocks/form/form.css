@@ -656,11 +656,9 @@ main div.form-wrapper:has(.field-header-test) .field-header-test {
     align-items: center;
     justify-content: space-between;
     flex: 1;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+    background: #001a40;
+    padding: 9px 62px 37px;
     border: none;
-    background: transparent;
 }
 
 main div.form-wrapper:has(.field-header-test) .field-header-test > legend {
@@ -801,7 +799,6 @@ main div.form-wrapper {
     background: white;
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 4px 24px rgb(0 0 0 / 8%);
 }
 
 /* Responsive adjustments for mobile */
