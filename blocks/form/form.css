@@ -830,7 +830,7 @@ main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textar
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 32px;
+    padding: 34px 16px 22px;
     gap: 0;
 }
 
