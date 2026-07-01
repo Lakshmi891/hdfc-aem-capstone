@@ -652,8 +652,10 @@ main .form form .repeat-wrapper{
 
 main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .panel-wrapper {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    flex: 1;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -823,6 +825,12 @@ main .form form select[multiple] {
 }
 
 /* ─── HDFC Header bar (form with only images, no inputs/buttons) ─────────────── */
+
+/* Collapse the EDS nav header placeholder when the HDFC header form is on the page */
+body:has(div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea))) header {
+    height: 0;
+}
+
 main > .section:has(div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea))) {
     margin: 0;
 }
