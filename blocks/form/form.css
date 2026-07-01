@@ -385,7 +385,6 @@ main .form .form-image-wrapper img {
 main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .image-wrapper img {
     height: 22px;
     width: auto;
-    display: block;
     max-width: none;
 }
 
@@ -395,6 +394,13 @@ main .form form fieldset.cards > .checkbox-wrapper > label > img {
     max-width: 18px;
     max-height: 18px;
     object-fit: contain;
+}
+
+/* Safe badge (last image) has transparent padding — boost height to match logo visually */
+main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .image-wrapper:last-child img {
+    height: 38px;
+    width: auto;
+    max-width: none;
 }
 
 /* Responsive adjustments for cards */
@@ -642,6 +648,21 @@ main .form form .repeat-wrapper{
     display: grid;
     grid-template-columns: repeat(var(--form-columns), minmax(0, 1fr));
     gap: var(--form-field-vert-gap) var(--form-field-horz-gap);
+}
+
+main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .panel-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+main div.form-wrapper:has(.image-wrapper):not(:has(input, button, select, textarea)) .panel-wrapper > legend {
+    display: none;
 }
 
 main .form form .wizard.left .panel-wrapper{
