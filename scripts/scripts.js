@@ -643,6 +643,82 @@ function initWelcomePageLayout() {
   setTimeout(applyLayout, 2000);
 }
 
+function initPanDobToggle() {
+  if (!window.location.pathname.includes('personal-loan-welcome')) return;
+  if (document.querySelector('.form.edit-mode, .form-block.edit-mode')) return;
+
+  function getPanWrapper() {
+    return (
+      document.querySelector('input[name="pan_card_number"]')?.closest('.field-wrapper')
+      || document.querySelector('input[name*="pan" i]:not([type="radio"]):not([type="checkbox"])')
+        ?.closest('.field-wrapper')
+      || [...document.querySelectorAll('.field-wrapper')]
+        .find((w) => /pan\s*card\s*number/i.test(w.querySelector('label')?.textContent || ''))
+    );
+  }
+
+  function getDobWrapper() {
+    return (
+      document.querySelector('input[type="date"]')?.closest('.field-wrapper')
+      || document.querySelector('input[name="dob_input"]')?.closest('.field-wrapper')
+      || document.querySelector('input[name*="dob" i]:not([type="radio"]):not([type="checkbox"])')
+        ?.closest('.field-wrapper')
+      || [...document.querySelectorAll('.field-wrapper')]
+        .find((w) => /date\s*of\s*birth/i.test(w.querySelector('label')?.textContent || ''))
+    );
+  }
+
+  // Attach a single delegated listener — only react to the PAN/DOB identifier radio
+  document.addEventListener('change', (e) => {
+    const radio = e.target;
+    if (radio.type !== 'radio') return;
+    // Ignore income-type and other radios; only handle the PAN vs DOB selector
+    const val = radio.value || '';
+    const labelText = radio.closest('label')?.textContent || radio.closest('.field-wrapper')?.querySelector('label')?.textContent || '';
+    const isIdTypeRadio = /pan|dob|date.*birth|birth.*date/i.test(val)
+      || /pan|dob|date.*birth/i.test(labelText);
+    if (!isIdTypeRadio) return;
+    const panWrapper = getPanWrapper();
+    const dobWrapper = getDobWrapper();
+    if (!panWrapper || !dobWrapper) return;
+    const isPan = /pan/i.test(val);
+    panWrapper.style.display = isPan ? '' : 'none';
+    dobWrapper.style.display = isPan ? 'none' : '';
+  });
+
+  // Uncheck income-type radio (Salaried / Self Employed) — no default selection per design
+  let incomeCleared = false;
+  function clearIncomeDefault() {
+    if (incomeCleared) return;
+    const salariedRadio = [...document.querySelectorAll('input[type="radio"]')]
+      .find((r) => /salaried/i.test(r.value));
+    if (!salariedRadio) return;
+    incomeCleared = true;
+    const group = salariedRadio.closest('fieldset') || salariedRadio.parentElement;
+    group.querySelectorAll('input[type="radio"]').forEach((r) => { r.checked = false; });
+  }
+
+  // Apply initial state once the form has rendered (retry until fields exist)
+  let initialized = false;
+  function applyInitialVisibility() {
+    if (initialized) return;
+    const panWrapper = getPanWrapper();
+    const dobWrapper = getDobWrapper();
+    if (!panWrapper || !dobWrapper) return;
+    initialized = true;
+    const checked = document.querySelector('input[type="radio"]:checked');
+    // Default: show DOB, hide PAN (per PDF design); if PAN radio is already checked, show PAN
+    const isPan = checked ? /pan/i.test(checked.value) : false;
+    panWrapper.style.display = isPan ? '' : 'none';
+    dobWrapper.style.display = isPan ? 'none' : '';
+  }
+
+  applyInitialVisibility();
+  clearIncomeDefault();
+  setTimeout(() => { applyInitialVisibility(); clearIncomeDefault(); }, 800);
+  setTimeout(() => { applyInitialVisibility(); clearIncomeDefault(); }, 2000);
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
@@ -654,6 +730,7 @@ async function loadPage() {
   initOfferPageHandlers();
   initPreviewPageHandlers();
   initWelcomePageLayout();
+  initPanDobToggle();
 }
 
 loadPage();
