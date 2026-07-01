@@ -824,18 +824,19 @@ main .form form select[multiple] {
     height: calc(42px + 50px);
 }
 
-/* ─── HDFC Header bar (.field-header-test panel present) ────────────────────── */
+/* ─── HDFC Header bar ────────────────────────────────────────────────────────── */
 
-main > .section:has(.field-header-test) {
+/* Section/wrapper overrides: only when it is a standalone header form (no inputs/buttons) */
+main > .section:has(.field-header-test):not(:has(input, button, select, textarea)) {
     margin: 0;
 }
 
-main > .section:has(.field-header-test) > div {
+main > .section:has(.field-header-test):not(:has(input, button, select, textarea)) > div {
     max-width: 100%;
     padding: 0;
 }
 
-main div.form-wrapper:has(.field-header-test) {
+main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) {
     background: #001a40;
     padding: 0;
     border-radius: 0;
@@ -844,13 +845,13 @@ main div.form-wrapper:has(.field-header-test) {
     max-width: 100%;
 }
 
-main div.form-wrapper:has(.field-header-test) .form.block {
+main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block {
     background: #001a40;
     max-width: 100%;
     padding: 0;
 }
 
-main div.form-wrapper:has(.field-header-test) .form.block form {
+main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block form {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -858,6 +859,7 @@ main div.form-wrapper:has(.field-header-test) .form.block form {
     gap: 0;
 }
 
+/* Panel-level: applies whether header is standalone or embedded inside a larger form */
 main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper {
     margin: 0;
     grid-column: unset;
