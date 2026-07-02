@@ -663,6 +663,7 @@ main div.form-wrapper:has(.field-header-test) .field-header-test {
     background: #001a40;
     padding: 9px 62px 37px;
     border: none;
+    overflow: hidden;
 }
 
 main div.form-wrapper:has(.field-header-test) .field-header-test > legend {
@@ -867,6 +868,7 @@ main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, te
     box-shadow: none;
     width: 100%;
     max-width: 100%;
+    overflow-x: hidden;
 }
 
 main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block {
@@ -892,6 +894,28 @@ main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper 
     padding: 0;
     display: flex;
     align-items: center;
+}
+
+/* Header banner — responsive padding and image constraints */
+@media (width < 768px) {
+    main div.form-wrapper:has(.field-header-test) .field-header-test,
+    main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block form {
+        padding: 12px 16px 20px;
+    }
+
+    main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper picture,
+    main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper img,
+    main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper:last-child img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media (768px <= width < 1024px) {
+    main div.form-wrapper:has(.field-header-test) .field-header-test,
+    main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block form {
+        padding: 9px 32px 28px;
+    }
 }
 
 
