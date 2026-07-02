@@ -583,8 +583,8 @@ function initOfferPageHandlers() {
   }
 
   function updateOfferDisplay() {
-    const P = parseFloat(getVal('loan_amount')) || 1000000;
-    const n = parseInt(getVal('tenure_months'), 10) || 36;
+    const P = parseFloat(getVal('loan_amount')) || 1500000;
+    const n = parseInt(getVal('tenure_months'), 10) || 84;
     // eslint-disable-next-line no-console
     console.info(`[Journey] EMI calc: P=${P} n=${n}`);
     setVal('emi_display', fmtINR(calcEMI(P, n)));
@@ -592,9 +592,25 @@ function initOfferPageHandlers() {
     setVal('taxes', fmtINR(Math.round(P * 0.02 * 0.18)));
   }
 
+  function setRangeDefaults() {
+    const loanInp = document.querySelector('[name="loan_amount"]');
+    const tenureInp = document.querySelector('[name="tenure_months"]');
+    if (loanInp) {
+      loanInp.value = 1500000;
+      loanInp.dispatchEvent(new Event('input', { bubbles: true }));
+      loanInp.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    if (tenureInp) {
+      tenureInp.value = 84;
+      tenureInp.dispatchEvent(new Event('input', { bubbles: true }));
+      tenureInp.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    updateOfferDisplay();
+  }
+
   // AEM Forms resets fields during its own init — wait for it to finish
-  setTimeout(updateOfferDisplay, 2000);
-  setTimeout(updateOfferDisplay, 4000);
+  setTimeout(setRangeDefaults, 2000);
+  setTimeout(setRangeDefaults, 4000);
 
   document.addEventListener('input', (e) => {
     if (e.target.closest('[name="loan_amount"]') || e.target.closest('[name="tenure_months"]')) {
@@ -614,8 +630,8 @@ function initOfferPageHandlers() {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    const P = parseFloat(getVal('loan_amount')) || 1000000;
-    const n = parseInt(getVal('tenure_months'), 10) || 36;
+    const P = parseFloat(getVal('loan_amount')) || 1500000;
+    const n = parseInt(getVal('tenure_months'), 10) || 84;
 
     const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
     data.selectedLoanAmount = P;
@@ -725,6 +741,38 @@ function initPreviewPageHandlers() {
   setTimeout(populatePreview, 2000);
   setTimeout(populatePreview, 4000);
   setTimeout(populatePreview, 6000);
+
+  function addScheduleChargesLink() {
+    const wrapper = document.querySelector('.field-schedule-charges');
+    if (!wrapper || wrapper.querySelector('.schedule-charges-link')) return;
+    const link = document.createElement('a');
+    link.className = 'schedule-charges-link';
+    link.textContent = 'Click here';
+    link.href = '#';
+    link.target = '_blank';
+    wrapper.appendChild(link);
+  }
+
+  setTimeout(addScheduleChargesLink, 1500);
+
+  function initAccordion() {
+    const panels = document.querySelectorAll(
+      'fieldset.panel-wrapper.field-loan-details, fieldset.panel-wrapper.field-personal-details',
+    );
+    panels.forEach((panel) => {
+      const legend = panel.querySelector(':scope > legend');
+      if (!legend) return;
+      legend.addEventListener('click', () => {
+        if (panel.hasAttribute('data-collapsed')) {
+          panel.removeAttribute('data-collapsed');
+        } else {
+          panel.setAttribute('data-collapsed', '');
+        }
+      });
+    });
+  }
+
+  setTimeout(initAccordion, 1500);
 
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
