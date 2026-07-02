@@ -357,18 +357,29 @@ function initOTPPageHandlers() {
     if (attEl) setElText(attEl, `${left}/3 attempt(s) left`);
 
     if (left <= 0) {
-      // No more resend attempts — hide the element
+      // No more resend attempts — hide the timer element and remove the button
       if (otpResendEl) {
         const wrap = otpResendEl.closest('.field-wrapper') || otpResendEl.parentElement;
         if (wrap) wrap.style.display = 'none';
       }
+      const exhaustedBtn = document.querySelector(
+        '.field-help-us-confirm-this-is-you .field-submit-otp .resend-otp-btn',
+      );
+      if (exhaustedBtn) exhaustedBtn.remove();
       return;
     }
 
-    // Reset the <p> back to countdown text and restart
+    // Remove the injected Resend OTP button from the submit row
+    const injectedBtn = document.querySelector(
+      '.field-help-us-confirm-this-is-you .field-submit-otp .resend-otp-btn',
+    );
+    if (injectedBtn) injectedBtn.remove();
+
+    // Reset the timer <p> back to countdown text and restart
     if (otpResendEl) {
       otpResendEl.textContent = 'Resend OTP in: 21 secs';
       otpResendEl.style.cssText = '';
+      otpResendEl.classList.remove('resend-otp-btn');
       otpResendEl.removeAttribute('role');
       otpResendEl.removeAttribute('tabindex');
     }
@@ -415,17 +426,27 @@ function initOTPPageHandlers() {
         remaining -= 1;
         if (remaining <= 0) {
           timerStarted = false;
-          // Transform the plain-text <p> into a clickable "Resend OTP" element
           if (otpResendEl) {
             const data = getJourneyData();
             if (parseInt(data.otpAttemptsLeft || '3', 10) <= 0) return;
-            otpResendEl.textContent = 'Resend OTP';
-            otpResendEl.style.cursor = 'pointer';
-            otpResendEl.style.color = '#1473e6';
-            otpResendEl.style.fontWeight = 'bold';
-            otpResendEl.setAttribute('role', 'button');
-            otpResendEl.setAttribute('tabindex', '0');
-            otpResendEl.addEventListener('click', doResendOTP, { once: true });
+            // Keep the timer <p> as plain "Resend OTP in: 0" text in the meta row
+            otpResendEl.textContent = 'Resend OTP in: 0';
+            otpResendEl.style.cssText = '';
+          }
+          // Inject a Resend OTP button into the submit row (same row as Submit button)
+          const submitWrapper = document.querySelector(
+            '.field-help-us-confirm-this-is-you .field-submit-otp',
+          );
+          if (submitWrapper && !submitWrapper.querySelector('.resend-otp-btn')) {
+            const data = getJourneyData();
+            if (parseInt(data.otpAttemptsLeft || '3', 10) > 0) {
+              const resendBtn = document.createElement('button');
+              resendBtn.type = 'button';
+              resendBtn.textContent = 'Resend OTP';
+              resendBtn.className = 'resend-otp-btn';
+              submitWrapper.appendChild(resendBtn);
+              resendBtn.addEventListener('click', doResendOTP, { once: true });
+            }
           }
           // Also reveal an actual button if present (AEM cloud)
           const actualBtn = document.querySelector('[name="resend_otp_timer"]');
@@ -466,7 +487,7 @@ function initOTPPageHandlers() {
     const otpWrapper = document.querySelector('.field-otp-code');
     const otpInput = otpWrapper?.querySelector('input[name="otp_code"]');
     if (!otpInput || otpWrapper.querySelector('.otp-input-container')) return;
-    otpInput.type = 'password';
+    otpInput.type = 'text';
 
     const container = document.createElement('div');
     container.className = 'otp-input-container';
@@ -476,15 +497,15 @@ function initOTPPageHandlers() {
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'otp-eye-toggle';
-    toggle.setAttribute('aria-label', 'Show OTP');
+    toggle.setAttribute('aria-label', 'Hide OTP');
     const eyeOpen = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
     const eyeClosed = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
-    toggle.innerHTML = eyeClosed;
+    toggle.innerHTML = eyeOpen;
     toggle.addEventListener('click', () => {
-      const isHidden = otpInput.type === 'password';
-      otpInput.type = isHidden ? 'text' : 'password';
-      toggle.innerHTML = isHidden ? eyeOpen : eyeClosed;
-      toggle.setAttribute('aria-label', isHidden ? 'Hide OTP' : 'Show OTP');
+      const isVisible = otpInput.type === 'text';
+      otpInput.type = isVisible ? 'password' : 'text';
+      toggle.innerHTML = isVisible ? eyeClosed : eyeOpen;
+      toggle.setAttribute('aria-label', isVisible ? 'Show OTP' : 'Hide OTP');
     });
     container.appendChild(toggle);
   }

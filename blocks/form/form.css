@@ -1198,8 +1198,7 @@ main .form form .field-personal-loan-offer-introduction .field-cheque-book-bank-
 
 
 main .form form .field-help-us-confirm-this-is-you {
-    max-width: 640px;
-    row-gap: 15px;
+    row-gap: 6px;
     box-shadow: 0 4px 24px rgb(0 0 0 / 10%);
     border-radius: 12px;
     padding: 2rem 2.5rem;
@@ -1294,13 +1293,19 @@ main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
 
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-resend-otp-timer p,
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-attempts-left p {
-    margin: 0;
+    margin: 10px 0 0 0;
     font-size: 0.8125rem;
     color: #555;
 }
 
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-attempts-left {
     text-align: right;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 main .form form .field-help-us-confirm-this-is-you .field-submit-otp button {
@@ -1327,8 +1332,31 @@ main .form form .field-help-us-confirm-this-is-you .field-submit-otp button::aft
     margin-top: -0.1em;
 }
 
-
 main .form form .field-help-us-confirm-this-is-you .field-submit-otp button:hover {
+    background-color: #0d66d0;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button.resend-otp-btn {
+    min-width: 150px;
+    padding: 0.65em 2em;
+    background-color: #1473e6;
+    color: #fff;
+    border: none;
+    border-radius: 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button.resend-otp-btn::after {
+    content: none;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button.resend-otp-btn:hover {
     background-color: #0d66d0;
 }
 
