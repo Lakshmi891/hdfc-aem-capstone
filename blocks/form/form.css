@@ -1074,13 +1074,13 @@ main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibi
 }
 
 main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button button {
-    border-radius: 2rem;
+    border-radius: 1rem;
     padding: 0.75rem 2.5rem;
     font-size: 1rem;
     font-weight: 500;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
 }
 
 main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button button::after {
@@ -1198,24 +1198,32 @@ main .form form .field-personal-loan-offer-introduction .field-cheque-book-bank-
 
 
 main .form form .field-help-us-confirm-this-is-you {
-    max-width: 560px;
-    row-gap: 8px;
+    max-width: 640px;
+    row-gap: 15px;
+    box-shadow: 0 4px 24px rgb(0 0 0 / 10%);
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    margin: 2rem auto 2rem 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    height: 90%;
 }
 
 main .form form fieldset.panel-wrapper.field-help-us-confirm-this-is-you > legend {
-    font-size: 1.25rem;
     font-weight: 600;
     color: #131313;
     margin-bottom: 0.25rem;
     padding: 0;
     width: 100%;
     float: none;
+    font-size: 1.25rem;
+    margin-left: 2px;
 }
 
 main .form form .field-help-us-confirm-this-is-you .field-otp-instruction p {
     margin: 0 0 0.25rem;
-    font-size: 0.875rem;
     color: #555;
+    font-size: 0.875rem;
     line-height: 1.5;
 }
 
@@ -1227,13 +1235,13 @@ main .form form .field-help-us-confirm-this-is-you .field-otp-instruction u {
 
 main .form form .field-help-us-confirm-this-is-you .field-enter-otp-heading p {
     margin: 0;
-    font-size: 0.9rem;
     font-weight: 500;
+    font-size: 0.9rem;
     color: #131313;
 }
 
 main .form form .field-help-us-confirm-this-is-you .field-otp-code {
-    max-width: 380px;
+    max-width: 480px;
 }
 
 main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-input-container {
@@ -1275,11 +1283,10 @@ main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-eye-togg
 main .form form .field-help-us-confirm-this-is-you .field-otp-code input[name="otp_code"]:focus {
     border-color: #1473e6;
     outline: none;
-    box-shadow: 0 0 0 2px rgb(20 115 230 / 15%);
 }
 
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
-    max-width: 380px;
+    max-width: 480px;
     border: none;
     padding: 0;
     margin-top: -2rem;
@@ -1287,8 +1294,8 @@ main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
 
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-resend-otp-timer p,
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-attempts-left p {
-    font-size: 0.8125rem;
     margin: 0;
+    font-size: 0.8125rem;
     color: #555;
 }
 
@@ -1303,10 +1310,21 @@ main .form form .field-help-us-confirm-this-is-you .field-submit-otp button {
     background-color: #1473e6;
     color: #fff;
     border: none;
-    border-radius: 2.4em;
-    font-size: 1rem;
+    border-radius: 1rem;
     font-weight: 500;
+    font-size: 1rem;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button::after {
+    content: "\203A";
+    font-size: 1.4rem;
+    line-height: 0;
+    vertical-align: middle;
+    margin-top: -0.1em;
 }
 
 
