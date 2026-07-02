@@ -983,7 +983,7 @@ main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"
     display: none;
 }
 
-@media (760px <= width < 1200px) {
+@media (768px <= width <= 1024px) {
     main .form form .field-personal-loan-offer-introduction .field-mobileno {
         grid-row: 3 !important;
     }
@@ -999,7 +999,7 @@ main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"
     }
 }
 
-@media (width < 760px) {
+@media (width < 768px) {
     main .form form .field-personal-loan-offer-introduction {
         grid-template-columns: 1fr;
         row-gap: 1rem;
