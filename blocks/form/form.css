@@ -1145,17 +1145,15 @@ main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer
     gap: 1rem;
 }
 
-main .form form .field-offer-display-fragment .field-offer-highlight-banner div.plain-text-wrapper.field-offer-highlight-text {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+main .form form .field-offer-display-fragment .field-offer-highlight-banner div.image-wrapper {
+    width: 56px;
+    flex-shrink: 0;
 }
 
-main .form form .field-offer-display-fragment .field-offer-highlight-banner div.plain-text-wrapper.field-offer-highlight-text::before {
-    content: "💰";
-    font-size: 2.5rem;
-    flex-shrink: 0;
-    line-height: 1;
+main .form form .field-offer-display-fragment .field-offer-highlight-banner div.image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
 
 main .form form .field-offer-display-fragment .field-offer-highlight-banner div.plain-text-wrapper.field-offer-highlight-text p {
@@ -1168,6 +1166,7 @@ main .form form .field-offer-display-fragment .field-offer-highlight-banner div.
 main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-content {
     align-items: start;
     column-gap: 2rem;
+    padding: 0;
 }
 
 main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-enter-loan-amount-tenure > legend {
@@ -1180,8 +1179,9 @@ main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-enter
 main .form form .field-offer-display-fragment .field-offer-content div.number-wrapper.field-loan-amount label,
 main .form form .field-offer-display-fragment .field-offer-content div.number-wrapper.field-tenure-months label {
     font-size: 0.875rem;
-    font-weight: 500;
-    color: #555;
+    font-weight: bold;
+    color:#131313;
+    margin-left:-5px;
 }
 
 main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"] {
@@ -1194,14 +1194,25 @@ main .form form .field-offer-display-fragment .range-widget-wrapper.decorated in
 
 main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"]::-webkit-slider-thumb {
     border-color: #1473e6;
-    background: #fff;
+    background: #1473e6;
+    outline: none;
+}
+
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"]:focus,
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"]:focus-visible {
+    outline: none;
+    box-shadow: none;
 }
 
 main .form form .field-offer-display-fragment .range-widget-wrapper.decorated .range-bubble {
-    font-size: 1rem;
-    font-weight: 600;
+    background: #fff;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
     color: #131313;
-    padding-bottom: 6px;
+    user-select: none;
 }
 
 main .form form .field-offer-display-fragment div.submit-wrapper.field-proceed-btn button {
@@ -1224,7 +1235,13 @@ main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer
     background: #fffce8;
     border: none;
     border-radius: 10px;
-    padding: 1.25rem;
+    padding: 0.5rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header {
+    border-bottom: 1.5px dotted #ddd0a0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header p {
@@ -1239,8 +1256,7 @@ main .form form .field-offer-display-fragment .field-offer-summary div.plain-tex
     font-weight: 700;
     color: #131313;
     margin-top: 0.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px dashed #d4a017;
+    padding-bottom: 0.5rem;
 }
 
 main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics {
@@ -1267,43 +1283,94 @@ main .form form .field-offer-display-fragment .field-offer-summary fieldset.pane
 }
 
 main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-emi-display {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 0.75rem;
     padding-right: 1rem;
     padding-bottom: 0.75rem;
 }
 
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-emi-display::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 85%;
+    background: #f5a623;
+    border-radius: 2px;
+}
+
 main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-rate-of-interest {
-    padding-left: 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 0.75rem;
     padding-bottom: 0.75rem;
 }
 
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-rate-of-interest::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 85%;
+    background: #f5a623;
+    border-radius: 2px;
+}
+
 main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-taxes {
-    border-top: 1px dashed #d4a017;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 0.75rem;
     padding-top: 0.75rem;
     margin-top: 0;
     grid-column: 1 / -1;
 }
 
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-taxes::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 60%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 85%;
+    background: #f5a623;
+    border-radius: 2px;
+}
+
 main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer {
-    background: #fff3cd;
+    background: #f5a623;
     border: none;
-    border-radius: 6px;
+    border-radius: 0 0 20px 20px;
     padding: 0.75rem 1rem 0.75rem 2.25rem;
     position: relative;
+    margin: -9px;
 }
 
 main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer::before {
     content: "ⓘ";
     position: absolute;
-    left: 0.65rem;
-    top: 0.7rem;
-    font-size: 1rem;
-    color: #f5a623;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    color: #fff;
 }
 
 main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer p {
     margin: 0;
     font-size: 0.8125rem;
-    color: #555;
+    color: #fff;
     line-height: 1.5;
 }
 

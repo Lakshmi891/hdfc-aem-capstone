@@ -555,6 +555,14 @@ function initOfferPageHandlers() {
     return Math.round((P * r * powered) / (powered - 1));
   }
 
+  function fmtINR(n) {
+    const s = String(Math.round(n));
+    if (s.length <= 3) return `₹${s}`;
+    const last3 = s.slice(-3);
+    const rest = s.slice(0, -3);
+    return `₹${rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',')},${last3}`;
+  }
+
   function getVal(name) {
     const el = document.querySelector(`[name="${name}"]`);
     if (!el) return null;
@@ -579,9 +587,9 @@ function initOfferPageHandlers() {
     const n = parseInt(getVal('tenure_months'), 10) || 36;
     // eslint-disable-next-line no-console
     console.info(`[Journey] EMI calc: P=${P} n=${n}`);
-    setVal('emi_display', String(calcEMI(P, n)));
-    setVal('rate_of_interest', '10.20');
-    setVal('taxes', String(Math.round(P * 0.02 * 0.18)));
+    setVal('emi_display', fmtINR(calcEMI(P, n)));
+    setVal('rate_of_interest', '10.20%');
+    setVal('taxes', fmtINR(Math.round(P * 0.02 * 0.18)));
   }
 
   // AEM Forms resets fields during its own init — wait for it to finish

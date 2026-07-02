@@ -49,3 +49,19 @@ main .form .range-widget-wrapper.decorated input[type="range"]:focus {
 .range-widget-wrapper.decorated .range-max {
     float: right;
 }
+
+.range-widget-wrapper.decorated .range-ticks {
+    position: relative;
+    height: 20px;
+    margin-top: 4px;
+    clear: both;
+}
+
+.range-widget-wrapper.decorated .range-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 0.6875rem;
+    color: #888;
+    line-height: 1.4;
+    white-space: nowrap;
+}
