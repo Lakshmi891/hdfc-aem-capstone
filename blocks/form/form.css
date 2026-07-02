@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --background-color-primary: #fff;
     --label-color: #666;
     --border-color: #818a91;
@@ -954,6 +954,13 @@ main .form form .field-personal-loan-offer-introduction .field-income-source.hor
 
 main .form form .field-personal-loan-offer-introduction .field-income-verification-note {
     display: none;
+    background: #fffbe6;
+    border: 1px solid #f5a623;
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    grid-column: 3 !important;
+    grid-row: 4 !important;
+    margin-top: 0.25rem;
 }
 
 main .form form .field-personal-loan-offer-introduction .field-consent-data-collection,
@@ -976,7 +983,23 @@ main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"
     display: none;
 }
 
-@media (width <= 768px) {
+@media (760px <= width < 1200px) {
+    main .form form .field-personal-loan-offer-introduction .field-mobileno {
+        grid-row: 3 !important;
+    }
+
+    main .form form .field-personal-loan-offer-introduction .field-otp-instruction {
+        grid-row: 4 !important;
+        margin-top: 0;
+    }
+
+    main .form form .field-personal-loan-offer-introduction .field-pan-card-number,
+    main .form form .field-personal-loan-offer-introduction .field-dob-input {
+        margin-top: 4px;
+    }
+}
+
+@media (width < 760px) {
     main .form form .field-personal-loan-offer-introduction {
         grid-template-columns: 1fr;
         row-gap: 1rem;
@@ -985,6 +1008,174 @@ main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"
     main .form form .field-personal-loan-offer-introduction > * {
         grid-column: 1 !important;
         grid-row: auto !important;
+    }
+
+    main .form form .field-personal-loan-offer-introduction .field-mobileno,
+    main .form form .field-personal-loan-offer-introduction .field-id-type,
+    main .form form .field-personal-loan-offer-introduction .field-income-source,
+    main .form form .field-personal-loan-offer-introduction .field-income-verification-note {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        margin-top: 0;
+    }
+
+    main .form form .field-personal-loan-offer-introduction .field-otp-instruction,
+    main .form form .field-personal-loan-offer-introduction .field-pan-card-number,
+    main .form form .field-personal-loan-offer-introduction .field-dob-input {
+        margin-top: 0;
+    }
+}
+
+/* Income verification note — show when Salaried is selected */
+main .form form .field-personal-loan-offer-introduction:has(input[name="income_source"][value="salaried"]:checked) .field-income-verification-note {
+    display: block;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-income-verification-note p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #7a5200;
+    line-height: 1.5;
+}
+
+/* Consent checkboxes — flex so checkbox aligns with first line of text */
+main .form form .field-personal-loan-offer-introduction .field-consent-data-collection,
+main .form form .field-personal-loan-offer-introduction .field-consent-marketing {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+/* Terms & Privacy links */
+main .form form .field-personal-loan-offer-introduction .field-terms-privacy-text a {
+    color: #1473e6;
+}
+
+/* View Loan Eligibility button — pill with › arrow */
+main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button {
+    margin-top: 0.5rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button button {
+    border-radius: 2rem;
+    padding: 0.75rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button button::after {
+    content: "\203A";
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+/* Essentials outer panel — spans all columns, no border */
+main .form form .field-personal-loan-offer-introduction .field-essentials {
+    grid-column: 1 / -1 !important;
+    border: none;
+    padding: 0;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Important links text — top divider, centered */
+main .form form .field-personal-loan-offer-introduction .field-essentials-main-heading {
+    border-top: 1px solid #e8e8e8;
+    padding-top: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-essentials-main-heading p {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #555;
+    margin: 0 0 1rem;
+}
+
+/* "Essentials for the journey" heading */
+main .form form .field-personal-loan-offer-introduction .field-essentials-heading p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin: 0 0 0.75rem;
+}
+
+/* Inner 4-column essentials grid */
+main .form form .field-personal-loan-offer-introduction .field-essentials-panel {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.5rem 1rem !important;
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-essentials-panel > legend {
+    grid-column: 1 / -1;
+    border: none;
+    padding: 0;
+    width: 100%;
+}
+
+/* Individual essential item panels */
+main .form form .field-personal-loan-offer-introduction .field-essential-mobile,
+main .form form .field-personal-loan-offer-introduction .field-essential-pan,
+main .form form .field-personal-loan-offer-introduction .field-essential-dob,
+main .form form .field-personal-loan-offer-introduction .field-essential-cheque {
+    border: none;
+    padding: 0;
+    background: transparent;
+    display: flex !important;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 0.6rem;
+    grid-column: auto !important;
+}
+
+/* Icon for each item via ::before */
+main .form form .field-personal-loan-offer-introduction .field-essential-mobile::before,
+main .form form .field-personal-loan-offer-introduction .field-essential-pan::before,
+main .form form .field-personal-loan-offer-introduction .field-essential-dob::before,
+main .form form .field-personal-loan-offer-introduction .field-essential-cheque::before {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-essential-mobile::before {
+    content: "\1F4F1";
+}
+
+main .form form .field-personal-loan-offer-introduction .field-essential-pan::before {
+    content: "\1FAAA";
+}
+
+main .form form .field-personal-loan-offer-introduction .field-essential-dob::before {
+    content: "\1F4C5";
+}
+
+main .form form .field-personal-loan-offer-introduction .field-essential-cheque::before {
+    content: "\1F4C4";
+}
+
+/* Essential item text */
+main .form form .field-personal-loan-offer-introduction .field-mobile-phone-text p,
+main .form form .field-personal-loan-offer-introduction .field-pan-card-text p,
+main .form form .field-personal-loan-offer-introduction .field-date-of-birth-text p,
+main .form form .field-personal-loan-offer-introduction .field-cheque-book-bank-account-details-text p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #1473e6;
+    font-weight: 500;
+}
+
+@media (width <= 768px) {
+    main .form form .field-personal-loan-offer-introduction .field-essentials-panel {
+        grid-template-columns: repeat(2, 1fr) !important;
     }
 }
 

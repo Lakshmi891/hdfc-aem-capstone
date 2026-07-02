@@ -841,6 +841,32 @@ function initPanDobToggle() {
   setTimeout(() => { applyInitialVisibility(); clearIncomeDefault(); }, 2000);
 }
 
+function initOTPLoginFragmentEnhancements() {
+  function run() {
+    const panel = document.querySelector('main .form form .field-personal-loan-offer-introduction');
+    if (!panel) return;
+
+    // Income verification note — show when Salaried is selected
+    const verificationNote = panel.querySelector('.field-income-verification-note');
+    if (verificationNote && !verificationNote.dataset.toggleInit) {
+      // eslint-disable-next-line no-param-reassign
+      verificationNote.dataset.toggleInit = 'true';
+      const updateNote = () => {
+        const checked = panel.querySelector('.field-income-source input[type="radio"]:checked');
+        const isSalaried = checked && /salaried/i.test(checked.value);
+        // eslint-disable-next-line no-param-reassign
+        verificationNote.style.display = isSalaried ? 'block' : 'none';
+      };
+      panel.addEventListener('change', (e) => { if (e.target.type === 'radio') updateNote(); });
+      updateNote();
+    }
+  }
+
+  run();
+  setTimeout(run, 800);
+  setTimeout(run, 2500);
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
@@ -853,6 +879,7 @@ async function loadPage() {
   initPreviewPageHandlers();
   initWelcomePageLayout();
   initPanDobToggle();
+  initOTPLoginFragmentEnhancements();
 }
 
 loadPage();
