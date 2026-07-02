@@ -832,23 +832,17 @@ main > .section:has(.field-header-test) {
     margin-top: 0;
 }
 
-main > .section:has(.field-header-test) > div {
-    max-width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-}
-
+/* Only remove top padding — keep natural side padding so card has equal spacing on both sides */
 main div.form-wrapper:has(.field-header-test) {
     padding-top: 0;
-    padding-left: 0;
-    padding-right: 0;
-    border-radius: 0;
 }
 
-/* Restore horizontal padding for form content panels below the header */
-main div.form-wrapper:has(.field-header-test) .wizard > .panel-wrapper:not(.field-header-test),
-main div.form-wrapper:has(.field-header-test) .wizard-button-wrapper {
-    padding-right: 40px;
+/* Banner escapes the form-wrapper's 40px side padding to fill the card edge-to-edge */
+main div.form-wrapper:has(.field-header-test):has(input, button, select, textarea) .field-header-test {
+    margin-left: -40px;
+    margin-right: -40px;
+    width: calc(100% + 80px);
+    border-radius: 0;
 }
 
 /* Section/wrapper overrides: only when it is a standalone header form (no inputs/buttons) */
