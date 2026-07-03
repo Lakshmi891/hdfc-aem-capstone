@@ -629,8 +629,20 @@ function initOfferPageHandlers() {
     updateOfferDisplay();
   }
 
-  // AEM Forms resets fields during its own init — wait for it to finish
-  setTimeout(setRangeDefaults, 2000);
+  // Poll every 100ms until AEM has set its defaults, then immediately override.
+  // This eliminates the 2s flash of wrong values.
+  let pollCount = 0;
+  const pollInterval = setInterval(() => {
+    pollCount += 1;
+    const loanInp = document.querySelector('[name="loan_amount"]');
+    const tenureInp = document.querySelector('[name="tenure_months"]');
+    if (loanInp && tenureInp && (loanInp.value || pollCount > 15)) {
+      clearInterval(pollInterval);
+      setRangeDefaults();
+    }
+    if (pollCount >= 60) clearInterval(pollInterval);
+  }, 100);
+  // Fallback in case AEM takes longer than expected
   setTimeout(setRangeDefaults, 4000);
 
   document.addEventListener('input', (e) => {
