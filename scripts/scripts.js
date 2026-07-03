@@ -949,6 +949,56 @@ function initOTPLoginFragmentEnhancements() {
   setTimeout(run, 2500);
 }
 
+function initThankYouPageHandlers() {
+  if (!window.location.pathname.includes('personal-loan-thankyou')) return;
+
+  const clipboardSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>';
+  const downloadSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+
+  function run() {
+    // Build icon + label + number row so icon is vertically centered with both
+    const legend = document.querySelector('.field-loan-application-summary-panel > legend');
+    const fieldset = legend ? legend.closest('fieldset') : null;
+    const numEl = fieldset ? fieldset.querySelector('.field-loan-application-number p') : null;
+    if (legend && fieldset && numEl && !fieldset.querySelector('.ty-app-number-row')) {
+      const row = document.createElement('div');
+      row.className = 'ty-app-number-row';
+      row.innerHTML = `<span class="ty-legend-icon">${clipboardSvg}</span><div class="ty-app-number-text"><span class="ty-app-label">${legend.textContent.trim()}</span><span class="ty-app-value">${numEl.textContent.trim()}</span></div>`;
+      legend.style.display = 'none';
+      const numWrapper = numEl.closest('.field-loan-application-number');
+      if (numWrapper) numWrapper.style.display = 'none';
+      fieldset.prepend(row);
+    }
+
+    // Replace easy loan management legend with inner header div (download icon, fix border-notch)
+    const easyLegend = document.querySelector('.field-easy-loan-management-panel > legend');
+    const easyFieldset = easyLegend ? easyLegend.closest('fieldset') : null;
+    if (easyLegend && easyFieldset && !easyFieldset.querySelector('.ty-easy-loan-header')) {
+      const header = document.createElement('div');
+      header.className = 'ty-easy-loan-header';
+      header.innerHTML = `<span class="ty-easy-icon">${downloadSvg}</span><span>${easyLegend.textContent.trim()}</span>`;
+      easyLegend.style.display = 'none';
+      easyFieldset.prepend(header);
+    }
+
+    // Split "Loan Amount ₹15,00,000" into label + value lines
+    const loanAmountP = document.querySelector('.field-loan-amount p');
+    if (loanAmountP && !loanAmountP.querySelector('.ty-label')) {
+      const text = loanAmountP.textContent || '';
+      const rupeeIdx = text.indexOf('₹');
+      if (rupeeIdx > 0) {
+        const label = text.substring(0, rupeeIdx).trim();
+        const value = text.substring(rupeeIdx).trim();
+        loanAmountP.innerHTML = `<span class="ty-label">${label}</span><span class="ty-value">${value}</span>`;
+      }
+    }
+  }
+
+  run();
+  setTimeout(run, 800);
+  setTimeout(run, 2500);
+}
+
 function initWelcomePageIcons() {
   const svgIcons = {
     '.field-essential-mobile': '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>',
@@ -1007,6 +1057,7 @@ async function loadPage() {
   initPanDobToggle();
   initOTPLoginFragmentEnhancements();
   initWelcomePageIcons();
+  initThankYouPageHandlers();
 }
 
 loadPage();

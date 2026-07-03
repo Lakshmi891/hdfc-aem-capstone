@@ -1927,27 +1927,47 @@ body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-th
     grid-template-columns: 1fr;
     gap: 0.25rem;
     background: #fff;
-    border: 1px solid #e0e0e0;
+    border: none;
+    box-shadow: 0 0 0 1px #e0e0e0;
+    overflow: hidden;
     border-radius: 10px;
     padding: 1.25rem;
 }
 
 body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel > legend {
+    display: none;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-number-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-number-row .ty-legend-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: #888;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-number-text {
+    display: flex;
+    flex-direction: column;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-label {
     font-size: 0.75rem;
     color: #888;
     font-weight: 400;
-    margin-bottom: 0.25rem;
-    float: none;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
-body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel > legend::before {
-    content: "📋";
-    font-size: 1.25rem;
-    flex-shrink: 0;
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #131313;
+    line-height: 1.2;
 }
 
 body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-application-number p {
@@ -1958,10 +1978,16 @@ body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-th
     line-height: 1.2;
 }
 
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-contact-info-note {
+    border-bottom: 1px dashed #d0d0d0;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
 body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-contact-info-note p {
     font-size: 0.8125rem;
     color: #888;
-    margin: 0 0 1rem;
+    margin: 0;
 }
 
 body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-xpress-personal-loan-summary-panel {
@@ -1981,15 +2007,30 @@ body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-th
     width: 100%;
 }
 
-body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount p {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #131313;
-    margin: 0;
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount {
     border-left: 3px solid #5f8dda;
-    padding: 0.2rem 0 0.2rem 0.75rem;
+    padding-left: 0.75rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount p {
+    margin: 0;
     background: transparent;
-    line-height: 1.5;
+    line-height: 1.4;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount p .ty-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #888;
+    margin-bottom: 0.15rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount p .ty-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #131313;
 }
 
 body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-disbursal-note {
@@ -2008,19 +2049,21 @@ body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-th
 body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel {
     grid-template-columns: 1fr;
     gap: 0;
-    border: 1px solid #dde0f5;
+    border: none;
+    box-shadow: 0 0 0 1px #dde0f5;
     border-radius: 10px;
     padding: 0;
     overflow: hidden;
 }
 
 body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel > legend {
+    display: none;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel .ty-easy-loan-header {
     font-size: 0.9375rem;
     font-weight: 600;
     color: #131313;
-    margin-bottom: 0;
-    float: none;
-    width: 100%;
     background: #eef0fb;
     padding: 0.875rem 1.25rem;
     display: flex;
@@ -2028,10 +2071,11 @@ body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-th
     gap: 0.5rem;
 }
 
-body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel > legend::before {
-    content: "📋";
-    font-size: 1rem;
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel .ty-easy-icon {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
+    color: #131313;
 }
 
 body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-download-app-info {
