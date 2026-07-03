@@ -2168,3 +2168,28 @@ body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-th
     }
 }
 
+/* Welcome page field validation */
+main .form form .field-wrapper .wv-field-error {
+    color: var(--form-error-color);
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.3rem;
+    margin-bottom: 0;
+    display: none;
+}
+
+main .form form .field-wrapper input.wv-input-invalid {
+    border-color: var(--form-error-color);
+    outline-color: var(--form-error-color);
+}
+
+main .form form button.wv-btn-disabled,
+main .form form button:disabled {
+    background-color: #a0a0a0 !important;
+    border-color: #a0a0a0 !important;
+    color: #fff !important;
+    opacity: 1;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+

@@ -847,8 +847,182 @@ function initWelcomePageLayout() {
   setTimeout(applyLayout, 2000);
 }
 
+function initWelcomePageValidation() {
+  const path = window.location.pathname;
+  if (!path.includes('personal-loan-welcome') && !path.includes('otp-login')) return;
+
+  function getMobileInput() {
+    return document.querySelector('input[name="aadhaar_mobile_number"]')
+      || document.querySelector('input[name*="mobile" i]:not([type="radio"])')
+      || document.querySelector('input[type="tel"]');
+  }
+
+  function getPanInput() {
+    return document.querySelector('input[name="pan_card_number"]')
+      || document.querySelector('input[name*="pan" i]:not([type="radio"]):not([type="checkbox"])');
+  }
+
+  function getDobInput() {
+    return document.querySelector('input[type="date"]')
+      || document.querySelector('input[name="dob_input"]')
+      || document.querySelector('input[name*="dob" i]:not([type="radio"])');
+  }
+
+  function showError(input, message) {
+    const wrapper = input.closest('.field-wrapper');
+    if (!wrapper) return false;
+    let errEl = wrapper.querySelector('.wv-field-error');
+    if (!errEl) {
+      errEl = document.createElement('p');
+      errEl.className = 'wv-field-error';
+      wrapper.appendChild(errEl);
+    }
+    errEl.textContent = message;
+    errEl.style.display = 'block';
+    input.classList.add('wv-input-invalid');
+    return false;
+  }
+
+  function clearError(input) {
+    const wrapper = input.closest('.field-wrapper');
+    if (!wrapper) return;
+    const errEl = wrapper.querySelector('.wv-field-error');
+    if (errEl) errEl.style.display = 'none';
+    input.classList.remove('wv-input-invalid');
+  }
+
+  function validatePan(input) {
+    const val = (input.value || '').trim().toUpperCase();
+    if (!val) return showError(input, 'Please fill the field.');
+    if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(val)) return showError(input, 'Invalid PAN. Expected format: ABCDE1234F');
+    clearError(input);
+    return true;
+  }
+
+  function validateDob(input) {
+    const val = input.value;
+    if (!val) return showError(input, 'Please fill the field.');
+    const dob = new Date(val);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (dob > today) return showError(input, 'Date of birth cannot be in the future.');
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age -= 1;
+    if (age < 18) return showError(input, 'You must be at least 18 years old to apply.');
+    if (age > 60) return showError(input, 'Age must not exceed 60 years.');
+    clearError(input);
+    return true;
+  }
+
+  function isVisible(input) {
+    const wrapper = input.closest('.field-wrapper');
+    return wrapper ? wrapper.style.display !== 'none' : true;
+  }
+
+  function getSubmitBtn() {
+    const form = document.querySelector('main .form form');
+    if (!form) return null;
+    return form.querySelector('button[type="submit"]')
+      || form.querySelector('.field-button button')
+      || form.querySelector('.field-submit button')
+      || [...form.querySelectorAll('button')].find((b) => /loan|eligib|continu|generate|otp/i.test(b.textContent));
+  }
+
+  function isMobileValid() {
+    const mob = getMobileInput();
+    return mob && /^[6-9]\d{9}$/.test((mob.value || '').trim());
+  }
+
+  function isIdFieldValid() {
+    const p = getPanInput();
+    const d = getDobInput();
+    if (p && isVisible(p)) {
+      return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test((p.value || '').trim().toUpperCase());
+    }
+    if (d && isVisible(d)) {
+      const dv = d.value;
+      if (!dv) return false;
+      const dob = new Date(dv);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (dob > today) return false;
+      let age = today.getFullYear() - dob.getFullYear();
+      const mo = today.getMonth() - dob.getMonth();
+      if (mo < 0 || (mo === 0 && today.getDate() < dob.getDate())) age -= 1;
+      return age >= 18 && age <= 60;
+    }
+    return false;
+  }
+
+  function updateSubmitBtn() {
+    const btn = getSubmitBtn();
+    if (!btn) return;
+    const enabled = isMobileValid() && isIdFieldValid();
+    btn.disabled = !enabled;
+    btn.classList.toggle('wv-btn-disabled', !enabled);
+  }
+
+  function attachValidation() {
+    const mobileInput = getMobileInput();
+    const panInput = getPanInput();
+    const dobInput = getDobInput();
+
+    if (mobileInput && !mobileInput.dataset.wvValidation) {
+      mobileInput.dataset.wvValidation = 'true';
+      mobileInput.addEventListener('input', () => {
+        let v = mobileInput.value.replace(/\D/g, '').slice(0, 10);
+        if (v.length > 0 && parseInt(v[0], 10) <= 5) v = v.slice(1);
+        mobileInput.value = v;
+        updateSubmitBtn();
+      });
+    }
+
+    if (panInput && !panInput.dataset.wvValidation) {
+      panInput.dataset.wvValidation = 'true';
+      panInput.addEventListener('input', () => {
+        panInput.value = panInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+        updateSubmitBtn();
+      });
+      panInput.addEventListener('blur', () => { validatePan(panInput); updateSubmitBtn(); });
+    }
+
+    if (dobInput && !dobInput.dataset.wvValidation) {
+      dobInput.dataset.wvValidation = 'true';
+      dobInput.addEventListener('blur', () => { validateDob(dobInput); updateSubmitBtn(); });
+      dobInput.addEventListener('change', () => { validateDob(dobInput); updateSubmitBtn(); });
+    }
+
+    // Re-evaluate button when PAN/DOB radio switches
+    document.addEventListener('change', (e) => {
+      if (e.target.type === 'radio') updateSubmitBtn();
+    });
+
+    // Disable button initially
+    updateSubmitBtn();
+
+    // Intercept submit — block if any visible field is invalid
+    const form = document.querySelector('main .form form');
+    if (form && !form.dataset.wvValidation) {
+      form.dataset.wvValidation = 'true';
+      form.addEventListener('submit', (e) => {
+        const p = getPanInput();
+        const d = getDobInput();
+        const pOk = !p || !isVisible(p) || validatePan(p);
+        const dOk = !d || !isVisible(d) || validateDob(d);
+        if (!pOk || !dOk) e.preventDefault();
+      }, true);
+    }
+  }
+
+  attachValidation();
+  setTimeout(() => { attachValidation(); updateSubmitBtn(); }, 800);
+  setTimeout(() => { attachValidation(); updateSubmitBtn(); }, 2500);
+}
+
 function initPanDobToggle() {
-  if (!window.location.pathname.includes('personal-loan-welcome')) return;
+  const path = window.location.pathname;
+  if (!path.includes('personal-loan-welcome') && !path.includes('otp-login')) return;
   if (document.querySelector('.form.edit-mode, .form-block.edit-mode')) return;
 
   function getPanWrapper() {
@@ -1055,6 +1229,7 @@ async function loadPage() {
   initPreviewPageHandlers();
   initWelcomePageLayout();
   initPanDobToggle();
+  initWelcomePageValidation();
   initOTPLoginFragmentEnhancements();
   initWelcomePageIcons();
   initThankYouPageHandlers();
