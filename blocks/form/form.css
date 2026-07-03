@@ -837,12 +837,22 @@ main div.form-wrapper:has(.field-header-test) {
     padding-top: 0;
 }
 
-/* Banner escapes the form-wrapper's 40px side padding to fill the card edge-to-edge */
+/* Banner fixed at top — full viewport width, no side gaps */
 main div.form-wrapper:has(.field-header-test):has(input, button, select, textarea) .field-header-test {
-    margin-left: -40px;
-    margin-right: -40px;
-    width: calc(100% + 80px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
     border-radius: 0;
+    z-index: 200;
+}
+
+/* Push form content below the fixed header */
+main div.form-wrapper:has(.field-header-test):has(input, button, select, textarea) {
+    padding-top: 40px;
 }
 
 /* Section/wrapper overrides: only when it is a standalone header form (no inputs/buttons) */

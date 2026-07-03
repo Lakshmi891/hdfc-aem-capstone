@@ -19,13 +19,18 @@ footer .footer p {
   }
 }
 
-/* Footer fragment inside form — dark navy bar matching header */
+/* Footer fragment inside form — dark navy bar fixed at bottom matching header */
 fieldset.field-footer-fragment {
   background-color: #0d1b3e !important;
   border: none !important;
   margin: 0 !important;
   padding: 0 !important;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
+  z-index: 100;
   box-sizing: border-box;
 }
 
