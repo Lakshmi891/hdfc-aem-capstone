@@ -580,6 +580,11 @@ export default async function decorate(block) {
     }
     container.replaceWith(form);
 
+    // Only inject phone prefix on the welcome/login page, not on preview/offer/thankyou
+    const path = window.location.pathname;
+    const isLoginPage = path.includes('otp-login') || path.includes('welcome');
+    if (!isLoginPage) return;
+
     // Inject India flag +91 prefix into mobile input
     function addPhonePrefix() {
       const telInput = form.querySelector(

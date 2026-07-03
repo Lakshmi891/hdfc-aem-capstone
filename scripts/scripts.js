@@ -631,6 +631,7 @@ function initOfferPageHandlers() {
 
   // Poll every 100ms until AEM has set its defaults, then immediately override.
   // This eliminates the 2s flash of wrong values.
+  let userInteracted = false;
   let pollCount = 0;
   const pollInterval = setInterval(() => {
     pollCount += 1;
@@ -638,20 +639,20 @@ function initOfferPageHandlers() {
     const tenureInp = document.querySelector('[name="tenure_months"]');
     if (loanInp && tenureInp && (loanInp.value || pollCount > 15)) {
       clearInterval(pollInterval);
-      setRangeDefaults();
+      if (!userInteracted) setRangeDefaults();
     }
     if (pollCount >= 60) clearInterval(pollInterval);
   }, 100);
-  // Fallback in case AEM takes longer than expected
-  setTimeout(setRangeDefaults, 4000);
 
   document.addEventListener('input', (e) => {
     if (e.target.closest('[name="loan_amount"]') || e.target.closest('[name="tenure_months"]')) {
+      userInteracted = true;
       updateOfferDisplay();
     }
   });
   document.addEventListener('change', (e) => {
     if (e.target.closest('[name="loan_amount"]') || e.target.closest('[name="tenure_months"]')) {
+      userInteracted = true;
       updateOfferDisplay();
     }
   });
