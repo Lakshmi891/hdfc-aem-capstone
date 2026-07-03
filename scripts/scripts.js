@@ -936,6 +936,50 @@ function initOTPLoginFragmentEnhancements() {
   setTimeout(run, 2500);
 }
 
+function initWelcomePageIcons() {
+  const svgIcons = {
+    '.field-essential-mobile': '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>',
+    '.field-essential-pan': '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>',
+    '.field-essential-dob': '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    '.field-essential-cheque': '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+  };
+
+  function injectIcons() {
+    Object.entries(svgIcons).forEach(([selector, svg]) => {
+      const el = document.querySelector(selector);
+      if (!el || el.querySelector('.essential-icon')) return;
+      const span = document.createElement('span');
+      span.className = 'essential-icon';
+      span.innerHTML = svg;
+      el.prepend(span);
+    });
+  }
+
+  function injectPhonePrefix() {
+    const mobileInput = document.querySelector(
+      'input[name="aadhaar_mobile_number"],'
+      + ' input[name*="mobile"][type="tel"],'
+      + ' input[type="tel"]',
+    );
+    if (!mobileInput || mobileInput.closest('.phone-prefix-wrapper')) return;
+    const inputParent = mobileInput.parentElement;
+    const wrapper = document.createElement('div');
+    wrapper.className = 'phone-prefix-wrapper';
+    const prefix = document.createElement('span');
+    prefix.className = 'phone-flag-prefix';
+    prefix.textContent = '🇮🇳 +91';
+    inputParent.insertBefore(wrapper, mobileInput);
+    wrapper.appendChild(prefix);
+    wrapper.appendChild(mobileInput);
+  }
+
+  injectIcons();
+  injectPhonePrefix();
+  setTimeout(() => { injectIcons(); injectPhonePrefix(); }, 500);
+  setTimeout(() => { injectIcons(); injectPhonePrefix(); }, 1500);
+  setTimeout(() => { injectIcons(); injectPhonePrefix(); }, 3000);
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
@@ -949,6 +993,7 @@ async function loadPage() {
   initWelcomePageLayout();
   initPanDobToggle();
   initOTPLoginFragmentEnhancements();
+  initWelcomePageIcons();
 }
 
 loadPage();

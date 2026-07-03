@@ -1153,30 +1153,55 @@ main .form form .field-personal-loan-offer-introduction .field-essential-cheque 
     grid-column: auto !important;
 }
 
-/* Icon for each item via ::before */
+/* Icons injected via JS as SVG — no emoji ::before */
 main .form form .field-personal-loan-offer-introduction .field-essential-mobile::before,
 main .form form .field-personal-loan-offer-introduction .field-essential-pan::before,
 main .form form .field-personal-loan-offer-introduction .field-essential-dob::before,
 main .form form .field-personal-loan-offer-introduction .field-essential-cheque::before {
+    content: none;
+}
+
+main .form form .field-personal-loan-offer-introduction .essential-icon {
+    display: flex;
+    align-items: center;
     flex-shrink: 0;
-    font-size: 1.25rem;
-    line-height: 1;
 }
 
-main .form form .field-personal-loan-offer-introduction .field-essential-mobile::before {
-    content: "\1F4F1";
+/* India flag + +91 phone prefix (injected by form.js) */
+main .form form .phone-prefix-wrapper {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--form-input-border-color, #d0d0d0);
+    border-radius: 0.25rem;
+    overflow: hidden;
+    background: #fff;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    height: 42px;
 }
 
-main .form form .field-personal-loan-offer-introduction .field-essential-pan::before {
-    content: "\1FAAA";
+main .form form .phone-flag-prefix {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 0.75rem;
+    background: transparent;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
-main .form form .field-personal-loan-offer-introduction .field-essential-dob::before {
-    content: "\1F4C5";
-}
-
-main .form form .field-personal-loan-offer-introduction .field-essential-cheque::before {
-    content: "\1F4C4";
+main .form form .phone-prefix-wrapper input {
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding-left: 0.75rem;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
 }
 
 /* Essential item text */
