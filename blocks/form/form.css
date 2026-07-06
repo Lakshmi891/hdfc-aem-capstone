@@ -802,8 +802,13 @@ main .form form .checkbox-group-wrapper.horizontal .field-description {
 
 main div.form-wrapper {
     background: white;
-    padding: 40px;
+    /* padding: 40px; */
     border-radius: 12px;
+}
+
+/* Hide AEM fragment container legends (e.g. "Fragment" label on offer page) */
+legend.field-label[for*="fragment"] {
+    display: none;
 }
 
 /* Responsive adjustments for mobile */
