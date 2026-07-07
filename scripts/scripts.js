@@ -983,9 +983,7 @@ function initWelcomePageValidation() {
       mobileInput.removeAttribute('minlength');
       mobileInput.addEventListener('invalid', (e) => e.preventDefault());
       mobileInput.addEventListener('input', () => {
-        let v = mobileInput.value.replace(/\D/g, '').slice(0, 10);
-        if (v.length > 0 && parseInt(v[0], 10) <= 5) v = v.slice(1);
-        mobileInput.value = v;
+        if (mobileInput.value.length > 10) mobileInput.value = mobileInput.value.slice(0, 10);
         clearError(mobileInput);
         updateSubmitBtn();
       });
