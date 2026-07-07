@@ -333,7 +333,7 @@ function initOTPPageHandlers() {
       document.querySelector('[name="attempts_left"]')
       || document.querySelector('.field-attempts-left p')
       || document.querySelector('.field-attempts-left input')
-      || [...document.querySelectorAll('p, span, label')]
+      || [...document.querySelectorAll('p:not(.wv-field-error), span:not(.wv-field-error), label')]
         .find((el) => el.childElementCount === 0 && /attempt.*left/i.test(elText(el)))
     );
   }
@@ -378,14 +378,16 @@ function initOTPPageHandlers() {
 
   function doResendOTP() {
     const data = getJourneyData();
-    const left = Math.max(0, parseInt(data.otpAttemptsLeft || '3', 10) - 1);
-    data.otpAttemptsLeft = left.toString();
+    const left = Math.max(0, parseInt(data.resendAttemptsLeft || '3', 10) - 1);
+    data.resendAttemptsLeft = left.toString();
+    data.otpAttemptsLeft = '3';
     data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
     sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
 
     const otpEl = document.querySelector('input[name="otp_code"]');
     if (otpEl) otpEl.value = data.mockOTP;
     clearOTPError();
+    updateOTPSubmitBtn();
     const attEl = findAttemptsEl();
     if (attEl) setElText(attEl, `${left}/3 attempt(s) left`);
 
@@ -461,7 +463,7 @@ function initOTPPageHandlers() {
           timerStarted = false;
           if (otpResendEl) {
             const data = getJourneyData();
-            if (parseInt(data.otpAttemptsLeft || '3', 10) <= 0) return;
+            if (parseInt(data.resendAttemptsLeft || '3', 10) <= 0) return;
             // Keep the timer <p> as plain "Resend OTP in: 0" text in the meta row
             otpResendEl.textContent = 'Resend OTP in: 0';
             otpResendEl.style.cssText = '';
@@ -472,13 +474,12 @@ function initOTPPageHandlers() {
           );
           if (submitWrapper && !submitWrapper.querySelector('.resend-otp-btn')) {
             const data = getJourneyData();
-            if (parseInt(data.otpAttemptsLeft || '3', 10) > 0) {
+            if (parseInt(data.resendAttemptsLeft || '3', 10) > 0) {
               const resendBtn = document.createElement('button');
               resendBtn.type = 'button';
               resendBtn.textContent = 'Resend OTP';
               resendBtn.className = 'resend-otp-btn';
               submitWrapper.appendChild(resendBtn);
-              resendBtn.addEventListener('click', doResendOTP, { once: true });
             }
           }
           // Also reveal an actual button if present (AEM cloud)
@@ -501,6 +502,7 @@ function initOTPPageHandlers() {
     if (!data.mockOTP) {
       data.mockOTP = Math.floor(100000 + Math.random() * 900000).toString();
       data.otpAttemptsLeft = '3';
+      data.resendAttemptsLeft = '3';
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
     }
     // eslint-disable-next-line no-console
@@ -512,7 +514,7 @@ function initOTPPageHandlers() {
     if (otpEl && !otpEl.value) otpEl.value = data.mockOTP;
     updateOTPSubmitBtn();
     startOTPTimer();
-    if (attemptsEl) setElText(attemptsEl, `${data.otpAttemptsLeft || 3}/3 attempt(s) left`);
+    if (attemptsEl) setElText(attemptsEl, `${data.resendAttemptsLeft || 3}/3 attempt(s) left`);
     updateMaskedMobile(data.mobileNo);
     return !!(otpEl && otpEl.value);
   }
@@ -578,8 +580,6 @@ function initOTPPageHandlers() {
       const left = Math.max(0, parseInt(data.otpAttemptsLeft || '3', 10) - 1);
       data.otpAttemptsLeft = left.toString();
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
-      const attemptsEl = findAttemptsEl();
-      if (attemptsEl) setElText(attemptsEl, `${left}/3 attempt(s) left`);
       showOTPError(left === 0 ? 'No attempts left. Please resend OTP.' : 'Invalid OTP. Please try again.');
       // eslint-disable-next-line no-console
       console.info(`[Journey: ${data.partnerJourneyID}] OTP mismatch, ${left} attempt(s) left`);
