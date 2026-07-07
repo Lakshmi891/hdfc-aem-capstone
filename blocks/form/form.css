@@ -1331,6 +1331,10 @@ main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
     margin-top: -2rem;
 }
 
+main .form form .field-help-us-confirm-this-is-you .field-otp-code.otp-has-error ~ .field-otp-meta-row {
+    margin-top: 0;
+}
+
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-resend-otp-timer p,
 main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-attempts-left p {
     margin: 10px 0 0 0;
@@ -2189,8 +2193,9 @@ main .form form .field-wrapper .wv-field-error {
     font-size: 0.8rem;
     font-weight: 600;
     /* margin-top: 0.3rem; */
-    margin-bottom: -1.7rem;
+    margin-bottom: -1.9rem;
     display: none;
+    margin-left:5px;
 }
 
 main .form form .field-wrapper input.wv-input-invalid {
@@ -2199,6 +2204,10 @@ main .form form .field-wrapper input.wv-input-invalid {
 }
 
 main .form form .field-mobileno.wv-has-error ~ .field-description {
+    display: none;
+}
+
+main .form form .field-wrapper.wv-has-error .field-description {
     display: none;
 }
 

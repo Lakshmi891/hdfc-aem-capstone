@@ -273,6 +273,38 @@ function initOTPPageHandlers() {
     return JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
   }
 
+  function showOTPError(message) {
+    const wrapper = document.querySelector('.field-otp-code');
+    if (!wrapper) return;
+    let errEl = wrapper.querySelector('.wv-field-error');
+    if (!errEl) {
+      errEl = document.createElement('p');
+      errEl.className = 'wv-field-error';
+      wrapper.appendChild(errEl);
+    }
+    errEl.textContent = message;
+    errEl.style.display = 'block';
+    wrapper.classList.add('otp-has-error');
+  }
+
+  function clearOTPError() {
+    const wrapper = document.querySelector('.field-otp-code');
+    if (!wrapper) return;
+    const errEl = wrapper.querySelector('.wv-field-error');
+    if (errEl) errEl.style.display = 'none';
+    wrapper.classList.remove('otp-has-error');
+  }
+
+  function updateOTPSubmitBtn() {
+    const otpInput = document.querySelector('input[name="otp_code"]');
+    const submitBtn = document.querySelector(
+      '.field-help-us-confirm-this-is-you .field-submit-otp button:not(.resend-otp-btn)',
+    );
+    if (!submitBtn) return;
+    const len = (otpInput?.value || '').trim().length;
+    submitBtn.disabled = len < 6;
+  }
+
   // Sets text on the element: prefers inner <input> if the target is a wrapper,
   // then falls back to .value for inputs or .textContent for everything else.
   function setElText(el, text) {
@@ -353,6 +385,7 @@ function initOTPPageHandlers() {
 
     const otpEl = document.querySelector('input[name="otp_code"]');
     if (otpEl) otpEl.value = data.mockOTP;
+    clearOTPError();
     const attEl = findAttemptsEl();
     if (attEl) setElText(attEl, `${left}/3 attempt(s) left`);
 
@@ -477,6 +510,7 @@ function initOTPPageHandlers() {
     const attemptsEl = findAttemptsEl();
 
     if (otpEl && !otpEl.value) otpEl.value = data.mockOTP;
+    updateOTPSubmitBtn();
     startOTPTimer();
     if (attemptsEl) setElText(attemptsEl, `${data.otpAttemptsLeft || 3}/3 attempt(s) left`);
     updateMaskedMobile(data.mobileNo);
@@ -488,6 +522,10 @@ function initOTPPageHandlers() {
     const otpInput = otpWrapper?.querySelector('input[name="otp_code"]');
     if (!otpInput || otpWrapper.querySelector('.otp-input-container')) return;
     otpInput.type = 'text';
+    otpInput.removeAttribute('minlength');
+    otpInput.setAttribute('maxlength', '6');
+    otpInput.addEventListener('invalid', (e) => e.preventDefault());
+    otpInput.addEventListener('input', () => { clearOTPError(); updateOTPSubmitBtn(); });
 
     const container = document.createElement('div');
     container.className = 'otp-input-container';
@@ -542,12 +580,7 @@ function initOTPPageHandlers() {
       sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
       const attemptsEl = findAttemptsEl();
       if (attemptsEl) setElText(attemptsEl, `${left}/3 attempt(s) left`);
-      const errEl = document.querySelector('input[name="otp_error"]');
-      if (errEl) {
-        errEl.value = left === 0
-          ? 'No attempts left. Please resend OTP.'
-          : 'Invalid OTP. Please try again.';
-      }
+      showOTPError(left === 0 ? 'No attempts left. Please resend OTP.' : 'Invalid OTP. Please try again.');
       // eslint-disable-next-line no-console
       console.info(`[Journey: ${data.partnerJourneyID}] OTP mismatch, ${left} attempt(s) left`);
       return;
@@ -1028,6 +1061,7 @@ function initWelcomePageValidation() {
 
     // Intercept submit — block if any visible field is invalid
     const form = document.querySelector('main .form form');
+    if (form) form.setAttribute('novalidate', '');
     if (form && !form.dataset.wvValidation) {
       form.dataset.wvValidation = 'true';
       form.addEventListener('submit', (e) => {
