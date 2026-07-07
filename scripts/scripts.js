@@ -880,6 +880,11 @@ function initWelcomePageValidation() {
     errEl.textContent = message;
     errEl.style.display = 'block';
     input.classList.add('wv-input-invalid');
+    wrapper.classList.add('wv-has-error');
+    if (wrapper.classList.contains('field-mobileno')) {
+      const sib = wrapper.nextElementSibling;
+      if (sib) sib.style.display = 'none';
+    }
     return false;
   }
 
@@ -889,12 +894,17 @@ function initWelcomePageValidation() {
     const errEl = wrapper.querySelector('.wv-field-error');
     if (errEl) errEl.style.display = 'none';
     input.classList.remove('wv-input-invalid');
+    wrapper.classList.remove('wv-has-error');
+    if (wrapper.classList.contains('field-mobileno')) {
+      const sib = wrapper.nextElementSibling;
+      if (sib) sib.style.display = '';
+    }
   }
 
   function validatePan(input) {
-    const val = (input.value || '').trim().toUpperCase();
+    const val = (input.value || '').trim();
     if (!val) return showError(input, 'Please fill the field.');
-    if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(val)) return showError(input, 'Invalid PAN. Expected format: ABCDE1234F');
+    if (!/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(val)) return showError(input, 'Enter valid PAN number.');
     clearError(input);
     return true;
   }
@@ -909,7 +919,7 @@ function initWelcomePageValidation() {
     let age = today.getFullYear() - dob.getFullYear();
     const m = today.getMonth() - dob.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age -= 1;
-    if (age < 18) return showError(input, 'You must be at least 18 years old to apply.');
+    if (age < 21) return showError(input, 'You must be at least 21 years old to apply.');
     if (age > 60) return showError(input, 'Age must not exceed 60 years.');
     clearError(input);
     return true;
@@ -938,7 +948,7 @@ function initWelcomePageValidation() {
     const p = getPanInput();
     const d = getDobInput();
     if (p && isVisible(p)) {
-      return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test((p.value || '').trim().toUpperCase());
+      return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test((p.value || '').trim());
     }
     if (d && isVisible(d)) {
       const dv = d.value;
@@ -950,7 +960,7 @@ function initWelcomePageValidation() {
       let age = today.getFullYear() - dob.getFullYear();
       const mo = today.getMonth() - dob.getMonth();
       if (mo < 0 || (mo === 0 && today.getDate() < dob.getDate())) age -= 1;
-      return age >= 18 && age <= 60;
+      return age >= 21 && age <= 60;
     }
     return false;
   }
@@ -970,18 +980,34 @@ function initWelcomePageValidation() {
 
     if (mobileInput && !mobileInput.dataset.wvValidation) {
       mobileInput.dataset.wvValidation = 'true';
+      mobileInput.removeAttribute('minlength');
+      mobileInput.addEventListener('invalid', (e) => e.preventDefault());
       mobileInput.addEventListener('input', () => {
         let v = mobileInput.value.replace(/\D/g, '').slice(0, 10);
         if (v.length > 0 && parseInt(v[0], 10) <= 5) v = v.slice(1);
         mobileInput.value = v;
+        clearError(mobileInput);
+        updateSubmitBtn();
+      });
+      mobileInput.addEventListener('blur', () => {
+        const val = (mobileInput.value || '').trim();
+        if (!val) { clearError(mobileInput); updateSubmitBtn(); return; }
+        if (val.length < 10) {
+          showError(mobileInput, 'Please enter full 10 digit number.');
+        } else if (!/^[6-9]\d{9}$/.test(val)) {
+          showError(mobileInput, 'Enter valid India number.');
+        } else {
+          clearError(mobileInput);
+        }
         updateSubmitBtn();
       });
     }
 
     if (panInput && !panInput.dataset.wvValidation) {
       panInput.dataset.wvValidation = 'true';
+      panInput.addEventListener('invalid', (e) => e.preventDefault());
       panInput.addEventListener('input', () => {
-        panInput.value = panInput.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+        panInput.value = panInput.value.replace(/[^A-Za-z0-9]/g, '').slice(0, 10);
         updateSubmitBtn();
       });
       panInput.addEventListener('blur', () => { validatePan(panInput); updateSubmitBtn(); });
@@ -989,6 +1015,7 @@ function initWelcomePageValidation() {
 
     if (dobInput && !dobInput.dataset.wvValidation) {
       dobInput.dataset.wvValidation = 'true';
+      dobInput.addEventListener('invalid', (e) => e.preventDefault());
       dobInput.addEventListener('blur', () => { validateDob(dobInput); updateSubmitBtn(); });
       dobInput.addEventListener('change', () => { validateDob(dobInput); updateSubmitBtn(); });
     }

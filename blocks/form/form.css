@@ -2188,14 +2188,18 @@ main .form form .field-wrapper .wv-field-error {
     color: var(--form-error-color);
     font-size: 0.8rem;
     font-weight: 600;
-    margin-top: 0.3rem;
-    margin-bottom: 0;
+    /* margin-top: 0.3rem; */
+    margin-bottom: -1.7rem;
     display: none;
 }
 
 main .form form .field-wrapper input.wv-input-invalid {
     border-color: var(--form-error-color);
     outline-color: var(--form-error-color);
+}
+
+main .form form .field-mobileno.wv-has-error ~ .field-description {
+    display: none;
 }
 
 main .form form button.wv-btn-disabled,
