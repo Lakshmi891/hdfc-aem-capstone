@@ -1016,7 +1016,10 @@ function initWelcomePageValidation() {
       mobileInput.removeAttribute('minlength');
       mobileInput.addEventListener('invalid', (e) => e.preventDefault());
       mobileInput.addEventListener('input', () => {
-        if (mobileInput.value.length > 10) mobileInput.value = mobileInput.value.slice(0, 10);
+        let val = mobileInput.value.replace(/[^0-9]/g, '');
+        if (val.length > 0 && parseInt(val[0], 10) < 6) val = val.slice(1);
+        if (val.length > 10) val = val.slice(0, 10);
+        mobileInput.value = val;
         clearError(mobileInput);
         updateSubmitBtn();
       });
@@ -1038,7 +1041,7 @@ function initWelcomePageValidation() {
       panInput.dataset.wvValidation = 'true';
       panInput.addEventListener('invalid', (e) => e.preventDefault());
       panInput.addEventListener('input', () => {
-        panInput.value = panInput.value.replace(/[^A-Za-z0-9]/g, '').slice(0, 10);
+        panInput.value = panInput.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase().slice(0, 10);
         updateSubmitBtn();
       });
       panInput.addEventListener('blur', () => { validatePan(panInput); updateSubmitBtn(); });
@@ -1046,6 +1049,11 @@ function initWelcomePageValidation() {
 
     if (dobInput && !dobInput.dataset.wvValidation) {
       dobInput.dataset.wvValidation = 'true';
+      const todayD = new Date();
+      const [maxDob] = new Date(todayD.getFullYear() - 21, todayD.getMonth(), todayD.getDate()).toISOString().split('T');
+      const [minDob] = new Date(todayD.getFullYear() - 60, todayD.getMonth(), todayD.getDate()).toISOString().split('T');
+      dobInput.max = maxDob;
+      dobInput.min = minDob;
       dobInput.addEventListener('invalid', (e) => e.preventDefault());
       dobInput.addEventListener('blur', () => { validateDob(dobInput); updateSubmitBtn(); });
       dobInput.addEventListener('change', () => { validateDob(dobInput); updateSubmitBtn(); });
