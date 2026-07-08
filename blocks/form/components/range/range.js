@@ -107,16 +107,13 @@ export default async function decorate(fieldDiv, fieldJson) {
   div.appendChild(rangeMaxEl);
 
   if (ticks) {
-    const minVal = parseFloat(input.min) || 0;
-    const maxVal = parseFloat(input.max) || 100;
     const ticksEl = document.createElement('div');
     ticksEl.className = 'range-ticks';
-    ticks.forEach((val) => {
+    ticks.forEach((val, i) => {
       const tick = document.createElement('span');
       tick.className = 'range-tick';
       tick.textContent = tickFmt(val);
-      const pct = ((val - minVal) / (maxVal - minVal)).toFixed(4);
-      // 25px = thumb width; offset aligns label with thumb center at that value
+      const pct = (ticks.length > 1 ? i / (ticks.length - 1) : 0).toFixed(4);
       tick.style.left = `calc(${pct} * (100% - 25px) + 12.5px)`;
       ticksEl.appendChild(tick);
     });

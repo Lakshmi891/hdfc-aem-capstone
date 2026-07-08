@@ -644,6 +644,9 @@ function initOfferPageHandlers() {
     setVal('emi_display', fmtINR(calcEMI(P, n)));
     setVal('rate_of_interest', '10.20%');
     setVal('taxes', fmtINR(Math.round(P * 0.02 * 0.18)));
+    const availEl = document.querySelector('.field-offer-summary-header p:last-child')
+      || document.querySelector('[name="avail_loan_amount"] input, [name="avail_loan_amount"]');
+    if (availEl) availEl.textContent = fmtINR(P);
   }
 
   function setRangeDefaults() {
