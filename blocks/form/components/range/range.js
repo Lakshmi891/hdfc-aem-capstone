@@ -31,7 +31,7 @@ const TICK_FORMATTERS = {
 };
 
 const TICK_VALUES = {
-  'field-loan-amount': [50000, 200000, 400000, 600000, 800000, 1000000, 1500000],
+  'field-loan-amount': [50000, 200000, 400000, 600000, 800000, 1000000, 1200000, 1500000],
   'field-tenure-months': [12, 24, 36, 48, 60, 72, 84],
 };
 
@@ -109,12 +109,10 @@ export default async function decorate(fieldDiv, fieldJson) {
   if (ticks) {
     const ticksEl = document.createElement('div');
     ticksEl.className = 'range-ticks';
-    ticks.forEach((val, i) => {
+    ticks.forEach((val) => {
       const tick = document.createElement('span');
       tick.className = 'range-tick';
       tick.textContent = tickFmt(val);
-      const pct = (ticks.length > 1 ? i / (ticks.length - 1) : 0).toFixed(4);
-      tick.style.left = `calc(${pct} * (100% - 25px) + 12.5px)`;
       ticksEl.appendChild(tick);
     });
     div.appendChild(ticksEl);

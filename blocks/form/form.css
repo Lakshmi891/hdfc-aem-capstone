@@ -1553,15 +1553,19 @@ main .form form .field-offer-display-fragment .field-offer-summary div.plain-tex
     margin-bottom: 0.25rem;
 }
 
-main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header p {
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header p,
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header h1,
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header h2,
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header h3 {
     margin: 0;
     font-size: 0.875rem;
+    font-weight: 400;
     color: #666;
     line-height: 1.4;
 }
 
 main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header p:last-child {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #131313;
     margin-top: 0.25rem;

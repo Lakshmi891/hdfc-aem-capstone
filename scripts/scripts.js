@@ -644,9 +644,15 @@ function initOfferPageHandlers() {
     setVal('emi_display', fmtINR(calcEMI(P, n)));
     setVal('rate_of_interest', '10.20%');
     setVal('taxes', fmtINR(Math.round(P * 0.02 * 0.18)));
-    const availEl = document.querySelector('.field-offer-summary-header p:last-child')
-      || document.querySelector('[name="avail_loan_amount"] input, [name="avail_loan_amount"]');
-    if (availEl) availEl.textContent = fmtINR(P);
+    const headerEl = document.querySelector('.field-offer-summary-header');
+    if (headerEl) {
+      let amountP = [...headerEl.querySelectorAll('p')].find((p) => /^₹/.test(p.textContent.trim()));
+      if (!amountP) {
+        amountP = document.createElement('p');
+        headerEl.appendChild(amountP);
+      }
+      amountP.textContent = fmtINR(P);
+    }
   }
 
   function setRangeDefaults() {
