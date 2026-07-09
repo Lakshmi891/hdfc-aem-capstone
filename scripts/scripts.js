@@ -253,10 +253,10 @@ function initOTPPageHandlers() {
   const MOCK_OFFER = {
     customerFirstName: 'Ankit',
     customerLastName: 'Enterprises',
-    customerAddress1: '1301, Barkha',
+    customerAddress1: 'B/H Fame Theatre 21, Shri Ram Bungalow, Kalpataru Nagar, Ashoka Colony, Kharar (West)',
     customerCity: 'Mumbai',
     customerState: 'Maharashtra',
-    zipCode: '400016',
+    zipCode: '422022',
     emailAddress: 'ankit@gmail.com',
     offerAmount: '1000000.00',
     tenure: '36',
@@ -264,7 +264,11 @@ function initOTPPageHandlers() {
     kycFlag: 'Y',
     accountNumber: 'XX50151',
     customerID: 'XX12345',
-    employerName: 'Apollo Services',
+    employerName: 'Adobe Systems',
+    industryType: 'IT',
+    workEmail: 'ankit@adobe.com',
+    netMonthlyIncome: '50000',
+    ongoingEmi: '0',
     residenceType: 'Owned by Parents',
     dateOfBirth: '1990-05-15',
   };
@@ -591,7 +595,7 @@ function initOTPPageHandlers() {
     sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
     // eslint-disable-next-line no-console
     console.info(`[Journey: ${data.partnerJourneyID}] OTP verified, offer loaded`);
-    window.location.href = getEDSUrl('/personal-loan-offer');
+    window.location.href = getEDSUrl('/personal-loan-info');
   }, true);
 }
 
@@ -1293,6 +1297,398 @@ function initWelcomePageIcons() {
   setTimeout(() => { injectIcons(); injectPhonePrefix(); }, 3000);
 }
 
+function initPersonalInfoPageHandlers() {
+  // SVG icon strings matched to UX design: person, ID card, contact form, home,
+  // office building, Indian rupee (₹), envelope, document/loan
+  const panelSvgIcons = {
+    // Customer Details – person silhouette
+    'field-personal-info': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    // Full Name as per PAN – ID card with name lines
+    'field-full-name-as-per-pan': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M13 10h5M13 14h4"/></svg>',
+    // Personal Details – user with lines (contact record)
+    'field-personal-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    // Address Details – location pin
+    'field-address-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+    // Employer Details – office building
+    'field-employer-details-panel': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 21h18"/><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>',
+    // Income Details – wallet
+    'field-income-details-panel': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><circle cx="17" cy="15" r="1" fill="currentColor"/></svg>',
+    // Work Email ID – envelope
+    'field-work-email-id-panel': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    // Type of Loan – bank / institution building
+    'field-type-of-loan-panel': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 22h18"/><path d="M2 7l10-5 10 5"/><rect x="5" y="7" width="2" height="13"/><rect x="11" y="7" width="2" height="13"/><rect x="17" y="7" width="2" height="13"/><line x1="2" y1="7" x2="22" y2="7"/></svg>',
+  };
+
+  const collapsiblePanels = [
+    'field-employer-details-panel',
+    'field-income-details-panel',
+    'field-work-email-id-panel',
+    'field-type-of-loan-panel',
+  ];
+
+  function run() {
+    if (!document.querySelector('.field-personal-info')) return;
+
+    // Add scoping class so CSS selectors are reliable (avoids :has() hydration timing issues)
+    const form = document.querySelector('.field-personal-info')?.closest('form');
+    if (form && !form.classList.contains('personal-info-form')) {
+      form.classList.add('personal-info-form');
+    }
+
+    // Pre-populate Customer Details name from sessionStorage (set during OTP verification).
+    // Fallback to mock so the field shows during direct-page testing.
+    const journeyData = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+    const offer = journeyData.offerDemogDetails || {};
+    const firstName = offer.customerFirstName || 'Ankit';
+    const lastName = offer.customerLastName || 'Enterprises';
+    const fullName = journeyData.customerName || [firstName, lastName].filter(Boolean).join(' ') || 'Ankit Enterprises';
+
+    // Inject a visible <span> for the name so the display is immune to AEM model re-renders.
+    // Also set input.value so the value is present for any form submission logic.
+    const fullNameWrapper = document.querySelector('.field-personal-info .field-customer-full-name');
+    if (fullNameWrapper && !fullNameWrapper.querySelector('.pi-display-name')) {
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'pi-display-name';
+      nameSpan.textContent = fullName;
+      const nameInput = fullNameWrapper.querySelector('input');
+      if (nameInput) {
+        nameInput.value = fullName;
+        nameInput.after(nameSpan);
+      } else {
+        fullNameWrapper.append(nameSpan);
+      }
+    }
+
+    // Pre-populate Full Name (As per PAN) first/last name fields
+    const panFirstInput = document.querySelector('.field-pan-first-name input');
+    const panLastInput = document.querySelector('.field-pan-last-name input');
+    if (panFirstInput && !panFirstInput.value) {
+      panFirstInput.value = firstName;
+      panFirstInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    if (panLastInput && !panLastInput.value) {
+      panLastInput.value = lastName;
+      panLastInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill PAN Number from what the user entered on the welcome page
+    const panNumberInput = document.querySelector('.field-personal-details .field-pan-number input');
+    const panNumber = journeyData.pan || '';
+    if (panNumberInput && !panNumberInput.value && panNumber) {
+      panNumberInput.value = panNumber;
+      panNumberInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Aadhaar address from journey/offer data (with mock fallbacks for direct page access)
+    const aadhaarAddressInput = document.querySelector('.field-address-details .field-aadhaar-address input, .field-address-details .field-aadhaar-address textarea');
+    if (aadhaarAddressInput && !aadhaarAddressInput.value) {
+      const addr1 = offer.customerAddress1 || 'B/H Fame Theatre 21, Shri Ram Bungalow, Kalpataru Nagar, Ashoka Colony, Kharar (West)';
+      const city = offer.customerCity || 'Mumbai';
+      const zip = offer.zipCode || '422022';
+      const fullAddress = `${addr1}, ${city} - ${zip}`;
+      aadhaarAddressInput.value = fullAddress;
+      aadhaarAddressInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Monthly Net Income (Salary) with mock fallback
+    const salaryInput = document.querySelector('.field-income-details-panel .field-monthly-net-income-salary input')
+      || document.querySelector('.field-income-details-panel .field-monthly-net-income input')
+      || document.querySelector('.field-income-details-panel .field-monthly-salary input')
+      || document.querySelector('.field-income-details-panel div.number-wrapper input, .field-income-details-panel div.text-wrapper input');
+    if (salaryInput && !salaryInput.value) {
+      salaryInput.value = offer.netMonthlyIncome || '50000';
+      salaryInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Ongoing EMIs with 0
+    const emiInput = document.querySelector('.field-income-details-panel .field-ongoing-emis input, .field-income-details-panel .field-ongoing-emis-if-any input');
+    if (emiInput && !emiInput.value) {
+      emiInput.value = offer.ongoingEmi !== undefined ? offer.ongoingEmi : '0';
+      emiInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Enter Employer/Company Name text input
+    // Try specific class names, then fall back to the first plain text input in the panel
+    const employerTextInput = document.querySelector('.field-employer-details-panel .field-enter-employer-company-name input')
+      || document.querySelector('.field-employer-details-panel .field-enter-company-name input')
+      || document.querySelector('.field-employer-details-panel .field-employer-name-text input')
+      || document.querySelector('.field-employer-details-panel div.text-wrapper input');
+    if (employerTextInput && !employerTextInput.value) {
+      employerTextInput.value = offer.employerName || 'Adobe Systems';
+      employerTextInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Industry Type (text or select)
+    const industryInput = document.querySelector('.field-employer-details-panel .field-industry-type input')
+      || document.querySelector('.field-employer-details-panel .field-industry-type select');
+    if (industryInput && !industryInput.value) {
+      industryInput.value = offer.industryType || 'IT';
+      industryInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Work Email ID
+    const workEmailInput = document.querySelector('.field-work-email-id-panel .field-work-email-id input');
+    if (workEmailInput && !workEmailInput.value) {
+      workEmailInput.value = offer.workEmail || 'ankit@adobe.com';
+      workEmailInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // "Leave blank if not available on PAN": move hint to bottom of Middle Name wrapper
+    // so it appears below the Middle Name input (right column), not beside Last Name.
+    const panPanel = document.querySelector('.field-full-name-as-per-pan');
+    if (panPanel && !panPanel.querySelector('.pi-pan-hint')) {
+      const descEl = panPanel.querySelector('.field-pan-last-name .field-description')
+        || panPanel.querySelector('.field-pan-middle-name .field-description');
+      const middleWrapper = panPanel.querySelector('.field-pan-middle-name');
+      if (descEl && middleWrapper) {
+        const hint = document.createElement('div');
+        hint.className = 'pi-pan-hint';
+        hint.textContent = descEl.textContent;
+        descEl.style.display = 'none';
+        middleWrapper.appendChild(hint);
+      }
+    }
+
+    // Inject icon badge into each panel's legend
+    Object.entries(panelSvgIcons).forEach(([cls, svgHtml]) => {
+      const panel = document.querySelector(`.${cls}`);
+      const legend = panel?.querySelector(':scope > legend');
+      if (!legend || legend.querySelector('.panel-icon')) return;
+      const iconEl = document.createElement('span');
+      iconEl.className = 'panel-icon';
+      iconEl.innerHTML = svgHtml;
+      legend.insertBefore(iconEl, legend.firstChild);
+    });
+
+    // Inject ℹ info circle after the title text on non-collapsible, non-external-header panels
+    const infoIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+    ['field-full-name-as-per-pan'].forEach((cls) => {
+      const panel = document.querySelector(`.${cls}`);
+      const legend = panel?.querySelector(':scope > legend');
+      if (!legend || legend.querySelector('.pi-info-icon')) return;
+      const infoEl = document.createElement('span');
+      infoEl.className = 'pi-info-icon';
+      infoEl.innerHTML = infoIconSvg;
+      legend.appendChild(infoEl);
+    });
+
+    // Move Verify button inside email wrapper so it appears as an inline action
+    const emailWrapper = document.querySelector('.field-personal-details .field-personal-email');
+    const verifyWrapper = document.querySelector('.field-personal-details .field-verify-personal-email');
+    if (emailWrapper && verifyWrapper && !emailWrapper.querySelector('.verify-inline-btn')) {
+      const btn = verifyWrapper.querySelector('button');
+      if (btn) {
+        btn.classList.add('verify-inline-btn');
+        emailWrapper.appendChild(btn);
+        verifyWrapper.style.display = 'none';
+      }
+    }
+
+    // Move Work Email Verify button inline (same pattern as personal email)
+    const workEmailWrapper = document.querySelector('.field-work-email-id-panel .field-work-email-id');
+    const workVerifyWrapper = document.querySelector('.field-work-email-id-panel .field-verify-work-email-button');
+    if (workEmailWrapper && workVerifyWrapper && !workEmailWrapper.querySelector('.verify-inline-btn')) {
+      const workBtn = workVerifyWrapper.querySelector('button');
+      if (workBtn) {
+        workBtn.classList.add('verify-inline-btn');
+        workEmailWrapper.appendChild(workBtn);
+        workVerifyWrapper.style.display = 'none';
+      }
+    }
+
+    // Wrap email chips in a single flex div so they sit side-by-side without the grid column gap
+    const gmailChip = document.querySelector('.field-email-chip-gmail');
+    const outlookChip = document.querySelector('.field-email-chip-outlook');
+    const yahooChip = document.querySelector('.field-email-chip-yahoo');
+    if (gmailChip && outlookChip && yahooChip && !document.querySelector('.email-chips-row')) {
+      const chipsRow = document.createElement('div');
+      chipsRow.className = 'email-chips-row';
+      gmailChip.parentNode.insertBefore(chipsRow, gmailChip);
+      chipsRow.appendChild(gmailChip);
+      chipsRow.appendChild(outlookChip);
+      chipsRow.appendChild(yahooChip);
+    }
+
+    // ---- Email verification flow ----
+    (function initEmailVerification() {
+      const personalEmailWrapper = document.querySelector('.field-personal-details .field-personal-email');
+      if (!personalEmailWrapper || personalEmailWrapper.dataset.emailSetup) return;
+      personalEmailWrapper.dataset.emailSetup = '1';
+
+      const emailInput = personalEmailWrapper.querySelector('input');
+      const verifyBtn = personalEmailWrapper.querySelector('.verify-inline-btn');
+      if (!emailInput || !verifyBtn) return;
+
+      // Pre-fill with <firstName>@gmail.com by default
+      if (!emailInput.value) {
+        const jd = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+        const fn = (jd.offerDemogDetails?.customerFirstName || 'ankit').toLowerCase();
+        emailInput.value = `${fn}@gmail.com`;
+        emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
+      function resetVerified() {
+        personalEmailWrapper.classList.remove('email-verified');
+        verifyBtn.style.display = '';
+        personalEmailWrapper.querySelector('.pi-email-check')?.remove();
+        document.querySelector('.pi-email-success')?.remove();
+      }
+
+      function markVerified() {
+        personalEmailWrapper.classList.add('email-verified');
+        verifyBtn.style.display = 'none';
+        if (!personalEmailWrapper.querySelector('.pi-email-check')) {
+          const check = document.createElement('span');
+          check.className = 'pi-email-check';
+          check.textContent = 'Verified';
+          personalEmailWrapper.appendChild(check);
+        }
+      }
+
+      function showSuccess() {
+        document.querySelector('.pi-email-success')?.remove();
+        const msg = document.createElement('div');
+        msg.className = 'pi-email-success';
+        msg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Email sent successfully';
+        const chipsRow = document.querySelector('.email-chips-row');
+        (chipsRow || personalEmailWrapper).insertAdjacentElement('afterend', msg);
+        setTimeout(() => msg?.remove(), 4000);
+      }
+
+      verifyBtn.addEventListener('click', () => {
+        const val = emailInput.value.trim();
+        if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return;
+        markVerified();
+        showSuccess();
+      });
+
+      emailInput.addEventListener('input', resetVerified);
+
+      // Chip clicks: swap domain, keep local part
+      document.querySelectorAll('.field-email-chip-gmail p, .field-email-chip-outlook p, .field-email-chip-yahoo p')
+        .forEach((chip) => {
+          chip.addEventListener('click', () => {
+            const domain = chip.textContent.trim().replace('@', '');
+            const local = emailInput.value.split('@')[0] || 'user';
+            emailInput.value = `${local}@${domain}`;
+            emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+            resetVerified();
+          });
+        });
+    }());
+
+    // ---- Work Email verification flow (same pattern as personal email) ----
+    (function initWorkEmailVerification() {
+      const workEmailWrap = document.querySelector('.field-work-email-id-panel .field-work-email-id');
+      if (!workEmailWrap || workEmailWrap.dataset.workEmailSetup) return;
+      workEmailWrap.dataset.workEmailSetup = '1';
+
+      const workInput = workEmailWrap.querySelector('input');
+      const workVerifyBtn = workEmailWrap.querySelector('.verify-inline-btn');
+      if (!workInput || !workVerifyBtn) return;
+
+      function resetWorkVerified() {
+        workEmailWrap.classList.remove('email-verified');
+        workVerifyBtn.style.display = '';
+        workEmailWrap.querySelector('.pi-email-check')?.remove();
+        document.querySelector('.pi-work-email-success')?.remove();
+      }
+
+      function markWorkVerified() {
+        workEmailWrap.classList.add('email-verified');
+        workVerifyBtn.style.display = 'none';
+        if (!workEmailWrap.querySelector('.pi-email-check')) {
+          const check = document.createElement('span');
+          check.className = 'pi-email-check';
+          check.textContent = 'Verified';
+          workEmailWrap.appendChild(check);
+        }
+      }
+
+      function showWorkSuccess() {
+        document.querySelector('.pi-work-email-success')?.remove();
+        const msg = document.createElement('div');
+        msg.className = 'pi-work-email-success';
+        msg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Email sent successfully';
+        workEmailWrap.insertAdjacentElement('afterend', msg);
+        setTimeout(() => msg?.remove(), 4000);
+      }
+
+      workVerifyBtn.addEventListener('click', () => {
+        const val = workInput.value.trim();
+        if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return;
+        markWorkVerified();
+        showWorkSuccess();
+      });
+
+      workInput.addEventListener('input', resetWorkVerified);
+    }());
+
+    // Customer Details: external header div placed BEFORE the fieldset (above the card)
+    ['field-personal-info'].forEach((cls) => {
+      const panel = document.querySelector(`.${cls}`);
+      if (!panel || panel.previousElementSibling?.classList.contains('panel-external-header')) return;
+      const legend = panel.querySelector(':scope > legend');
+      if (!legend) return;
+
+      const header = document.createElement('div');
+      header.className = 'panel-external-header';
+      header.innerHTML = legend.innerHTML;
+      panel.parentNode.insertBefore(header, panel);
+      legend.hidden = true;
+    });
+
+    // Address Details: internal header div inserted as FIRST CHILD inside the card
+    // (<legend> always renders above the fieldset border — a div stays inside)
+    // Build from scratch so we always use our own icon regardless of what AEM put in the legend
+    const addrPanel = document.querySelector('.field-address-details');
+    if (addrPanel && !addrPanel.querySelector('.panel-internal-header')) {
+      const addrLegend = addrPanel.querySelector(':scope > legend');
+      if (addrLegend) {
+        const internalHeader = document.createElement('div');
+        internalHeader.className = 'panel-internal-header';
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'panel-icon';
+        iconSpan.innerHTML = panelSvgIcons['field-address-details'];
+        internalHeader.appendChild(iconSpan);
+        const legendClone = addrLegend.cloneNode(true);
+        legendClone.querySelector('.panel-icon')?.remove();
+        internalHeader.appendChild(document.createTextNode(legendClone.textContent.trim()));
+        addrPanel.insertBefore(internalHeader, addrPanel.firstChild);
+        addrLegend.hidden = true;
+      }
+    }
+
+    // Wire collapsible toggle behaviour
+    collapsiblePanels.forEach((cls) => {
+      const panel = document.querySelector(`.${cls}`);
+      if (!panel) return;
+      panel.classList.add('collapsible');
+      const legend = panel.querySelector(':scope > legend');
+      if (!legend) return;
+      legend.addEventListener('click', () => {
+        const isCollapsed = panel.getAttribute('data-collapsed') === 'true';
+        panel.setAttribute('data-collapsed', String(!isCollapsed));
+      });
+    });
+
+    // Move Back + Confirm buttons outside the Type of Loan panel so they sit at form level
+    const typeOfLoanPanel = document.querySelector('.field-type-of-loan-panel');
+    const confirmBtnWrapper = document.querySelector('.field-confirm-button');
+    const backBtnWrapper = document.querySelector('.field-back-button');
+    if (typeOfLoanPanel && confirmBtnWrapper && typeOfLoanPanel.contains(confirmBtnWrapper)) {
+      if (backBtnWrapper) {
+        typeOfLoanPanel.insertAdjacentElement('afterend', backBtnWrapper);
+        backBtnWrapper.insertAdjacentElement('afterend', confirmBtnWrapper);
+      } else {
+        typeOfLoanPanel.insertAdjacentElement('afterend', confirmBtnWrapper);
+      }
+    }
+  }
+
+  setTimeout(run, 1500);
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
@@ -1309,6 +1705,7 @@ async function loadPage() {
   initOTPLoginFragmentEnhancements();
   initWelcomePageIcons();
   initThankYouPageHandlers();
+  initPersonalInfoPageHandlers();
 }
 
 loadPage();
