@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --background-color-primary: #fff;
     --label-color: #666;
     --border-color: #818a91;
@@ -197,7 +197,7 @@ main .form input[type='radio'] {
     width: 16px;
     height: 16px;
     flex: none;
-    margin: 0;
+    margin: 6px 0 0;
     position: static;
     z-index: 1;
 }
@@ -263,7 +263,7 @@ main .form form p {
 main .form form .checkbox-wrapper, main .form form .radio-wrapper {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     margin: 0;
     gap: 8px;
 }
@@ -387,6 +387,20 @@ main .form form fieldset.cards > .checkbox-wrapper > label > img {
     max-width: 18px;
     max-height: 18px;
     object-fit: contain;
+}
+
+/* Header form image sizing */
+main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper img {
+    height: 22px;
+    width: auto;
+    max-width: none;
+}
+
+/* Safe badge (last image) has transparent padding — boost height to match logo visually */
+main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper:last-child img {
+    height: 38px;
+    width: auto;
+    max-width: none;
 }
 
 /* Responsive adjustments for cards */
@@ -578,6 +592,10 @@ main .form form .wizard .wizard-button-wrapper .field-wrapper{
     grid-column: span 12;
 }
 
+main div.form-wrapper:has(.field-header-test) .wizard-menu-items {
+    display: none;
+}
+
 main .form form .wizard .wizard-menu-item {
   counter-increment: wizard-step-counter;
 }
@@ -634,6 +652,22 @@ main .form form .repeat-wrapper{
     display: grid;
     grid-template-columns: repeat(var(--form-columns), minmax(0, 1fr));
     gap: var(--form-field-vert-gap) var(--form-field-horz-gap);
+}
+
+main div.form-wrapper:has(.field-header-test) .field-header-test {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    background: #001a40;
+    padding: 9px 62px 37px;
+    border: none;
+    overflow: hidden;
+}
+
+main div.form-wrapper:has(.field-header-test) .field-header-test > legend {
+    display: none;
 }
 
 main .form form .wizard.left .panel-wrapper{
@@ -768,9 +802,13 @@ main .form form .checkbox-group-wrapper.horizontal .field-description {
 
 main div.form-wrapper {
     background: white;
-    padding: 40px;
+    /* padding: 40px; */
     border-radius: 12px;
-    box-shadow: 0 4px 24px rgb(0 0 0 / 8%);
+}
+
+/* Hide AEM fragment container legends (e.g. "Fragment" label on offer page) */
+legend.field-label[for*="fragment"] {
+    display: none;
 }
 
 /* Responsive adjustments for mobile */
@@ -792,3 +830,1398 @@ main div.form-wrapper {
 main .form form select[multiple] {
     height: calc(42px + 50px);
 }
+
+
+/* All pages with header fragment: full width, no gap above */
+main > .section:has(.field-header-test) {
+    margin-top: 0;
+}
+
+/* Only remove top padding — keep natural side padding so card has equal spacing on both sides */
+main div.form-wrapper:has(.field-header-test) {
+    padding-top: 0;
+}
+
+/* Banner fixed at top — full viewport width, no side gaps */
+main div.form-wrapper:has(.field-header-test):has(input, button, select, textarea) .field-header-test {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 0;
+    z-index: 200;
+}
+
+/* Push form content below the fixed header */
+main div.form-wrapper:has(.field-header-test):has(input, button, select, textarea) {
+    padding-top: 40px;
+}
+
+/* Section/wrapper overrides: only when it is a standalone header form (no inputs/buttons) */
+main > .section:has(.field-header-test):not(:has(input, button, select, textarea)) {
+    margin: 0;
+}
+
+main > .section:has(.field-header-test):not(:has(input, button, select, textarea)) > div {
+    max-width: 100%;
+    padding: 0;
+}
+
+main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) {
+    background: #001a40;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block {
+    background: #001a40;
+    max-width: 100%;
+    padding: 0;
+}
+
+main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block form {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 62px 37px;
+    gap: 0;
+}
+
+/* Panel-level: applies whether header is standalone or embedded inside a larger form */
+main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper {
+    margin: 0;
+    grid-column: unset;
+    background: transparent;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Header banner — responsive padding and image constraints */
+@media (width < 768px) {
+    main div.form-wrapper:has(.field-header-test) .field-header-test,
+    main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block form {
+        padding: 12px 16px 20px;
+    }
+
+    main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper picture,
+    main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper img,
+    main div.form-wrapper:has(.field-header-test) .field-header-test .image-wrapper:last-child img {
+        max-width: 100%;
+    }
+}
+
+@media (768px <= width < 1024px) {
+    main div.form-wrapper:has(.field-header-test) .field-header-test,
+    main div.form-wrapper:has(.field-header-test):not(:has(input, button, select, textarea)) .form.block form {
+        padding: 9px 32px 28px;
+    }
+}
+
+
+/* Overrides AEM 12-col grid with a clean 3-column layout.
+   !important is required on grid-column/row to beat AEM's inline grid-area styles. */
+main .form form .field-personal-loan-offer-introduction {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1fr;
+    gap: 0.5rem 2rem;
+    align-items: start;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-welcome-title {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-mobileno {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-otp-instruction {
+    grid-column: 1;
+    grid-row: 3;
+    font-size: 0.875rem;
+    color: #555;
+    margin-top: -2.5rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-id-type {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    align-self: start;
+    margin-top: -1rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-pan-card-number,
+main .form form .field-personal-loan-offer-introduction .field-dob-input {
+    grid-column: 2;
+    grid-row: 3;
+    width: 100%;
+    margin-top: -6rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-income-source {
+    grid-column: 3 !important;
+    grid-row: 2 / span 2 !important;
+    align-self: start;
+    margin-top: -1rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-income-source.horizontal {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-income-verification-note {
+    display: none;
+    background: #fffbe6;
+    border: 1px solid #f5a623;
+    border-radius: 6px;
+    padding: 0.6rem 0.75rem;
+    grid-column: 3 !important;
+    grid-row: 4 !important;
+    margin-top: 0.25rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-consent-data-collection,
+main .form form .field-personal-loan-offer-introduction .field-consent-marketing,
+main .form form .field-personal-loan-offer-introduction .field-terms-privacy-text,
+main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-dob-input {
+    display: none;
+}
+
+main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"][value="dob"]:checked) .field-dob-input {
+    display: block;
+}
+
+main .form form .field-personal-loan-offer-introduction:has(input[name="id_type"][value="dob"]:checked) .field-pan-card-number {
+    display: none;
+}
+
+@media (768px <= width <= 1024px) {
+    main .form form .field-personal-loan-offer-introduction .field-mobileno {
+        grid-row: 3 !important;
+    }
+
+    main .form form .field-personal-loan-offer-introduction .field-otp-instruction {
+        grid-row: 4 !important;
+        margin-top: 0;
+    }
+
+    main .form form .field-personal-loan-offer-introduction .field-pan-card-number,
+    main .form form .field-personal-loan-offer-introduction .field-dob-input {
+        margin-top: 4px;
+    }
+}
+
+@media (width < 768px) {
+    main .form form .field-personal-loan-offer-introduction {
+        grid-template-columns: 1fr;
+        row-gap: 1rem;
+    }
+
+    main .form form .field-personal-loan-offer-introduction > * {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+    }
+
+    main .form form .field-personal-loan-offer-introduction .field-mobileno,
+    main .form form .field-personal-loan-offer-introduction .field-id-type,
+    main .form form .field-personal-loan-offer-introduction .field-income-source,
+    main .form form .field-personal-loan-offer-introduction .field-income-verification-note {
+        grid-column: 1 !important;
+        grid-row: auto !important;
+        margin-top: 0;
+    }
+
+    main .form form .field-personal-loan-offer-introduction .field-otp-instruction,
+    main .form form .field-personal-loan-offer-introduction .field-pan-card-number,
+    main .form form .field-personal-loan-offer-introduction .field-dob-input {
+        margin-top: 0;
+    }
+}
+
+/* Income verification note — show when Salaried is selected */
+main .form form .field-personal-loan-offer-introduction:has(input[name="income_source"][value="salaried"]:checked) .field-income-verification-note {
+    display: block;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-income-verification-note p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #7a5200;
+    line-height: 1.5;
+}
+
+/* Consent checkboxes — flex so checkbox aligns with first line of text */
+main .form form .field-personal-loan-offer-introduction .field-consent-data-collection,
+main .form form .field-personal-loan-offer-introduction .field-consent-marketing {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+/* Terms & Privacy links */
+main .form form .field-personal-loan-offer-introduction .field-terms-privacy-text a {
+    color: #1473e6;
+}
+
+/* View Loan Eligibility button — pill with › arrow */
+main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button {
+    margin-top: 0.5rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button button {
+    border-radius: 1rem;
+    padding: 0.75rem 2.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-view-loan-eligibility-button button::after {
+    content: "\203A";
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+/* Essentials outer panel — spans all columns, no border */
+main .form form .field-personal-loan-offer-introduction .field-essentials {
+    grid-column: 1 / -1 !important;
+    border: none;
+    padding: 0;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Important links text — top divider, centered */
+main .form form .field-personal-loan-offer-introduction .field-essentials-main-heading {
+    border-top: 1px solid #e8e8e8;
+    padding-top: 1.25rem;
+    margin-top: 0.5rem;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-essentials-main-heading p {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #555;
+    margin: 0 0 1rem;
+}
+
+/* "Essentials for the journey" heading */
+main .form form .field-personal-loan-offer-introduction .field-essentials-heading p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin: 0 0 0.75rem;
+}
+
+/* Inner 4-column essentials grid */
+main .form form .field-personal-loan-offer-introduction .field-essentials-panel {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.5rem 1rem !important;
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+main .form form .field-personal-loan-offer-introduction .field-essentials-panel > legend {
+    grid-column: 1 / -1;
+    border: none;
+    padding: 0;
+    width: 100%;
+}
+
+/* Individual essential item panels */
+main .form form .field-personal-loan-offer-introduction .field-essential-mobile,
+main .form form .field-personal-loan-offer-introduction .field-essential-pan,
+main .form form .field-personal-loan-offer-introduction .field-essential-dob,
+main .form form .field-personal-loan-offer-introduction .field-essential-cheque {
+    border: none;
+    padding: 0;
+    background: transparent;
+    display: flex !important;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 0.6rem;
+    grid-column: auto !important;
+}
+
+/* Icons injected via JS as SVG — no emoji ::before */
+main .form form .field-personal-loan-offer-introduction .field-essential-mobile::before,
+main .form form .field-personal-loan-offer-introduction .field-essential-pan::before,
+main .form form .field-personal-loan-offer-introduction .field-essential-dob::before,
+main .form form .field-personal-loan-offer-introduction .field-essential-cheque::before {
+    content: none;
+}
+
+main .form form .field-personal-loan-offer-introduction .essential-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* India flag + +91 phone prefix (injected by form.js) */
+main .form form .phone-prefix-wrapper {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--form-input-border-color, #d0d0d0);
+    border-radius: 0.25rem;
+    overflow: hidden;
+    background: #fff;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    height: 42px;
+}
+
+main .form form .phone-flag-prefix {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 0.75rem;
+    background: transparent;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+main .form form .phone-prefix-wrapper input {
+    border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding-left: 0.75rem;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+}
+
+/* Essential item text */
+main .form form .field-personal-loan-offer-introduction .field-mobile-phone-text p,
+main .form form .field-personal-loan-offer-introduction .field-pan-card-text p,
+main .form form .field-personal-loan-offer-introduction .field-date-of-birth-text p,
+main .form form .field-personal-loan-offer-introduction .field-cheque-book-bank-account-details-text p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #1473e6;
+    font-weight: 500;
+}
+
+@media (width <= 768px) {
+    main .form form .field-personal-loan-offer-introduction .field-essentials-panel {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+
+main .form form .field-help-us-confirm-this-is-you {
+    row-gap: 6px;
+    box-shadow: 0 4px 24px rgb(0 0 0 / 10%);
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    margin: 2rem auto 2rem 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    height: 90%;
+}
+
+main .form form fieldset.panel-wrapper.field-help-us-confirm-this-is-you > legend {
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 0.25rem;
+    padding: 0;
+    width: 100%;
+    float: none;
+    font-size: 1.25rem;
+    margin-left: 2px;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-instruction p {
+    margin: 0 0 0.25rem;
+    color: #555;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-instruction u {
+    color: #1473e6;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-enter-otp-heading p {
+    margin: 0;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #131313;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code {
+    max-width: 480px;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code input[name="otp_code"] {
+    width: 100%;
+    height: 48px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    padding: 0 44px 0 16px;
+    font-size: 1.4rem;
+    letter-spacing: 2rem;
+    text-align: left;
+    background: #fff;
+    box-shadow: none;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-eye-toggle {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    color: #666;
+    width: auto;
+    border-radius: 0;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-eye-toggle:hover {
+    color: #131313;
+    background: none;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code input[name="otp_code"]:focus {
+    border-color: #1473e6;
+    outline: none;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
+    max-width: 480px;
+    border: none;
+    padding: 0;
+    margin-top: -2rem;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-code.otp-has-error ~ .field-otp-meta-row {
+    margin-top: 0;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-resend-otp-timer p,
+main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-attempts-left p {
+    margin: 10px 0 0 0;
+    font-size: 0.8125rem;
+    color: #555;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row .field-attempts-left {
+    text-align: right;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button {
+    width: auto;
+    min-width: 150px;
+    padding: 0.65em 2em;
+    background-color: #1473e6;
+    color: #fff;
+    border: none;
+    border-radius: 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button::after {
+    content: "\203A";
+    font-size: 1.4rem;
+    line-height: 0;
+    vertical-align: middle;
+    margin-top: -0.1em;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button:hover {
+    background-color: #0d66d0;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button.resend-otp-btn {
+    min-width: 150px;
+    padding: 0.65em 2em;
+    background-color: #1473e6;
+    color: #fff;
+    border: none;
+    border-radius: 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button.resend-otp-btn::after {
+    content: none;
+}
+
+main .form form .field-help-us-confirm-this-is-you .field-submit-otp button.resend-otp-btn:hover {
+    background-color: #0d66d0;
+}
+
+@media (width <= 768px) {
+    main .form form .field-help-us-confirm-this-is-you {
+        max-width: 100%;
+    }
+
+    main .form form .field-help-us-confirm-this-is-you .field-otp-code,
+    main .form form .field-help-us-confirm-this-is-you .field-otp-code .otp-input-container,
+    main .form form .field-help-us-confirm-this-is-you .field-otp-meta-row {
+        max-width: 100%;
+    }
+}
+
+/* ─── Offer Display Fragment ─────────────────────────────────────────────── */
+
+main .form form fieldset.panel-wrapper.field-offer-display-fragment > legend,
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-highlight-banner > legend,
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-content > legend,
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics > legend,
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary > legend {
+    display: none;
+}
+
+main .form form .field-offer-display-fragment div.plain-text-wrapper.field-offer-display-intro p {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: #131313;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-highlight-banner {
+    background: #ebf5fb;
+    border: 1px solid #aed6f1;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-highlight-banner div.image-wrapper {
+    width: 56px;
+    flex-shrink: 0;
+}
+
+main .form form .field-offer-display-fragment .field-offer-highlight-banner div.image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+main .form form .field-offer-display-fragment .field-offer-highlight-banner div.plain-text-wrapper.field-offer-highlight-text p {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #131313;
+    margin: 0;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-content {
+    align-items: start;
+    column-gap: 2rem;
+    padding: 0;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-enter-loan-amount-tenure > legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 0.5rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-content div.number-wrapper.field-loan-amount label,
+main .form form .field-offer-display-fragment .field-offer-content div.number-wrapper.field-tenure-months label {
+    font-size: 0.875rem;
+    font-weight: bold;
+    color:#131313;
+    margin-left:-5px;
+}
+
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"] {
+    background-image: linear-gradient(
+        to right,
+        #f5a623 calc(100% * var(--current-steps) / var(--total-steps)),
+        #e0e0e0 calc(100% * var(--current-steps) / var(--total-steps))
+    );
+}
+
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"]::-webkit-slider-thumb {
+    border-color: #1473e6;
+    background: #1473e6;
+    outline: none;
+}
+
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"]:focus,
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated input[type="range"]:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+main .form form .field-offer-display-fragment .range-widget-wrapper.decorated .range-bubble {
+    background: #fff;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #131313;
+    user-select: none;
+}
+
+main .form form .field-offer-display-fragment div.submit-wrapper.field-proceed-btn button {
+    background-color: #1473e6;
+    color: #fff;
+    border: none;
+    border-radius: 1rem;
+    padding: 0.65em 2em;
+    font-size: 1rem;
+    font-weight: 500;
+    width: auto;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+main .form form .field-offer-display-fragment div.submit-wrapper.field-proceed-btn button::after {
+    content: "\203A";
+    font-size: 1.4rem;
+    line-height: 0;
+    vertical-align: middle;
+    margin-top: -0.1em;
+}
+
+main .form form .field-offer-display-fragment div.submit-wrapper.field-proceed-btn button:hover {
+    background-color: #0d66d0;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary {
+    background: #fffce8;
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header {
+    border-bottom: 1.5px dotted #ddd0a0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header p,
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header h1,
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header h2,
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header h3 {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: #666;
+    line-height: 1.4;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-offer-summary-header p:last-child {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #131313;
+    margin-top: 0.25rem;
+    padding-bottom: 0.5rem;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics {
+    gap: 0;
+    padding-top: 0.75rem;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics input[type="text"] {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0.25rem 0 0;
+    height: auto;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    pointer-events: none;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary fieldset.panel-wrapper.field-offer-summary-metrics label {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 400;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-emi-display {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 0.75rem;
+    padding-right: 1rem;
+    padding-bottom: 0.75rem;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-emi-display::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 85%;
+    background: #f5a623;
+    border-radius: 2px;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-rate-of-interest {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-rate-of-interest::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 85%;
+    background: #f5a623;
+    border-radius: 2px;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-taxes {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 0.75rem;
+    padding-top: 0.75rem;
+    margin-top: 0;
+    grid-column: 1 / -1;
+}
+
+main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary-metrics div.text-wrapper.field-taxes::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 60%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 85%;
+    background: #f5a623;
+    border-radius: 2px;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer {
+    background: #f5a623;
+    border: none;
+    border-radius: 0 0 20px 20px;
+    padding: 0.75rem 1rem 0.75rem 2.25rem;
+    position: relative;
+    margin: -9px;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer::before {
+    content: "ⓘ";
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    color: #fff;
+}
+
+main .form form .field-offer-display-fragment .field-offer-summary div.plain-text-wrapper.field-wrapper.field-offer-disclaimer p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: #fff;
+    line-height: 1.5;
+}
+
+@media (width <= 768px) {
+    main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-enter-loan-amount-tenure,
+    main .form form .field-offer-display-fragment fieldset.panel-wrapper.field-offer-summary {
+        grid-column: 1 / -1 !important;
+    }
+}
+
+/* Personal Loan Preview Page (body class `page-personal-loan-preview` set by loadPage) */
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details {
+    background: #fff;
+    border: none;
+    box-shadow: 0 0 0 1px #dde0f5;
+    border-radius: 10px;
+    padding: 0 1rem 1rem;
+    gap: 0.75rem 1.25rem;
+    overflow: hidden;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend {
+    background: #eef0fb;
+    border-radius: 10px 10px 0 0;
+    padding: 0.875rem 1.25rem;
+    margin: 0 -1rem 0;
+    width: calc(100% + 2rem);
+    float: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend::before {
+    content: "💼";
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend::before {
+    content: "👤";
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend::after {
+    content: "∧";
+    margin-left: auto;
+    font-size: 1rem;
+    font-weight: 600;
+    color:navy;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    letter-spacing: 0.05em;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details[data-collapsed] > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed] > legend::after {
+    content: "∨";
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details[data-collapsed] div.text-wrapper,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed] div.text-wrapper {
+    display: none;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details[data-collapsed],
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed] {
+    padding-bottom: 0;
+    overflow: hidden;
+}
+
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-loan-amount,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-emi,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-tenure,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-processing-fee,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-rate,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-employer-name,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-loan-type,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-schedule-charges {
+    grid-column: span 3;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    position: relative;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-schedule-charges input {
+    display: none;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-schedule-charges label {
+    display: block;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-schedule-charges .schedule-charges-link {
+    display: block;
+    color: #1473e6;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 0.4rem;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-schedule-charges .schedule-charges-link:hover {
+    text-decoration: underline;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-full-name,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-mobile,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-dob,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-pan,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-residence-type {
+    grid-column: span 3;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    position: relative;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-address {
+    grid-column: span 12;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    position: relative;
+}
+
+/* accent bar — floats within the cell, doesn't touch top or bottom edges */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-loan-amount::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-emi::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-tenure::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-processing-fee::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-rate::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-employer-name::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-preview-loan-type::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper.field-schedule-charges::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-full-name::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-mobile::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-dob::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-pan::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-residence-type::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-address::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2px;
+    background: #b8c2e8;
+    border-radius: 2px;
+}
+
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper label,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper label {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper input[type="text"],
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper input[type="text"] {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #131313;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+body.page-personal-loan-preview main .form form.preview-form div.submit-wrapper button:not([disabled]) {
+    background-color: #1473e6;
+    color: #fff;
+    border: none;
+    border-radius: 1rem;
+    padding: 0.65em 2em;
+    font-size: 1rem;
+    font-weight: 500;
+    width: auto;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+body.page-personal-loan-preview main .form form.preview-form div.submit-wrapper button:not([disabled])::after {
+    content: "\203A";
+    font-size: 1.4rem;
+    line-height: 0;
+    vertical-align: middle;
+    margin-top: -0.1em;
+}
+
+body.page-personal-loan-preview main .form form.preview-form div.submit-wrapper button:not([disabled]):hover {
+    background-color: #0d66d0;
+}
+
+@media (width <= 768px) {
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details div.text-wrapper,
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper {
+        grid-column: span 6;
+    }
+
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-address {
+        grid-column: span 12;
+    }
+}
+
+/* Personal Loan Thank You Page (body class `page-personal-loan-thankyou` set by loadPage) */
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel {
+    grid-template-columns: 1fr 280px;
+    gap: 1rem 1.5rem;
+    align-items: start;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel > legend {
+    display: none;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel > .field-wrapper {
+    grid-column: 1;
+    margin: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel > fieldset.panel-wrapper.field-additional-services-panel {
+    grid-column: 2;
+    grid-row: 1 / span 20;
+    align-self: start;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    border: none;
+    padding: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-kyc-verification-info {
+    background: #fffde7;
+    border: 1px solid #e8d89d;
+    border-radius: 6px;
+    padding: 0.875rem 1.25rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-kyc-verification-info p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #444;
+    line-height: 1.5;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    background: #fff;
+    border: none;
+    box-shadow: 0 0 0 1px #e0e0e0;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 1.25rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel > legend {
+    display: none;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-number-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-number-row .ty-legend-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: #888;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-number-text {
+    display: flex;
+    flex-direction: column;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-label {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 400;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-loan-application-summary-panel .ty-app-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #131313;
+    line-height: 1.2;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-application-number p {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #131313;
+    margin: 0.25rem 0 0;
+    line-height: 1.2;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-contact-info-note {
+    border-bottom: 1px dashed #d0d0d0;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-contact-info-note p {
+    font-size: 0.8125rem;
+    color: #888;
+    margin: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-xpress-personal-loan-summary-panel {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    padding: 1rem 0 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-xpress-personal-loan-summary-panel > legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 0.5rem;
+    float: none;
+    width: 100%;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount {
+    border-left: 3px solid #5f8dda;
+    padding-left: 0.75rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount p {
+    margin: 0;
+    background: transparent;
+    line-height: 1.4;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount p .ty-label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #888;
+    margin-bottom: 0.15rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-amount p .ty-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #131313;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-disbursal-note {
+    background: #ebedff;
+    border-radius: 6px;
+    padding: 0.875rem 1.25rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-loan-disbursal-note p {
+    font-size: 0.8125rem;
+    color: #3d52d5;
+    margin: 0;
+    line-height: 1.5;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel {
+    grid-template-columns: 1fr;
+    gap: 0;
+    border: none;
+    box-shadow: 0 0 0 1px #dde0f5;
+    border-radius: 10px;
+    padding: 0;
+    overflow: hidden;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel > legend {
+    display: none;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel .ty-easy-loan-header {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #131313;
+    background: #eef0fb;
+    padding: 0.875rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel fieldset.panel-wrapper.field-easy-loan-management-panel .ty-easy-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: #131313;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-download-app-info {
+    border-top: 1px solid #dde0f5;
+    padding: 0.875rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-download-app-info::after {
+    content: "›";
+    font-size: 1.25rem;
+    color: #555;
+    flex-shrink: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-download-app-info p {
+    font-size: 0.875rem;
+    color: #131313;
+    margin: 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-more-services-note p {
+    font-size: 0.8125rem;
+    color: #555;
+    margin: 0.25rem 0;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-open-recurring-deposit,
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance {
+    background: #ede8ff;
+    border-radius: 10px;
+    padding: 1.25rem;
+    position: relative;
+    min-height: 140px;
+    margin: 0;
+    grid-column: 1;
+    overflow: hidden;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-open-recurring-deposit::before {
+    content: "💰";
+    font-size: 3.5rem;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    line-height: 1;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance {
+    background: #fce8f3;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance::before {
+    content: "❤️";
+    font-size: 3.5rem;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+    line-height: 1;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-open-recurring-deposit p,
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance p {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #131313;
+    margin: auto 0 0;
+    line-height: 1.4;
+    max-width: 58%;
+}
+
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-open-recurring-deposit p::first-line,
+body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel div.plain-text-wrapper.field-buy-health-insurance p::first-line {
+    color: #6b4ff6;
+    font-weight: 400;
+    font-size: 0.8125rem;
+}
+
+@media (width <= 768px) {
+    body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel {
+        grid-template-columns: 1fr;
+    }
+
+    body.page-personal-loan-thankyou main .form form fieldset.panel-wrapper.field-thank-you-screen-panel > fieldset.panel-wrapper.field-additional-services-panel {
+        grid-column: 1;
+        grid-row: auto;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Welcome page field validation */
+main .form form .field-wrapper .wv-field-error {
+    color: var(--form-error-color);
+    font-size: 0.8rem;
+    font-weight: 600;
+    /* margin-top: 0.3rem; */
+    margin-bottom: -1.9rem;
+    display: none;
+    margin-left:5px;
+}
+
+main .form form .field-wrapper input.wv-input-invalid {
+    border-color: var(--form-error-color);
+    outline-color: var(--form-error-color);
+}
+
+main .form form .field-mobileno.wv-has-error ~ .field-description {
+    display: none;
+}
+
+main .form form .field-wrapper.wv-has-error .field-description {
+    display: none;
+}
+
+main .form form button.wv-btn-disabled,
+main .form form button:disabled {
+    background-color: #a0a0a0 !important;
+    border-color: #a0a0a0 !important;
+    color: #fff !important;
+    opacity: 1;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+

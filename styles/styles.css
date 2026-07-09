@@ -255,3 +255,8 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* HDFC journey pages: collapse EDS nav spacer when header fragment is present */
+body:has(.field-header-test) {
+  --nav-height: 0px;
+}

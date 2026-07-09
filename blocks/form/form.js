@@ -579,5 +579,46 @@ export default async function decorate(block) {
       form.dataset.formpath = formDef.properties['fd:path'];
     }
     container.replaceWith(form);
+
+    // Only inject phone prefix on the welcome/login page, not on preview/offer/thankyou
+    const path = window.location.pathname;
+    const isLoginPage = path.includes('otp-login') || path.includes('welcome');
+    if (!isLoginPage) return;
+
+    // Inject India flag +91 prefix into mobile input
+    function addPhonePrefix() {
+      const telInput = form.querySelector(
+        'input[type="tel"],'
+        + ' input[name*="mobile" i],'
+        + ' input[name*="aadhaar" i],'
+        + ' input[placeholder*="aadhaar" i],'
+        + ' input[placeholder*="aadhar" i]',
+      );
+      if (!telInput || telInput.closest('.phone-prefix-wrapper')) return;
+      const parent = telInput.parentElement;
+      const wrapper = document.createElement('div');
+      wrapper.className = 'phone-prefix-wrapper';
+      const prefix = document.createElement('span');
+      prefix.className = 'phone-flag-prefix';
+      prefix.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 30 20" style="border-radius:2px;flex-shrink:0"><rect width="30" height="20" fill="#138808"/><rect width="30" height="14" fill="#fff"/><rect width="30" height="6.67" fill="#FF9933"/><circle cx="15" cy="10" r="3.5" fill="none" stroke="#000080" stroke-width="0.6"/><circle cx="15" cy="10" r="0.7" fill="#000080"/></svg>&nbsp;+91';
+      parent.insertBefore(wrapper, telInput);
+      wrapper.appendChild(prefix);
+      wrapper.appendChild(telInput);
+    }
+
+    // Watch for mobile input added by the AF engine (renders asynchronously)
+    const phonePrefixObserver = new MutationObserver(() => {
+      const tel = form.querySelector(
+        'input[type="tel"], input[name*="mobile" i], input[name*="aadhaar" i]',
+      );
+      if (tel && !form.querySelector('.phone-prefix-wrapper')) {
+        addPhonePrefix();
+        phonePrefixObserver.disconnect();
+      }
+    });
+    phonePrefixObserver.observe(form, { childList: true, subtree: true });
+    setTimeout(addPhonePrefix, 500);
+    setTimeout(addPhonePrefix, 2000);
+    setTimeout(addPhonePrefix, 4000);
   }
 }
