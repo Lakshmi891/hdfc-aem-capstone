@@ -142,7 +142,7 @@ const AEM_AUTHOR_FORMS_BASE = '/content/forms/af/lakshmi-forms-capstone';
 
 function getEDSUrl(path) {
   return window.location.hostname.includes('adobeaemcloud.com')
-    ? `${AEM_AUTHOR_FORMS_BASE}${path}.html?ref=otp-login`
+    ? `${AEM_AUTHOR_FORMS_BASE}${path}.html`
     : path;
 }
 
