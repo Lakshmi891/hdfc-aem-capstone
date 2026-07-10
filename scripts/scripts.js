@@ -271,6 +271,12 @@ function initOTPPageHandlers() {
     ongoingEmi: '0',
     residenceType: 'Owned by Parents',
     dateOfBirth: '1990-05-15',
+    salaryAccountNumber: '123456789011',
+    ifscCode: 'ICICI0005001',
+    salaryBankName: 'ICICI Bank',
+    officeAddress: 'B4-1, MIG Duplex, Naveen Nagar, PAC Tiraha, Muzaffarpur, Uttar Pradesh 200972',
+    referenceFullName: 'Swapnil Patel',
+    referenceMobile: '9876543210',
   };
 
   function getJourneyData() {
@@ -815,6 +821,26 @@ function initPreviewPageHandlers() {
     }
     setVal('preview_address', address);
     setVal('preview_residence_type', offer.residenceType || 'Owned by Parents');
+
+    // Salary Account Details
+    setVal('preview_salary_account', offer.salaryAccountNumber || '123456789011');
+    setVal('preview_ifsc', offer.ifscCode || 'ICICI0005001');
+    setVal('preview_bank_name', offer.salaryBankName || 'ICICI Bank');
+
+    // Office Address
+    setVal('preview_office_address', offer.officeAddress || 'B4-1, MIG Duplex, Naveen Nagar, PAC Tiraha, Muzaffarpur, Uttar Pradesh 200972');
+
+    // Reference Details
+    setVal('preview_reference_name', offer.referenceFullName || 'Swapnil Patel');
+    setVal('preview_reference_mobile', offer.referenceMobile || '9876543210');
+
+    // Verify Email ID
+    const previewPersonalEmail = offer.emailAddress || 'ankit@gmail.com';
+    const previewWorkEmail = offer.workEmail || 'ankit@adobe.com';
+    setVal('preview_personal_email', previewPersonalEmail);
+    setVal('preview_work_email', previewWorkEmail);
+    setValByLabel(['personal email'], previewPersonalEmail);
+    setValByLabel(['work email'], previewWorkEmail);
   }
 
   setTimeout(populatePreview, 1000);
@@ -836,9 +862,14 @@ function initPreviewPageHandlers() {
   setTimeout(addScheduleChargesLink, 1500);
 
   function initAccordion() {
-    const panels = document.querySelectorAll(
-      'fieldset.panel-wrapper.field-loan-details, fieldset.panel-wrapper.field-personal-details',
-    );
+    const panels = document.querySelectorAll([
+      'fieldset.panel-wrapper.field-loan-details',
+      'fieldset.panel-wrapper.field-personal-details',
+      'fieldset.panel-wrapper.field-salary-account-details',
+      'fieldset.panel-wrapper.field-office-address',
+      'fieldset.panel-wrapper.field-reference-details',
+      'fieldset.panel-wrapper.field-verify-email-id',
+    ].join(', '));
     panels.forEach((panel) => {
       const legend = panel.querySelector(':scope > legend');
       if (!legend) return;
@@ -854,9 +885,133 @@ function initPreviewPageHandlers() {
 
   setTimeout(initAccordion, 1500);
 
+  function setupVerifyEmailPanel() {
+    const panel = document.querySelector('.field-verify-email-id');
+    if (!panel || panel.dataset.verifySetup) return;
+    panel.dataset.verifySetup = '1';
+
+    const emailFields = [
+      {
+        cls: '.field-preview-personal-email',
+        desc: 'Mandatory: Verify using OTP for receiving loan updates & communications.',
+      },
+      {
+        cls: '.field-preview-work-email',
+        desc: 'Verify using OTP for effortless process & to get instant approvals.',
+      },
+    ];
+
+    emailFields.forEach(({ cls, desc }) => {
+      const wrapper = panel.querySelector(cls);
+      if (!wrapper || wrapper.querySelector('.verify-email-row')) return;
+      const input = wrapper.querySelector('input');
+      const label = wrapper.querySelector('label');
+      if (!input) return;
+
+      // Input box: bordered container with floating label on its border
+      const inputBox = document.createElement('div');
+      inputBox.className = 'email-input-box';
+      if (label) inputBox.appendChild(label);
+      input.replaceWith(inputBox);
+      inputBox.appendChild(input);
+
+      // Outer flex row: input box + Verify button
+      const row = document.createElement('div');
+      row.className = 'verify-email-row';
+      inputBox.replaceWith(row);
+      row.appendChild(inputBox);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'verify-email-btn';
+      btn.textContent = 'Verify';
+      row.appendChild(btn);
+
+      // OTP row (hidden until Verify clicked)
+      const otpRow = document.createElement('div');
+      otpRow.className = 'verify-otp-row';
+      otpRow.style.display = 'none';
+
+      const otpInput = document.createElement('input');
+      otpInput.type = 'text';
+      otpInput.maxLength = 6;
+      otpInput.placeholder = 'Enter OTP';
+      otpInput.className = 'verify-otp-input';
+      otpInput.inputMode = 'numeric';
+
+      const submitOtp = document.createElement('button');
+      submitOtp.type = 'button';
+      submitOtp.className = 'verify-otp-submit';
+      submitOtp.textContent = 'Confirm OTP';
+
+      const resendOtp = document.createElement('button');
+      resendOtp.type = 'button';
+      resendOtp.className = 'verify-otp-resend';
+      resendOtp.textContent = 'Resend';
+
+      otpRow.appendChild(otpInput);
+      otpRow.appendChild(submitOtp);
+      otpRow.appendChild(resendOtp);
+      wrapper.appendChild(otpRow);
+
+      // Verified badge (hidden until OTP submitted)
+      const badge = document.createElement('span');
+      badge.className = 'verify-email-badge';
+      badge.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Verified';
+      badge.style.display = 'none';
+      row.appendChild(badge);
+
+      let generatedOtp = '';
+
+      btn.addEventListener('click', () => {
+        generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+        otpRow.style.display = 'flex';
+        btn.textContent = 'OTP Sent';
+        btn.classList.add('otp-sent-state');
+        otpInput.value = generatedOtp;
+        otpInput.focus();
+      });
+
+      submitOtp.addEventListener('click', () => {
+        if (otpInput.value.trim() !== generatedOtp) {
+          otpInput.style.borderColor = '#e53e3e';
+          return;
+        }
+        otpRow.style.display = 'none';
+        btn.style.display = 'none';
+        badge.style.display = 'inline-flex';
+        const box = wrapper.querySelector('.email-input-box');
+        if (box) box.style.borderColor = '#38a169';
+        wrapper.classList.add('email-verified');
+      });
+
+      resendOtp.addEventListener('click', () => {
+        generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+        otpInput.value = generatedOtp;
+        otpInput.style.borderColor = '#c7d0f5';
+        btn.textContent = 'OTP Resent';
+        btn.classList.add('otp-sent-state');
+        otpInput.focus();
+      });
+
+      otpInput.addEventListener('input', () => {
+        otpInput.style.borderColor = '#d0d5dd';
+      });
+
+      const descEl = document.createElement('div');
+      descEl.className = 'verify-email-desc';
+      descEl.textContent = desc;
+      wrapper.appendChild(descEl);
+    });
+  }
+
+  setTimeout(setupVerifyEmailPanel, 1200);
+  setTimeout(setupVerifyEmailPanel, 2500);
+
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
+    if (btn.classList.contains('verify-otp-submit') || btn.classList.contains('verify-otp-resend')) return;
     const txt = btn.textContent.trim().toLowerCase();
     if (!txt.includes('confirm') && !txt.includes('submit')) return;
     e.preventDefault();
@@ -1418,12 +1573,38 @@ function initPersonalInfoPageHandlers() {
       employerTextInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
-    // Pre-fill Industry Type (text or select)
-    const industryInput = document.querySelector('.field-employer-details-panel .field-industry-type input')
-      || document.querySelector('.field-employer-details-panel .field-industry-type select');
-    if (industryInput && !industryInput.value) {
-      industryInput.value = offer.industryType || 'IT';
-      industryInput.dispatchEvent(new Event('input', { bubbles: true }));
+    // Industry Type — replace text input with a styled select dropdown
+    const industryWrapper = document.querySelector('.field-employer-details-panel .field-industry-type');
+    const industryTextInput = industryWrapper?.querySelector('input');
+    if (industryWrapper && industryTextInput && !industryWrapper.dataset.industrySetup) {
+      industryWrapper.dataset.industrySetup = '1';
+      const industryOptions = [
+        'IT / Software',
+        'Banking & Finance',
+        'Healthcare',
+        'Other',
+      ];
+      const select = document.createElement('select');
+      select.name = industryTextInput.name;
+      select.id = industryTextInput.id;
+      select.className = industryTextInput.className;
+      select.classList.add('industry-select');
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = '';
+      defaultOpt.textContent = 'Select Industry Type';
+      defaultOpt.disabled = true;
+      select.appendChild(defaultOpt);
+      industryOptions.forEach((opt) => {
+        const o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt;
+        select.appendChild(o);
+      });
+      const prefill = offer.industryType || 'IT / Software';
+      const match = industryOptions.find((o) => o.toLowerCase().includes(prefill.toLowerCase()));
+      select.value = match || industryOptions[0];
+      industryTextInput.replaceWith(select);
+      select.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
     // Pre-fill Work Email ID
@@ -1566,11 +1747,71 @@ function initPersonalInfoPageHandlers() {
         setTimeout(() => msg?.remove(), 4000);
       }
 
+      let personalOtp = '';
+
+      const chipsRow = document.querySelector('.email-chips-row');
+
+      function showOtpRow() {
+        let otpRow = personalEmailWrapper.parentElement.querySelector('.pi-otp-row');
+        if (otpRow) { otpRow.style.display = 'flex'; return; }
+        otpRow = document.createElement('div');
+        otpRow.className = 'pi-otp-row';
+
+        const otpInput = document.createElement('input');
+        otpInput.type = 'text';
+        otpInput.maxLength = 6;
+        otpInput.className = 'pi-otp-input';
+        otpInput.inputMode = 'numeric';
+        otpInput.placeholder = 'Enter OTP';
+
+        const confirmBtn = document.createElement('button');
+        confirmBtn.type = 'button';
+        confirmBtn.className = 'pi-otp-confirm';
+        confirmBtn.textContent = 'Confirm OTP';
+
+        const resendBtn = document.createElement('button');
+        resendBtn.type = 'button';
+        resendBtn.className = 'pi-otp-resend';
+        resendBtn.textContent = 'Resend';
+
+        otpRow.appendChild(otpInput);
+        otpRow.appendChild(confirmBtn);
+        otpRow.appendChild(resendBtn);
+        // Insert after chips row so order is: email input → chips → OTP row (no overlap)
+        const anchor = chipsRow || personalEmailWrapper;
+        anchor.insertAdjacentElement('afterend', otpRow);
+
+        confirmBtn.addEventListener('click', () => {
+          if (otpInput.value.trim() !== personalOtp) {
+            otpInput.style.borderColor = '#e53e3e';
+            return;
+          }
+          otpRow.style.display = 'none';
+          verifyBtn.textContent = 'OTP Sent';
+          verifyBtn.classList.add('otp-sent-state');
+          markVerified();
+          showSuccess();
+        });
+
+        resendBtn.addEventListener('click', () => {
+          personalOtp = String(Math.floor(100000 + Math.random() * 900000));
+          otpInput.value = personalOtp;
+          otpInput.style.borderColor = '#c7d0f5';
+          verifyBtn.textContent = 'OTP Resent';
+        });
+
+        otpInput.addEventListener('input', () => { otpInput.style.borderColor = '#c7d0f5'; });
+      }
+
       verifyBtn.addEventListener('click', () => {
         const val = emailInput.value.trim();
         if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return;
-        markVerified();
-        showSuccess();
+        personalOtp = String(Math.floor(100000 + Math.random() * 900000));
+        verifyBtn.textContent = 'OTP Sent';
+        verifyBtn.classList.add('otp-sent-state');
+        showOtpRow();
+        const otpInput = personalEmailWrapper.parentElement.querySelector('.pi-otp-input');
+        if (otpInput) otpInput.value = personalOtp;
       });
 
       emailInput.addEventListener('input', resetVerified);
@@ -1625,11 +1866,67 @@ function initPersonalInfoPageHandlers() {
         setTimeout(() => msg?.remove(), 4000);
       }
 
+      let workOtp = '';
+
+      function showWorkOtpRow() {
+        let otpRow = workEmailWrap.parentElement.querySelector('.pi-otp-row');
+        if (otpRow) { otpRow.style.display = 'flex'; return; }
+        otpRow = document.createElement('div');
+        otpRow.className = 'pi-otp-row';
+
+        const otpInput = document.createElement('input');
+        otpInput.type = 'text';
+        otpInput.maxLength = 6;
+        otpInput.className = 'pi-otp-input';
+        otpInput.inputMode = 'numeric';
+        otpInput.placeholder = 'Enter OTP';
+
+        const confirmBtn = document.createElement('button');
+        confirmBtn.type = 'button';
+        confirmBtn.className = 'pi-otp-confirm';
+        confirmBtn.textContent = 'Confirm OTP';
+
+        const resendBtn = document.createElement('button');
+        resendBtn.type = 'button';
+        resendBtn.className = 'pi-otp-resend';
+        resendBtn.textContent = 'Resend';
+
+        otpRow.appendChild(otpInput);
+        otpRow.appendChild(confirmBtn);
+        otpRow.appendChild(resendBtn);
+        workEmailWrap.insertAdjacentElement('afterend', otpRow);
+
+        confirmBtn.addEventListener('click', () => {
+          if (otpInput.value.trim() !== workOtp) {
+            otpInput.style.borderColor = '#e53e3e';
+            return;
+          }
+          otpRow.style.display = 'none';
+          workVerifyBtn.textContent = 'OTP Sent';
+          workVerifyBtn.classList.add('otp-sent-state');
+          markWorkVerified();
+          showWorkSuccess();
+        });
+
+        resendBtn.addEventListener('click', () => {
+          workOtp = String(Math.floor(100000 + Math.random() * 900000));
+          otpInput.value = workOtp;
+          otpInput.style.borderColor = '#c7d0f5';
+          workVerifyBtn.textContent = 'OTP Resent';
+        });
+
+        otpInput.addEventListener('input', () => { otpInput.style.borderColor = '#c7d0f5'; });
+      }
+
       workVerifyBtn.addEventListener('click', () => {
         const val = workInput.value.trim();
         if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return;
-        markWorkVerified();
-        showWorkSuccess();
+        workOtp = String(Math.floor(100000 + Math.random() * 900000));
+        workVerifyBtn.textContent = 'OTP Sent';
+        workVerifyBtn.classList.add('otp-sent-state');
+        showWorkOtpRow();
+        const otpInput = workEmailWrap.parentElement.querySelector('.pi-otp-input');
+        if (otpInput) otpInput.value = workOtp;
       });
 
       workInput.addEventListener('input', resetWorkVerified);
@@ -1702,6 +1999,34 @@ function initPersonalInfoPageHandlers() {
       confirmBtn.dataset.infoSetup = '1';
       confirmBtn.type = 'button';
       confirmBtn.addEventListener('click', () => {
+        const personalVerified = document.querySelector('.field-personal-details .field-personal-email.email-verified');
+        const workVerified = document.querySelector('.field-work-email-id-panel .field-work-email-id.email-verified');
+
+        let errEl = document.querySelector('.email-verify-error');
+        if (!errEl) {
+          errEl = document.createElement('p');
+          errEl.className = 'email-verify-error';
+          errEl.style.cssText = 'color:#e53e3e;font-size:0.82rem;margin:0.5rem 0 0;font-weight:500;';
+          confirmBtn.closest('.field-confirm-button').insertAdjacentElement('beforebegin', errEl);
+        }
+
+        if (!personalVerified && !workVerified) {
+          errEl.textContent = 'Please verify both Personal Email and Work Email before proceeding.';
+          errEl.style.display = 'block';
+          return;
+        }
+        if (!personalVerified) {
+          errEl.textContent = 'Please verify your Personal Email before proceeding.';
+          errEl.style.display = 'block';
+          return;
+        }
+        if (!workVerified) {
+          errEl.textContent = 'Please verify your Work Email before proceeding.';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        errEl.style.display = 'none';
         window.location.href = getEDSUrl('/get-bureau');
       });
     }
