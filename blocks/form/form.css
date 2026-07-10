@@ -2862,7 +2862,7 @@ main .form form.personal-info-form .field-confirm-button {
 }
 
 main .form form.personal-info-form .field-confirm-button button {
-    /* background: #1e2f6e; */
+    background: #3b5bdb;
     border-radius: 24px;
     padding: 0.75rem 2rem;
     font-size: 0.9375rem;
@@ -2884,4 +2884,413 @@ main .form form.personal-info-form .field-confirm-button button::after {
 main .form form.personal-info-form .field-back-button {
     display: none !important;
 }
+/* stylelint-enable no-descending-specificity */
+
+/* ======================== GET BUREAU PAGE ======================== */
+/* stylelint-disable no-descending-specificity */
+
+main .form form.get-bureau-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: transparent;
+}
+
+/* Section panels */
+main .form form.get-bureau-form .field-select-bank-panel,
+main .form form.get-bureau-form .field-income-verification-panel {
+    background: #fff;
+    border: 1.5px solid #e2e5f0;
+    border-radius: 16px;
+    padding: 0;
+    display: block;
+    margin: 0;
+    overflow: visible;
+}
+
+/* Panel legend = section header — blue bg only on heading row */
+main .form form.get-bureau-form .field-select-bank-panel > legend,
+main .form form.get-bureau-form .field-income-verification-panel > legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #1e2f6e;
+    background: #eef0ff;
+    padding: 16px 24px;
+    width: 100%;
+    float: left;
+    box-sizing: border-box;
+    border-radius: 14px 14px 0 0;
+}
+
+main .form form.get-bureau-form .field-select-bank-panel::after,
+main .form form.get-bureau-form .field-income-verification-panel::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+main .form form.get-bureau-form .bureau-panel-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: #1e2f6e;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: block;
+}
+
+/* ---- Bank Selection Cards ---- */
+main .form form.get-bureau-form .field-bank-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border: none;
+    padding: 20px 24px 24px;
+    align-items: flex-start;
+}
+
+main .form form.get-bureau-form .field-bank-selection > legend {
+    display: none;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper {
+    position: relative;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 58px;
+    cursor: pointer;
+    z-index: 2;
+    margin: 0;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    min-width: 58px;
+    height: 58px;
+    min-height: 58px;
+    background: #fff;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 10px;
+    padding: 6px;
+    cursor: pointer;
+    position: relative;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+}
+
+main .form form.get-bureau-form .field-bank-selection .bank-name {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: #374151;
+    text-align: center;
+    line-height: 1.3;
+    cursor: pointer;
+    user-select: none;
+    width: 68px;
+    height: 18px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+/* Bank logo tile */
+main .form form.get-bureau-form .field-bank-selection .bank-logo-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+main .form form.get-bureau-form .field-bank-selection .bank-logo-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    display: block;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper input[type="radio"]:checked + label {
+    border: 2px solid #3b5bdb;
+    box-shadow: 0 0 0 1px #3b5bdb40;
+}
+
+/* Blue check badge at bottom of selected card */
+main .form form.get-bureau-form .field-bank-selection .bank-check-badge {
+    display: none;
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 18px;
+    background: #3b5bdb;
+    border-radius: 50%;
+    z-index: 3;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper input[type="radio"]:checked + label .bank-check-badge {
+    display: flex;
+}
+
+main .form form.get-bureau-form .field-bank-selection .bank-check-badge svg {
+    width: 10px;
+    height: 10px;
+    stroke: #fff;
+    stroke-width: 3;
+    fill: none;
+}
+
+/* "Other Bank" — styled as wide dropdown card */
+main .form form.get-bureau-form .field-bank-selection .other-bank-wrapper {
+    align-self: flex-start;
+    flex: 1 1 auto;
+    min-width: 140px;
+    position: relative;
+    background: #fff;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-wrapper label {
+    display: none;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-wrapper input[type="radio"] {
+    pointer-events: none;
+    z-index: 0;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-dropdown {
+    position: relative;
+    width: 100%;
+    z-index: 3;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    height: 54px;
+    cursor: pointer;
+    gap: 8px;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-chevron svg {
+    width: 16px;
+    height: 16px;
+    stroke: #9ca3af;
+    display: block;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid #e2e5f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    z-index: 100;
+    overflow: hidden;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-dropdown.open .other-bank-menu {
+    display: block;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-option {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: #111827;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-option:hover {
+    background: #f3f4f6;
+}
+
+/* ---- Income Verification Method Cards ---- */
+main .form form.get-bureau-form .field-income-verification-method {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 14px !important;
+    border: none;
+    padding: 20px 24px 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+main .form form.get-bureau-form .field-income-verification-method > legend {
+    display: none;
+}
+
+/* Override global .radio-wrapper display:flex so desc stacks below title */
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper {
+    flex: 1 1 0;
+    min-width: 0;
+    position: relative;
+    background: #fff;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    display: block !important;
+    padding-bottom: 0;
+    transition: border-color 0.15s;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+/* Label = radio indicator + title in a row */
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper label {
+    display: flex !important;
+    flex-basis: auto !important;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 14px 6px;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    color: #111827;
+    line-height: 1.3;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Custom radio circle via ::before on the label */
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper label::before {
+    content: '';
+    min-width: 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #d0d5dd;
+    box-sizing: border-box;
+    margin-top: 1px;
+    display: block;
+    flex-shrink: 0;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper input[type="radio"]:checked + label::before {
+    border: 5px solid #3b5bdb;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper:has(input[type="radio"]:checked) {
+    border-color: #3b5bdb;
+    box-shadow: 0 0 0 0.5px #3b5bdb;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .card-title {
+    font-weight: 700;
+}
+
+/* Description block — naturally below label since wrapper is display:block */
+main .form form.get-bureau-form .field-income-verification-method .card-desc {
+    display: block;
+    font-size: 0.8125rem;
+    color: #6b7280;
+    line-height: 1.4;
+    padding: 4px 14px 36px;
+    margin: 0;
+}
+
+/* Green "Recommended" banner — position:absolute so it sits at card bottom */
+main .form form.get-bureau-form .field-income-verification-method .card-recommended {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #16a34a;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 5px 8px;
+    letter-spacing: 0.01em;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper:has(input[type="radio"]:checked) .card-recommended {
+    display: block;
+}
+
+/* Hide original description divs (content moved into cards by JS) */
+main .form form.get-bureau-form .field-account-aggregator-info,
+main .form form.get-bureau-form .field-login-salary-account-info,
+main .form form.get-bureau-form .field-upload-bank-statement-info {
+    display: none !important;
+}
+
+/* Continue button */
+main .form form.get-bureau-form .field-continue-button {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+}
+
+main .form form.get-bureau-form .field-continue-button button {
+    background: #3b5bdb;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: auto;
+    min-width: 160px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1;
+    transition: background 0.15s;
+}
+
+main .form form.get-bureau-form .field-continue-button button:hover {
+    background: #2f4ec4;
+}
+
 /* stylelint-enable no-descending-specificity */

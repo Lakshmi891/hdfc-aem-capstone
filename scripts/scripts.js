@@ -1433,6 +1433,17 @@ function initPersonalInfoPageHandlers() {
       workEmailInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
+    // Pre-fill Type of Loan dropdown — select first non-placeholder option
+    const loanTypeSelect = document.querySelector('.field-type-of-loan-panel .field-type-of-loan select, .field-type-of-loan-panel .field-select-loan-type select')
+      || document.querySelector('.field-type-of-loan-panel div.drop-down-wrapper select');
+    if (loanTypeSelect && !loanTypeSelect.value) {
+      const firstOption = [...loanTypeSelect.options].find((o) => o.value && !o.disabled);
+      if (firstOption) {
+        loanTypeSelect.value = firstOption.value;
+        loanTypeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+
     // "Leave blank if not available on PAN": move hint to bottom of Middle Name wrapper
     // so it appears below the Middle Name input (right column), not beside Last Name.
     const panPanel = document.querySelector('.field-full-name-as-per-pan');
@@ -1684,9 +1695,255 @@ function initPersonalInfoPageHandlers() {
         typeOfLoanPanel.insertAdjacentElement('afterend', confirmBtnWrapper);
       }
     }
+
+    // Confirm button → navigate to Get Bureau page
+    const confirmBtn = document.querySelector('.field-confirm-button button');
+    if (confirmBtn && !confirmBtn.dataset.infoSetup) {
+      confirmBtn.dataset.infoSetup = '1';
+      confirmBtn.type = 'button';
+      confirmBtn.addEventListener('click', () => {
+        window.location.href = getEDSUrl('/get-bureau');
+      });
+    }
   }
 
-  setTimeout(run, 1500);
+  // Run as soon as the form fieldset appears — avoids the 1.5 s FOUC from a fixed timeout
+  const target = document.querySelector('.field-personal-info');
+  if (target) {
+    run();
+    return;
+  }
+  const obs = new MutationObserver(() => {
+    if (document.querySelector('.field-personal-info')) {
+      obs.disconnect();
+      run();
+    }
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+  // Safety fallback in case the observer never fires
+  setTimeout(() => { obs.disconnect(); run(); }, 3000);
+}
+
+function initGetBureauPageHandlers() {
+  if (!window.location.pathname.includes('get-bureau')) return;
+
+  // Colored brand tiles — short brand text inside box, full name stays in label below
+  const bankTiles = {
+    hdfc: '/icons/hdfc.png',
+    icici: '/icons/icic.png',
+    axis: '/icons/axis.png',
+    kotak: '/icons/kotak.png',
+    sbi: '/icons/sbi.png',
+    bob: '/icons/baroda.png',
+    idfc: '/icons/idfc.png',
+  };
+
+  const methodDescriptions = {
+    account_aggregator: 'Instant & secure, processed via RBI-regulated partner.',
+    login_salary_account: 'Quick & hassle-free, processed via NetBanking.',
+    upload_bank_statement: 'Processed via uploading bank statement of the last 6 months.',
+  };
+
+  const bankIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 22h18"/><path d="M2 7l10-5 10 5"/><rect x="5" y="7" width="2" height="13"/><rect x="11" y="7" width="2" height="13"/><rect x="17" y="7" width="2" height="13"/><line x1="2" y1="7" x2="22" y2="7"/></svg>';
+  const incomeVerifyIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>';
+  const checkSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const arrowSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;vertical-align:middle"><polyline points="9 18 15 12 9 6"/></svg>';
+
+  function addLegendIcon(panel, svgHtml) {
+    const legend = panel.querySelector(':scope > legend');
+    if (!legend || legend.querySelector('.bureau-panel-icon')) return;
+    const icon = document.createElement('span');
+    icon.className = 'bureau-panel-icon';
+    icon.innerHTML = svgHtml;
+    legend.prepend(icon);
+  }
+
+  function setupBankCards() {
+    const bankGroup = document.querySelector('.field-bank-selection');
+    if (!bankGroup || bankGroup.dataset.bureauBankSetup) return;
+    bankGroup.dataset.bureauBankSetup = '1';
+
+    bankGroup.querySelectorAll('.radio-wrapper').forEach((wrapper) => {
+      const input = wrapper.querySelector('input[type="radio"]');
+      const label = wrapper.querySelector('label');
+      if (!input || !label) return;
+      const val = input.value;
+
+      if (val === 'other') {
+        wrapper.classList.add('other-bank-wrapper');
+        if (!wrapper.querySelector('.other-bank-dropdown')) {
+          const otherBankList = ['Union Bank of India', 'Punjab National Bank'];
+
+          const dropdown = document.createElement('div');
+          dropdown.className = 'other-bank-dropdown';
+
+          const trigger = document.createElement('div');
+          trigger.className = 'other-bank-trigger';
+          trigger.innerHTML = `<span class="other-bank-text">Other Bank</span><span class="other-bank-chevron"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>`;
+
+          const menu = document.createElement('ul');
+          menu.className = 'other-bank-menu';
+          otherBankList.forEach((name) => {
+            const li = document.createElement('li');
+            li.className = 'other-bank-option';
+            li.textContent = name;
+            li.addEventListener('click', (e) => {
+              e.stopPropagation();
+              trigger.querySelector('.other-bank-text').textContent = name;
+              dropdown.classList.remove('open');
+              input.value = name.toLowerCase().replace(/\s+/g, '_');
+            });
+            menu.appendChild(li);
+          });
+
+          trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+          });
+
+          document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+          dropdown.appendChild(trigger);
+          dropdown.appendChild(menu);
+          label.textContent = '';
+          label.style.display = 'none';
+          wrapper.appendChild(dropdown);
+        }
+        return;
+      }
+
+      if (!wrapper.querySelector('.bank-logo-icon')) {
+        const logoSrc = bankTiles[val];
+        const bankNameText = label.textContent.trim();
+
+        const iconEl = document.createElement('span');
+        iconEl.className = 'bank-logo-icon';
+
+        if (logoSrc) {
+          const img = document.createElement('img');
+          img.src = logoSrc;
+          img.alt = bankNameText;
+          img.onerror = () => {
+            img.remove();
+            iconEl.textContent = bankNameText.slice(0, 4).toUpperCase();
+            iconEl.style.fontSize = '0.65rem';
+            iconEl.style.fontWeight = '700';
+            iconEl.style.color = '#374151';
+          };
+          iconEl.appendChild(img);
+        } else {
+          iconEl.textContent = bankNameText.slice(0, 4).toUpperCase();
+        }
+
+        label.textContent = '';
+        label.appendChild(iconEl);
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'bank-name';
+        nameEl.textContent = bankNameText;
+        nameEl.addEventListener('click', () => input.click());
+        wrapper.appendChild(nameEl);
+      }
+
+      if (!wrapper.querySelector('.bank-check-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'bank-check-badge';
+        badge.innerHTML = checkSvg;
+        const lbl = wrapper.querySelector('label');
+        if (lbl) lbl.appendChild(badge);
+      }
+    });
+  }
+
+  function setupIncomeCards() {
+    const methodGroup = document.querySelector('.field-income-verification-method');
+    if (!methodGroup || methodGroup.dataset.bureauIncomeSetup) return;
+    methodGroup.dataset.bureauIncomeSetup = '1';
+
+    methodGroup.querySelectorAll('.radio-wrapper').forEach((wrapper) => {
+      const input = wrapper.querySelector('input[type="radio"]');
+      const label = wrapper.querySelector('label');
+      if (!input || !label) return;
+      const val = input.value;
+
+      if (!wrapper.querySelector('.card-title')) {
+        const titleText = label.textContent.trim();
+        label.textContent = '';
+        const title = document.createElement('span');
+        title.className = 'card-title';
+        title.textContent = titleText;
+        label.appendChild(title);
+      }
+
+      if (!wrapper.querySelector('.card-desc')) {
+        const descEl = document.createElement('p');
+        descEl.className = 'card-desc';
+        descEl.textContent = methodDescriptions[val] || '';
+        wrapper.appendChild(descEl);
+      }
+
+      if (val === 'account_aggregator' && !wrapper.querySelector('.card-recommended')) {
+        const badge = document.createElement('div');
+        badge.className = 'card-recommended';
+        badge.textContent = 'Recommended';
+        wrapper.appendChild(badge);
+      }
+    });
+
+    const aaInput = methodGroup.querySelector('input[value="account_aggregator"]');
+    if (aaInput && !aaInput.checked) {
+      aaInput.checked = true;
+    }
+  }
+
+  function setupContinueButton() {
+    const btn = document.querySelector('.field-continue-button button');
+    if (!btn || btn.dataset.bureauSetup) return;
+    btn.dataset.bureauSetup = '1';
+    // eslint-disable-next-line no-param-reassign
+    btn.type = 'button';
+    btn.innerHTML = `Continue ${arrowSvg}`;
+    btn.addEventListener('click', () => {
+      const selectedBank = document.querySelector('input[name="bank_selection"]:checked')?.value;
+      const selectedMethod = document.querySelector('input[name="income_verification_method"]:checked')?.value;
+      try {
+        const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+        data.selectedBank = selectedBank;
+        data.incomeVerificationMethod = selectedMethod;
+        sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+      } catch (err) { /* ignore */ }
+      window.location.href = getEDSUrl('/personal-loan-offer');
+    });
+  }
+
+  function run() {
+    const bankPanel = document.querySelector('.field-select-bank-panel');
+    if (!bankPanel) return;
+
+    const form = bankPanel.closest('form');
+    if (form && !form.classList.contains('get-bureau-form')) {
+      form.classList.add('get-bureau-form');
+    }
+
+    addLegendIcon(bankPanel, bankIconSvg);
+    const incomePanel = document.querySelector('.field-income-verification-panel');
+    if (incomePanel) addLegendIcon(incomePanel, incomeVerifyIconSvg);
+
+    setupBankCards();
+    setupIncomeCards();
+    setupContinueButton();
+  }
+
+  const initial = document.querySelector('.field-select-bank-panel');
+  if (initial) { run(); return; }
+  const obs = new MutationObserver(() => {
+    if (document.querySelector('.field-select-bank-panel')) {
+      obs.disconnect();
+      run();
+    }
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+  setTimeout(() => { obs.disconnect(); run(); }, 3000);
 }
 
 async function loadPage() {
@@ -1706,6 +1963,7 @@ async function loadPage() {
   initWelcomePageIcons();
   initThankYouPageHandlers();
   initPersonalInfoPageHandlers();
+  initGetBureauPageHandlers();
 }
 
 loadPage();
