@@ -1697,6 +1697,18 @@ main .form form .field-offer-display-fragment .field-offer-summary div.plain-tex
 
 /* Personal Loan Preview Page (body class `page-personal-loan-preview` set by loadPage) */
 
+body.page-personal-loan-preview main .form form .plain-text-wrapper p strong {
+    color: #131313;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+body.page-personal-loan-preview main .form form .plain-text-wrapper p {
+    color: #131313;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details,
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details {
     background: #fff;
@@ -3778,6 +3790,18 @@ main .form form.get-bureau-form .field-continue-button button {
 
 main .form form.get-bureau-form .field-continue-button button:hover {
     background: #2f4ec4;
+}
+
+main .form form.get-bureau-form .plain-text-wrapper p strong {
+    color: #131313;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+main .form form.get-bureau-form .plain-text-wrapper p {
+    color: #131313;
+    font-size: 0.875rem;
+    margin: 0;
 }
 
 /* stylelint-enable no-descending-specificity */
