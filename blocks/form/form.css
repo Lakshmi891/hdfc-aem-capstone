@@ -3104,16 +3104,15 @@ main .form form.personal-info-form .field-personal-email .pi-email-check {
     line-height: 1;
 }
 
-/* Success message — grid item below chips row */
+/* Success message — inline after email field */
 main .form form.personal-info-form .pi-email-success {
-    grid-column: 1 / span 6;
     display: flex;
     align-items: center;
     gap: 6px;
     color: #15803d;
     font-size: 0.8125rem;
     font-weight: 500;
-    margin-top: -4px;
+    margin-top: 4px;
 }
 
 main .form form.personal-info-form .pi-email-success svg {

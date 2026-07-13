@@ -1773,8 +1773,7 @@ function initPersonalInfoPageHandlers() {
         const msg = document.createElement('div');
         msg.className = 'pi-email-success';
         msg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Email sent successfully';
-        const chipsRow = document.querySelector('.email-chips-row');
-        (chipsRow || personalEmailWrapper).insertAdjacentElement('afterend', msg);
+        personalEmailWrapper.insertAdjacentElement('afterend', msg);
         setTimeout(() => msg?.remove(), 4000);
       }
 
