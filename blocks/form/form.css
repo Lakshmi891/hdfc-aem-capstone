@@ -1206,6 +1206,7 @@ main .form form .phone-flag-prefix {
     flex-shrink: 0;
 }
 
+/* stylelint-disable no-descending-specificity */
 main .form form .phone-prefix-wrapper input {
     border: none !important;
     border-radius: 0 !important;
@@ -1696,12 +1697,24 @@ main .form form .field-offer-display-fragment .field-offer-summary div.plain-tex
 
 /* Personal Loan Preview Page (body class `page-personal-loan-preview` set by loadPage) */
 
+body.page-personal-loan-preview main .form form .plain-text-wrapper p strong {
+    color: #131313;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+body.page-personal-loan-preview main .form form .plain-text-wrapper p {
+    color: #131313;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details,
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details {
     background: #fff;
-    border: none;
-    box-shadow: 0 0 0 1px #dde0f5;
-    border-radius: 10px;
+    border: 1px solid #cdd3ec;
+    box-shadow: 0 1px 4px rgb(0 0 80 / 7%);
+    border-radius: 17px;
     padding: 0 1rem 1rem;
     gap: 0.75rem 1.25rem;
     overflow: hidden;
@@ -1709,32 +1722,48 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-per
 
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend,
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend {
-    background: #eef0fb;
-    border-radius: 10px 10px 0 0;
-    padding: 0.875rem 1.25rem;
-    margin: 0 -1rem 0;
-    width: calc(100% + 2rem);
-    float: none;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #131313;
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    float: none;
+    width: calc(100% + 34px);
+    margin-left: -17px;
+    padding: 0.875rem 1.25rem;
+    background: #eef0fb;
+    border: 1px solid #cdd3ec;
+    border-bottom: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+    border-radius: 14px 14px 0 0;
     cursor: pointer;
     user-select: none;
 }
 
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend::before {
-    content: "💼";
-    font-size: 1rem;
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper > legend::before {
+    content: none;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper > legend .preview-panel-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
 }
 
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend::before {
-    content: "👤";
-    font-size: 1rem;
-    flex-shrink: 0;
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper > legend .preview-panel-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend::after,
@@ -1763,6 +1792,13 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loa
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed] {
     padding-bottom: 0;
     overflow: hidden;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details[data-collapsed] > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed] > legend {
+    margin-bottom: 0;
+    border-radius: 17px;
+    border-bottom: none;
 }
 
 
@@ -1901,6 +1937,357 @@ body.page-personal-loan-preview main .form form.preview-form div.submit-wrapper 
     }
 
     body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details div.text-wrapper.field-preview-address {
+        grid-column: span 12;
+    }
+}
+
+/* ---- Preview: Salary Account Details, Office Address, Reference Details, Verify Email ID ---- */
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id {
+    background: #fff;
+    border: 1px solid #cdd3ec;
+    box-shadow: 0 1px 4px rgb(0 0 80 / 7%);
+    border-radius: 17px;
+    padding: 0 1rem 1rem;
+    gap: 0.75rem 1.25rem;
+    overflow: hidden;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id > legend {
+    background: #eef0fb;
+    border-radius: 17px 17px 0 0;
+    border: 1px solid #cdd3ec;
+    border-bottom: none;
+    padding: 0.875rem 1.25rem;
+    margin: 0 -1rem 14px;
+    width: calc(100% + 2rem);
+    float: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id > legend::after {
+    content: "∧";
+    margin-left: auto;
+    font-size: 1rem;
+    font-weight: 600;
+    color: navy;
+    transition: transform 0.2s ease;
+    display: inline-block;
+    letter-spacing: 0.05em;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details[data-collapsed] > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address[data-collapsed] > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details[data-collapsed] > legend::after,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] > legend::after {
+    content: "∨";
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details[data-collapsed] div.text-wrapper,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address[data-collapsed] div.text-wrapper,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details[data-collapsed] div.text-wrapper,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] div.text-wrapper,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] .field-wrapper,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] div.button-wrapper,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] div.submit-wrapper {
+    display: none;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details[data-collapsed],
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address[data-collapsed],
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details[data-collapsed],
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] {
+    padding-bottom: 0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details[data-collapsed] > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address[data-collapsed] > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details[data-collapsed] > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] > legend {
+    margin-bottom: 0;
+    border-radius: 17px;
+    border-bottom: none;
+}
+
+/* Fields — salary account (3 cols each), office/reference full-width */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details div.text-wrapper.field-preview-salary-account,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details div.text-wrapper.field-preview-ifsc,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details div.text-wrapper.field-preview-bank-name {
+    grid-column: span 4;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    position: relative;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address div.text-wrapper.field-preview-office-address {
+    grid-column: span 12;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    position: relative;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details div.text-wrapper.field-preview-reference-name,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details div.text-wrapper.field-preview-reference-mobile {
+    grid-column: span 6;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    position: relative;
+}
+
+/* Verify Email: inputs are editable + verify button */
+/* Email wrappers — 2 columns side by side */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id div.text-wrapper.field-preview-personal-email,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id div.text-wrapper.field-preview-work-email {
+    grid-column: span 6;
+    padding: 1.25rem 1rem 0.75rem;
+    margin: 0;
+    position: relative;
+}
+
+/* Bordered input box — the label floats on this border */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .email-input-box {
+    position: relative;
+    flex: 1;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 10px;
+    padding: 0.55rem 0.75rem 0.45rem;
+    background: #fff;
+}
+
+/* Floating label sits on the top border line */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .email-input-box label {
+    position: absolute;
+    top: -0.55rem;
+    left: 0.85rem;
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: #9ca3af;
+    background: #fff;
+    padding: 0 4px;
+    line-height: 1;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* Input inside the box — no border, transparent bg */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .email-input-box input {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1e2f6e;
+    width: 100%;
+    box-shadow: none;
+    pointer-events: auto;
+}
+
+/* Input + Verify button row (injected by JS) */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-email-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0.25rem;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-email-btn {
+    background: #fff;
+    color: #3b5bdb;
+    border: 1.5px solid #3b5bdb;
+    border-radius: 8px;
+    padding: 0.42rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s;
+    width: auto;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-email-btn:hover {
+    background: #eef0ff;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-email-btn.otp-sent-state {
+    cursor: default;
+}
+
+/* Description text below each email row */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-email-desc {
+    font-size: 0.72rem;
+    color: #888;
+    margin-top: 0.4rem;
+    line-height: 1.4;
+}
+
+/* OTP row */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-otp-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0.6rem;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-otp-input {
+    border: 1.5px solid #c7d0f5;
+    border-radius: 6px;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    width: 130px;
+    letter-spacing: 0.25em;
+    height: 38px;
+    line-height: 38px;
+    pointer-events: auto;
+    color: #1e2f6e;
+    background: #fff;
+    outline: none;
+    text-align: center;
+    box-sizing: border-box;
+    margin:0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-otp-input:focus {
+    border-color: #3b5bdb;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-otp-submit {
+    background: #3b5bdb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    height: 38px;
+    line-height: 38px;
+    width: auto;
+    transition: background 0.15s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-otp-submit:hover {
+    background: #2f4ac7;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-otp-resend {
+    background: #eef0ff;
+    color: #3b5bdb;
+    border: 1.5px solid #3b5bdb;
+    border-radius: 6px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    height: 38px;
+    line-height: 38px;
+    width: auto;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    transition: background 0.15s;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-otp-resend:hover {
+    background: #dde3ff;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-otp-note {
+    font-size: 0.72rem;
+    color: #3b5bdb;
+    font-weight: 500;
+}
+
+/* Verified badge */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-email-badge {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    background: #f0fdf4;
+    color: #38a169;
+    border: 1px solid #9ae6b4;
+    border-radius: 20px;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-left: 4px;
+}
+
+/* Accent bar for new panels */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details div.text-wrapper::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address div.text-wrapper::before,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details div.text-wrapper::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.4rem;
+    bottom: 0.4rem;
+    width: 2px;
+    background: #b8c2e8;
+    border-radius: 2px;
+}
+
+/* Label + value styles for new panels */
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details div.text-wrapper label,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address div.text-wrapper label,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details div.text-wrapper label {
+    font-size: 0.75rem;
+    color: #888;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details div.text-wrapper input[type="text"],
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address div.text-wrapper input[type="text"],
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details div.text-wrapper input[type="text"] {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    height: auto;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #131313;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+@media (width <= 768px) {
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details div.text-wrapper,
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details div.text-wrapper {
+        grid-column: span 6;
+    }
+
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address div.text-wrapper.field-preview-office-address {
+        grid-column: span 12;
+    }
+
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id div.text-wrapper.field-preview-personal-email,
+    body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id div.text-wrapper.field-preview-work-email {
         grid-column: span 12;
     }
 }
@@ -2196,6 +2583,7 @@ main .form form .field-wrapper .wv-field-error {
     color: var(--form-error-color);
     font-size: 0.8rem;
     font-weight: 600;
+
     /* margin-top: 0.3rem; */
     margin-bottom: -1.9rem;
     display: none;
@@ -2225,3 +2613,1195 @@ main .form form button:disabled {
     pointer-events: none;
 }
 
+/* ============================================================
+   Personal Loan Info Page – Section Panel Cards
+   Scoped via JS-added class  .personal-info-form  on <form>
+   ============================================================ */
+
+/* Tighten form row gap for info page */
+main .form form.personal-info-form {
+    row-gap: 12px;
+}
+
+/* ---- Card wrapper: every top-level section panel ---- */
+main .form form.personal-info-form > fieldset.panel-wrapper {
+    border: 1px solid #cdd3ec;
+    border-radius: 17px;
+
+    /* background: #fff; */
+    padding: 0 19px 20px;
+    grid-column: span 12;
+    box-shadow: 0 1px 4px rgb(0 0 80 / 7%);
+    gap: 12px 16px;
+    overflow: hidden;   /* clips legend bg to border-radius */
+}
+
+/* Only the two Aadhaar pre-filled panels use lavender — signals read-only data */
+main .form form.personal-info-form > fieldset.panel-wrapper.field-personal-info,
+main .form form.personal-info-form > fieldset.panel-wrapper.field-address-details {
+    background: #f2e7f9;
+    padding: 16px 20px 20px;
+}
+
+
+/* Customer Details legend hidden — title lives in .panel-external-header above the card */
+main .form form.personal-info-form > fieldset.panel-wrapper.field-personal-info > legend {
+    display: none;
+}
+
+/* Address Details legend hidden — title lives in .panel-internal-header inside the card */
+main .form form.personal-info-form > fieldset.panel-wrapper.field-address-details > legend {
+    display: none;
+}
+
+/* Internal header injected by JS as first child inside Address Details card */
+main .form form.personal-info-form .field-address-details .panel-internal-header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #131313;
+    padding-bottom: 8px;
+}
+
+main .form form.personal-info-form .field-address-details .panel-internal-header .panel-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+main .form form.personal-info-form .field-address-details .panel-internal-header .panel-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ---- External panel header (div injected by JS before the fieldset) ---- */
+main .form form.personal-info-form .panel-external-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0 4px 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    grid-column: span 12;
+}
+
+main .form form.personal-info-form .panel-external-header .panel-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+main .form form.personal-info-form .panel-external-header .panel-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ---- Panel header strip (legend) ---- */
+main .form form.personal-info-form > fieldset.panel-wrapper > legend {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    float: none;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    padding: 0.875rem 1.25rem;
+    background: #eef0fb;
+    border: 1px solid #cdd3ec;
+    border-bottom: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+    border-radius: 14px 14px 0 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* ---- Icon badge injected by JS inside each legend ---- */
+main .form form.personal-info-form > fieldset.panel-wrapper > legend .panel-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper > legend .panel-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ---- Collapsible panels: clickable header + chevron ---- */
+main .form form.personal-info-form > fieldset.panel-wrapper.collapsible > legend {
+    cursor: pointer;
+    user-select: none;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper.collapsible > legend::after {
+    content: '∧';
+    margin-left: auto;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #5e6f9e;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper.collapsible[data-collapsed="true"] > legend::after {
+    content: '∨';
+}
+
+/* Hide all panel content when collapsed (legend stays visible) */
+main .form form.personal-info-form > fieldset.panel-wrapper.collapsible[data-collapsed="true"] > *:not(legend) {
+    display: none !important;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper.collapsible[data-collapsed="true"] {
+    padding-bottom: 0;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper.collapsible[data-collapsed="true"] > legend {
+    margin-bottom: 0;
+    border-radius: 14px;
+    border-bottom: none;
+}
+
+/* ---- Inputs & labels within info panels ---- */
+main .form form.personal-info-form input:not([type="radio"], [type="checkbox"]),
+main .form form.personal-info-form select {
+    border-color: #c8ccd8;
+    color: #131313;
+    font-size: 0.9375rem;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper label {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 0;
+}
+
+/* ---- Customer Details: compact panel, name as display text ---- */
+
+/* Reduce panel height */
+main .form form.personal-info-form > fieldset.panel-wrapper.field-personal-info {
+    padding: 12px 16px 14px;
+    gap: 0;
+}
+
+/* Name field: left accent bar, minimal spacing */
+main .form form.personal-info-form .field-personal-info .field-customer-full-name {
+    border-left: 3px solid #8fa3d8;
+    padding-left: 14px;
+    grid-column: span 12;
+    margin: 0;
+}
+
+/* Label above the name */
+main .form form.personal-info-form .field-personal-info .field-customer-full-name label {
+    font-size: 0.775rem;
+    color: #9aa3c0;
+    display: block;
+    margin-bottom: 2px;
+    line-height: 1.3;
+}
+
+/* Hide the AEM input box — name is shown via the injected .pi-display-name span */
+main .form form.personal-info-form .field-personal-info .field-customer-full-name input {
+    display: none;
+}
+
+/* Injected name span: bold text, matches the UX */
+main .form form.personal-info-form .field-personal-info .field-customer-full-name .pi-display-name {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e2f6e;
+    line-height: 1.4;
+}
+
+/* ---- Floating label (Material Design outlined) for all editable input panels ----
+   Applies to every text / number / email / date / select wrapper inside the editable
+   panels. Excludes the two Aadhaar display panels which use a different style. */
+
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.text-wrapper,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.number-wrapper,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.email-wrapper,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.date-wrapper,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.select-wrapper,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.drop-down-wrapper {
+    position: relative;
+}
+
+/* Label sits ON the top border — white background cuts through the border line */
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.text-wrapper > label.field-label,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.number-wrapper > label.field-label,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.email-wrapper > label.field-label,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.date-wrapper > label.field-label,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.select-wrapper > label.field-label,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.drop-down-wrapper > label.field-label {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.875rem;
+    transform: translateY(-50%);
+    background: #fff;
+    padding: 0 4px;
+    font-size: 0.72rem;
+    color: #8a95b0;
+    font-weight: 400;
+    line-height: 1;
+    z-index: 1;
+    pointer-events: none;
+    white-space: nowrap;
+    margin: 0;
+}
+
+/* Input/select: push down to leave room for the floating label at top */
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.text-wrapper > input,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.number-wrapper > input,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.email-wrapper > input,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.date-wrapper > input,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.select-wrapper > select,
+main .form form.personal-info-form fieldset.panel-wrapper:not(.field-personal-info):not(.field-address-details) div.drop-down-wrapper > select {
+    margin-top: 0.5rem;
+    padding: 0.625rem 0.875rem;
+    border: 1.5px solid #d0d4e4;
+    border-radius: 8px;
+    background: #fff;
+    color: #1a2550;
+    font-size: 0.9375rem;
+    min-height: 46px;
+    width: 100%;
+    height: auto;
+}
+
+/* Hide the required asterisk — UX design shows no red * on labels */
+main .form form.personal-info-form fieldset.panel-wrapper [data-required="true"] > label.field-label::after {
+    display: none;
+}
+
+/* ---- Full Name (As per PAN): column layout ---- */
+main .form form.personal-info-form .field-pan-first-name {
+    grid-column: span 6;
+}
+
+main .form form.personal-info-form .field-pan-middle-name {
+    grid-column: span 6;
+}
+
+main .form form.personal-info-form .field-pan-last-name {
+    grid-column: span 6;
+}
+
+/* "Leave blank if not available on PAN" hint — JS appends inside Middle Name wrapper */
+main .form form.personal-info-form .pi-pan-hint {
+    font-style: italic;
+    font-size: 0.78rem;
+    color: #8a95b0;
+    margin-top: -12px;
+}
+
+/* ---- Info (ℹ) icon injected after legend title on non-collapsible panels ---- */
+main .form form.personal-info-form > fieldset.panel-wrapper > legend .pi-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper > legend .pi-info-icon svg {
+    width: 16px;
+    height: 16px;
+    stroke: #1e6fd9;
+    fill: none;
+    stroke-width: 2;
+}
+
+/* ---- Personal Details panel ---- */
+
+main .form form.personal-info-form .field-personal-details .field-gender {
+    grid-column: span 6;
+}
+
+main .form form.personal-info-form .field-personal-details .field-gender select {
+    appearance: none;
+    padding-right: 2.25rem;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a95b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center !important;
+}
+
+main .form form.personal-info-form .field-personal-details .field-pan-number {
+    grid-column: span 6;
+}
+
+/* Email input: half-width, Verify button moved inside by JS */
+main .form form.personal-info-form .field-personal-details .field-personal-email {
+    grid-column: span 6;
+    position: relative;
+}
+
+main .form form.personal-info-form .field-personal-details .field-personal-email input {
+    padding-right: 64px;
+}
+
+/* Inline Verify button — centred vertically within the input area */
+main .form form.personal-info-form .field-personal-details .field-personal-email .verify-inline-btn {
+    position: absolute;
+    right: 12px;
+    top: calc(0.5rem + 12px);   /* 0.5rem = input margin-top; 23px = half of 46px min-height */
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #1473e6;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+/* Original verify wrapper hidden (button moved inside email wrapper) */
+main .form form.personal-info-form .field-personal-details .field-verify-personal-email {
+    display: none !important;
+}
+
+/* ---- Email verified state ---- */
+main .form form.personal-info-form .field-personal-email.email-verified input {
+    border-color: #22c55e;
+}
+
+/* "Verified" text injected by JS in place of the Verify button */
+/* OTP row on info page (personal + work email) */
+main .form form.personal-info-form .pi-otp-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0;
+    grid-column: span 12;
+}
+
+main .form form.personal-info-form .pi-otp-input {
+    border: 1.5px solid #c7d0f5;
+    border-radius: 6px;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    width: 130px;
+    letter-spacing: 0.25em;
+    height: 38px;
+    line-height: 38px;
+    pointer-events: auto;
+    color: #1e2f6e;
+    background: #fff;
+    outline: none;
+    text-align: center;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+main .form form.personal-info-form .pi-otp-input:focus {
+    border-color: #3b5bdb;
+}
+
+main .form form.personal-info-form .pi-otp-confirm {
+    background: #3b5bdb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 0 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    height: 38px;
+    line-height: 38px;
+    width: auto;
+    transition: background 0.15s;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+main .form form.personal-info-form .pi-otp-confirm:hover {
+    background: #2f4ac7;
+}
+
+main .form form.personal-info-form .pi-otp-resend {
+    background: #eef0ff;
+    color: #3b5bdb;
+    border: 1.5px solid #3b5bdb;
+    border-radius: 6px;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    height: 38px;
+    line-height: 38px;
+    width: auto;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    transition: background 0.15s;
+}
+
+main .form form.personal-info-form .pi-otp-resend:hover {
+    background: #dde3ff;
+}
+
+main .form form.personal-info-form .verify-inline-btn.otp-sent-state {
+    cursor: default;
+}
+
+main .form form.personal-info-form .field-personal-email .pi-email-check {
+    position: absolute;
+    right: 12px;
+    top: calc(0.5rem + 23px);
+    transform: translateY(-50%);
+    color: #1473e6;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* Success message — grid item below chips row */
+main .form form.personal-info-form .pi-email-success {
+    grid-column: 1 / span 6;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #15803d;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-top: -4px;
+}
+
+main .form form.personal-info-form .pi-email-success svg {
+    stroke: #22c55e;
+    flex-shrink: 0;
+}
+
+/* ---- Work Email verified state (mirrors personal email) ---- */
+main .form form.personal-info-form .field-work-email-id.email-verified input {
+    border-color: #22c55e;
+}
+
+main .form form.personal-info-form .field-work-email-id .pi-email-check {
+    position: absolute;
+    right: 12px;
+    top: calc(0.5rem + 23px);
+    transform: translateY(-50%);
+    color: #1473e6;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+main .form form.personal-info-form .pi-work-email-success {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #15803d;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+main .form form.personal-info-form .pi-work-email-success svg {
+    stroke: #22c55e;
+    flex-shrink: 0;
+}
+
+/* Flex wrapper injected by JS — sits in col 1 below the email field */
+main .form form.personal-info-form .email-chips-row {
+    grid-column: 1 / span 6;
+    display: flex;
+    /* gap: 8px; */
+    flex-wrap: wrap;
+    margin-top: -30px;
+}
+
+/* Chips are now flex children, not grid items */
+main .form form.personal-info-form .email-chips-row .field-email-chip-gmail,
+main .form form.personal-info-form .email-chips-row .field-email-chip-outlook,
+main .form form.personal-info-form .email-chips-row .field-email-chip-yahoo {
+    margin-top: 0;
+    width: auto;
+}
+
+main .form form.personal-info-form .field-email-chip-gmail p,
+main .form form.personal-info-form .field-email-chip-outlook p,
+main .form form.personal-info-form .field-email-chip-yahoo p {
+    display: inline-block;
+    /* background: #eef1fa; */
+    border: 1px solid #1473e6;
+    border-radius: 20px;
+    padding: 1px 6px;
+    font-size: 0.78rem;
+    color: #1473e6;
+    margin: 0;
+    cursor: pointer;
+    line-height: 1.6;
+    transition: background 0.15s;
+}
+
+main .form form.personal-info-form .field-email-chip-gmail p:hover,
+main .form form.personal-info-form .field-email-chip-outlook p:hover,
+main .form form.personal-info-form .field-email-chip-yahoo p:hover {
+    background: #dde4f5;
+}
+
+/* ---- Verify buttons: text-link style ---- */
+main .form form.personal-info-form .field-verify-personal-email button,
+main .form form.personal-info-form .field-verify-work-email-button button {
+    background: transparent;
+    color: #1473e6;
+    border: none;
+    padding: 0 4px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    width: auto;
+    height: 42px;
+    line-height: 1;
+}
+
+main .form form.personal-info-form .field-verify-personal-email button:hover,
+main .form form.personal-info-form .field-verify-work-email-button button:hover {
+    background: transparent;
+    text-decoration: underline;
+}
+
+/* ---- Address Details panel ---- */
+
+/* Aadhaar address block: label caption + plain-text address with left accent bar */
+main .form form.personal-info-form .field-address-details .field-aadhaar-address {
+    grid-column: span 12;
+    border-left: 3px solid #8fa3d8;
+    padding-left: 14px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin: 4px 0 4px 4px;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper.field-address-details .field-aadhaar-address label {
+    display: none;
+}
+
+/* Make readonly address look like static display text, not an input box */
+main .form form.personal-info-form .field-address-details .field-aadhaar-address input[readonly] {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    font-size: 0.9375rem;
+    color: #1a2550;
+    font-weight: 400;
+    height: auto;
+    line-height: 1.5;
+    box-shadow: none;
+    cursor: default;
+    width: 100%;
+}
+
+main .form form.personal-info-form .field-address-details .field-aadhaar-address input[readonly]:focus {
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+
+/* "Is the customer's Aadhaar address:" prompt */
+main .form form.personal-info-form .field-aadhaar-address-prompt {
+    grid-column: span 12;
+}
+
+main .form form.personal-info-form .field-aadhaar-address-prompt p {
+    font-size: 0.875rem;
+    color: #444;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* Radio group: horizontal row matching the design */
+main .form form.personal-info-form .field-aadhaar-address-type {
+    display: flex !important;
+    flex-flow: row wrap;
+    gap: 6px 32px;
+    border: none;
+    padding: 2px 0;
+    grid-column: span 12;
+}
+
+main .form form.personal-info-form .field-aadhaar-address-type .radio-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+main .form form.personal-info-form .field-aadhaar-address-type .radio-wrapper label {
+    font-size: 0.9rem;
+    color: #222;
+    font-weight: 400;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-top:6px;
+}
+
+/* ---- Employer Details panel ---- */
+main .form form.personal-info-form .field-employer-details-panel .field-industry-type {
+    grid-column: span 6;
+}
+
+main .form form.personal-info-form .field-employer-details-panel .field-industry-type select.industry-select {
+    width: 100%;
+    height: 48px;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 8px;
+    padding: 0 2rem 0 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #131313;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+main .form form.personal-info-form .field-employer-details-panel .field-industry-type select.industry-select:focus {
+    border-color: #3b5bdb;
+    outline: none;
+}
+
+/* ---- Work Email ID panel ---- */
+main .form form.personal-info-form .field-work-email-id-panel .field-work-email-id {
+    grid-column: span 6;
+    position: relative;
+}
+
+main .form form.personal-info-form .field-work-email-id-panel .field-work-email-id input {
+    padding-right: 64px;
+}
+
+main .form form.personal-info-form .field-work-email-id-panel .field-work-email-id .verify-inline-btn {
+    position: absolute;
+    right: 12px;
+    top: calc(0.5rem + 12px);
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #1473e6;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+main .form form.personal-info-form .field-work-email-id-panel .field-verify-work-email-button {
+    display: none !important;
+}
+
+main .form form.personal-info-form .field-work-email-id-panel .field-work-email-id-helptext {
+    grid-column: span 12;
+    margin-top: -8px;
+}
+
+main .form form.personal-info-form .field-work-email-id-panel .field-work-email-id-helptext p {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0;
+    font-style: normal;
+}
+
+/* ---- Type of Loan panel ---- */
+main .form form.personal-info-form .field-type-of-loan-panel .field-type-of-loan,
+main .form form.personal-info-form .field-type-of-loan-panel .field-select-loan-type {
+    grid-column: span 6;
+}
+
+main .form form.personal-info-form .field-type-of-loan-panel .field-type-of-loan select,
+main .form form.personal-info-form .field-type-of-loan-panel .field-select-loan-type select {
+    appearance: none;
+    padding-right: 2.25rem;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a95b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center !important;
+}
+
+/* ---- Employer Details panel: all dropdowns ---- */
+main .form form.personal-info-form .field-employer-details-panel div.drop-down-wrapper select {
+    appearance: none;
+    padding-right: 2.25rem;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a95b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center !important;
+}
+
+/* ---- Confirm button: full-width outside all panels ---- */
+main .form form.personal-info-form .field-confirm-button {
+    grid-column: 1 / -1;
+}
+
+main .form form.personal-info-form .field-confirm-button button {
+    background: #3b5bdb;
+    border-radius: 24px;
+    padding: 0.75rem 2rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+    /* width: 100%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+main .form form.personal-info-form .field-confirm-button button::after {
+    content: '›';
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+main .form form.personal-info-form .field-back-button {
+    display: none !important;
+}
+/* ======================== GET BUREAU PAGE ======================== */
+
+main .form form.get-bureau-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: transparent;
+}
+
+/* Section panels */
+main .form form.get-bureau-form .field-select-bank-panel,
+main .form form.get-bureau-form .field-income-verification-panel {
+    background: #fff;
+    border: 1.5px solid #e2e5f0;
+    border-radius: 16px;
+    padding: 0;
+    display: block;
+    margin: 0;
+    overflow: visible;
+}
+
+/* Panel legend = section header — blue bg only on heading row */
+main .form form.get-bureau-form .field-select-bank-panel > legend,
+main .form form.get-bureau-form .field-income-verification-panel > legend {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #131313;
+    background: #eef0fb;
+    padding: 0.875rem 1.25rem;
+    width: 100%;
+    float: left;
+    box-sizing: border-box;
+    border-radius: 14px 14px 0 0;
+}
+
+main .form form.get-bureau-form .field-select-bank-panel::after,
+main .form form.get-bureau-form .field-income-verification-panel::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+main .form form.get-bureau-form .bureau-panel-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    display: block;
+}
+
+/* ---- Bank Selection Cards ---- */
+main .form form.get-bureau-form .field-bank-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    border: none;
+    padding: 20px 24px 24px;
+    align-items: flex-start;
+}
+
+main .form form.get-bureau-form .field-bank-selection > legend {
+    display: none;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper {
+    position: relative;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 58px;
+    cursor: pointer;
+    z-index: 2;
+    margin: 0;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    min-width: 58px;
+    height: 58px;
+    min-height: 58px;
+    background: #fff;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 10px;
+    padding: 6px;
+    cursor: pointer;
+    position: relative;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+}
+
+main .form form.get-bureau-form .field-bank-selection .bank-name {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: #374151;
+    text-align: center;
+    line-height: 1.3;
+    cursor: pointer;
+    user-select: none;
+    width: 68px;
+    height: 18px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+/* Bank logo tile */
+main .form form.get-bureau-form .field-bank-selection .bank-logo-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+main .form form.get-bureau-form .field-bank-selection .bank-logo-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    display: block;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper input[type="radio"]:checked + label {
+    border: 2px solid #3b5bdb;
+    box-shadow: 0 0 0 1px #3b5bdb40;
+}
+
+/* Blue check badge at bottom of selected card */
+main .form form.get-bureau-form .field-bank-selection .bank-check-badge {
+    display: none;
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 18px;
+    background: #3b5bdb;
+    border-radius: 50%;
+    z-index: 3;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+main .form form.get-bureau-form .field-bank-selection .radio-wrapper input[type="radio"]:checked + label .bank-check-badge {
+    display: flex;
+}
+
+main .form form.get-bureau-form .field-bank-selection .bank-check-badge svg {
+    width: 10px;
+    height: 10px;
+    stroke: #fff;
+    stroke-width: 3;
+    fill: none;
+}
+
+/* "Other Bank" — styled as wide dropdown card */
+main .form form.get-bureau-form .field-bank-selection .other-bank-wrapper {
+    align-self: flex-start;
+    flex: 1 1 auto;
+    min-width: 140px;
+    position: relative;
+    background: #fff;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-wrapper label {
+    display: none;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-wrapper input[type="radio"] {
+    pointer-events: none;
+    z-index: 0;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-dropdown {
+    position: relative;
+    width: 100%;
+    z-index: 3;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    height: 54px;
+    cursor: pointer;
+    gap: 8px;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-text {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-chevron svg {
+    width: 16px;
+    height: 16px;
+    stroke: #9ca3af;
+    display: block;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid #e2e5f0;
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    z-index: 100;
+    overflow: hidden;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-dropdown.open .other-bank-menu {
+    display: block;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-option {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: #111827;
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+main .form form.get-bureau-form .field-bank-selection .other-bank-option:hover {
+    background: #f3f4f6;
+}
+
+/* ---- Income Verification Method Cards ---- */
+main .form form.get-bureau-form .field-income-verification-method {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 14px !important;
+    border: none;
+    padding: 20px 24px 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+main .form form.get-bureau-form .field-income-verification-method > legend {
+    display: none;
+}
+
+/* Override global .radio-wrapper display:flex so desc stacks below title */
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper {
+    flex: 1 1 0;
+    min-width: 0;
+    position: relative;
+    background: #fff;
+    border: 1.5px solid #d0d5dd;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    display: block !important;
+    padding-bottom: 0;
+    transition: border-color 0.15s;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+/* Label = radio indicator + title in a row */
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper label {
+    display: flex !important;
+    flex-basis: auto !important;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 14px 6px;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    color: #111827;
+    line-height: 1.3;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Custom radio circle via ::before on the label */
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper label::before {
+    content: '';
+    min-width: 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #d0d5dd;
+    box-sizing: border-box;
+    margin-top: 1px;
+    display: block;
+    flex-shrink: 0;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper input[type="radio"]:checked + label::before {
+    border: 5px solid #3b5bdb;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper:has(input[type="radio"]:checked) {
+    border-color: #3b5bdb;
+    box-shadow: 0 0 0 0.5px #3b5bdb;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .card-title {
+    font-weight: 700;
+}
+
+/* Description block — naturally below label since wrapper is display:block */
+main .form form.get-bureau-form .field-income-verification-method .card-desc {
+    display: block;
+    font-size: 0.8125rem;
+    color: #6b7280;
+    line-height: 1.4;
+    padding: 4px 14px 36px;
+    margin: 0;
+}
+
+/* Green "Recommended" banner — position:absolute so it sits at card bottom */
+main .form form.get-bureau-form .field-income-verification-method .card-recommended {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #16a34a;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 5px 8px;
+    letter-spacing: 0.01em;
+}
+
+main .form form.get-bureau-form .field-income-verification-method .radio-wrapper:has(input[type="radio"]:checked) .card-recommended {
+    display: block;
+}
+
+/* Hide original description divs (content moved into cards by JS) */
+main .form form.get-bureau-form .field-account-aggregator-info,
+main .form form.get-bureau-form .field-login-salary-account-info,
+main .form form.get-bureau-form .field-upload-bank-statement-info {
+    display: none !important;
+}
+
+/* Continue button */
+main .form form.get-bureau-form .field-continue-button {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+}
+
+main .form form.get-bureau-form .field-continue-button button {
+    background: #3b5bdb;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: auto;
+    min-width: 160px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1;
+    transition: background 0.15s;
+}
+
+main .form form.get-bureau-form .field-continue-button button:hover {
+    background: #2f4ec4;
+}
+
+main .form form.get-bureau-form .plain-text-wrapper p strong {
+    color: #131313;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+main .form form.get-bureau-form .plain-text-wrapper p {
+    color: #131313;
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+/* stylelint-enable no-descending-specificity */

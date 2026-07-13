@@ -253,10 +253,10 @@ function initOTPPageHandlers() {
   const MOCK_OFFER = {
     customerFirstName: 'Ankit',
     customerLastName: 'Enterprises',
-    customerAddress1: '1301, Barkha',
+    customerAddress1: 'B/H Fame Theatre 21, Shri Ram Bungalow, Kalpataru Nagar, Ashoka Colony, Kharar (West)',
     customerCity: 'Mumbai',
     customerState: 'Maharashtra',
-    zipCode: '400016',
+    zipCode: '422022',
     emailAddress: 'ankit@gmail.com',
     offerAmount: '1000000.00',
     tenure: '36',
@@ -264,9 +264,19 @@ function initOTPPageHandlers() {
     kycFlag: 'Y',
     accountNumber: 'XX50151',
     customerID: 'XX12345',
-    employerName: 'Apollo Services',
+    employerName: 'Adobe Systems',
+    industryType: 'IT',
+    workEmail: 'ankit@adobe.com',
+    netMonthlyIncome: '50000',
+    ongoingEmi: '0',
     residenceType: 'Owned by Parents',
     dateOfBirth: '1990-05-15',
+    salaryAccountNumber: '123456789011',
+    ifscCode: 'ICICI0005001',
+    salaryBankName: 'ICICI Bank',
+    officeAddress: 'B4-1, MIG Duplex, Naveen Nagar, PAC Tiraha, Muzaffarpur, Uttar Pradesh 200972',
+    referenceFullName: 'Swapnil Patel',
+    referenceMobile: '9876543210',
   };
 
   function getJourneyData() {
@@ -591,7 +601,7 @@ function initOTPPageHandlers() {
     sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
     // eslint-disable-next-line no-console
     console.info(`[Journey: ${data.partnerJourneyID}] OTP verified, offer loaded`);
-    window.location.href = getEDSUrl('/personal-loan-offer');
+    window.location.href = getEDSUrl('/personal-loan-info');
   }, true);
 }
 
@@ -811,6 +821,26 @@ function initPreviewPageHandlers() {
     }
     setVal('preview_address', address);
     setVal('preview_residence_type', offer.residenceType || 'Owned by Parents');
+
+    // Salary Account Details
+    setVal('preview_salary_account', offer.salaryAccountNumber || '123456789011');
+    setVal('preview_ifsc', offer.ifscCode || 'ICICI0005001');
+    setVal('preview_bank_name', offer.salaryBankName || 'ICICI Bank');
+
+    // Office Address
+    setVal('preview_office_address', offer.officeAddress || 'B4-1, MIG Duplex, Naveen Nagar, PAC Tiraha, Muzaffarpur, Uttar Pradesh 200972');
+
+    // Reference Details
+    setVal('preview_reference_name', offer.referenceFullName || 'Swapnil Patel');
+    setVal('preview_reference_mobile', offer.referenceMobile || '9876543210');
+
+    // Verify Email ID
+    const previewPersonalEmail = offer.emailAddress || 'ankit@gmail.com';
+    const previewWorkEmail = offer.workEmail || 'ankit@adobe.com';
+    setVal('preview_personal_email', previewPersonalEmail);
+    setVal('preview_work_email', previewWorkEmail);
+    setValByLabel(['personal email'], previewPersonalEmail);
+    setValByLabel(['work email'], previewWorkEmail);
   }
 
   setTimeout(populatePreview, 1000);
@@ -831,13 +861,35 @@ function initPreviewPageHandlers() {
 
   setTimeout(addScheduleChargesLink, 1500);
 
+  const previewPanelIcons = {
+    'field-loan-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>',
+    'field-personal-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    'field-salary-account-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><circle cx="17" cy="15" r="1" fill="currentColor"/></svg>',
+    'field-office-address': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 21h18"/><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>',
+    'field-reference-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    'field-verify-email-id': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+  };
+
   function initAccordion() {
-    const panels = document.querySelectorAll(
-      'fieldset.panel-wrapper.field-loan-details, fieldset.panel-wrapper.field-personal-details',
-    );
+    const panels = document.querySelectorAll([
+      'fieldset.panel-wrapper.field-loan-details',
+      'fieldset.panel-wrapper.field-personal-details',
+      'fieldset.panel-wrapper.field-salary-account-details',
+      'fieldset.panel-wrapper.field-office-address',
+      'fieldset.panel-wrapper.field-reference-details',
+      'fieldset.panel-wrapper.field-verify-email-id',
+    ].join(', '));
     panels.forEach((panel) => {
       const legend = panel.querySelector(':scope > legend');
       if (!legend) return;
+      // Inject blue SVG icon
+      const cls = Array.from(panel.classList).find((c) => previewPanelIcons[c]);
+      if (cls && !legend.querySelector('.preview-panel-icon')) {
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'preview-panel-icon';
+        iconSpan.innerHTML = previewPanelIcons[cls];
+        legend.insertBefore(iconSpan, legend.firstChild);
+      }
       legend.addEventListener('click', () => {
         if (panel.hasAttribute('data-collapsed')) {
           panel.removeAttribute('data-collapsed');
@@ -850,9 +902,146 @@ function initPreviewPageHandlers() {
 
   setTimeout(initAccordion, 1500);
 
+  function setupVerifyEmailPanel() {
+    const panel = document.querySelector('.field-verify-email-id');
+    if (!panel || panel.dataset.verifySetup) return;
+    panel.dataset.verifySetup = '1';
+
+    const emailFields = [
+      {
+        cls: '.field-preview-personal-email',
+        desc: 'Mandatory: Verify using OTP for receiving loan updates & communications.',
+        verifiedKey: 'personalEmailVerified',
+      },
+      {
+        cls: '.field-preview-work-email',
+        desc: 'Verify using OTP for effortless process & to get instant approvals.',
+        verifiedKey: 'workEmailVerified',
+      },
+    ];
+
+    const jd = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+
+    emailFields.forEach(({ cls, desc, verifiedKey }) => {
+      const wrapper = panel.querySelector(cls);
+      if (!wrapper || wrapper.querySelector('.verify-email-row')) return;
+      const input = wrapper.querySelector('input');
+      const label = wrapper.querySelector('label');
+      if (!input) return;
+
+      // Input box: bordered container with floating label on its border
+      const inputBox = document.createElement('div');
+      inputBox.className = 'email-input-box';
+      if (label) inputBox.appendChild(label);
+      input.replaceWith(inputBox);
+      inputBox.appendChild(input);
+
+      // Outer flex row: input box + Verify button
+      const row = document.createElement('div');
+      row.className = 'verify-email-row';
+      inputBox.replaceWith(row);
+      row.appendChild(inputBox);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'verify-email-btn';
+      btn.textContent = 'Verify';
+      row.appendChild(btn);
+
+      // OTP row (hidden until Verify clicked)
+      const otpRow = document.createElement('div');
+      otpRow.className = 'verify-otp-row';
+      otpRow.style.display = 'none';
+
+      const otpInput = document.createElement('input');
+      otpInput.type = 'text';
+      otpInput.maxLength = 6;
+      otpInput.placeholder = 'Enter OTP';
+      otpInput.className = 'verify-otp-input';
+      otpInput.inputMode = 'numeric';
+
+      const submitOtp = document.createElement('button');
+      submitOtp.type = 'button';
+      submitOtp.className = 'verify-otp-submit';
+      submitOtp.textContent = 'Confirm OTP';
+
+      const resendOtp = document.createElement('button');
+      resendOtp.type = 'button';
+      resendOtp.className = 'verify-otp-resend';
+      resendOtp.textContent = 'Resend';
+
+      otpRow.appendChild(otpInput);
+      otpRow.appendChild(submitOtp);
+      otpRow.appendChild(resendOtp);
+      wrapper.appendChild(otpRow);
+
+      // Verified badge (hidden until OTP submitted)
+      const badge = document.createElement('span');
+      badge.className = 'verify-email-badge';
+      badge.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Verified';
+      badge.style.display = 'none';
+      row.appendChild(badge);
+
+      // Auto-verify if already verified on Info page
+      if (jd[verifiedKey]) {
+        btn.style.display = 'none';
+        badge.style.display = 'inline-flex';
+        const box = wrapper.querySelector('.email-input-box');
+        if (box) box.style.borderColor = '#38a169';
+        wrapper.classList.add('email-verified');
+      }
+
+      let generatedOtp = '';
+
+      btn.addEventListener('click', () => {
+        generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+        otpRow.style.display = 'flex';
+        btn.textContent = 'OTP Sent';
+        btn.classList.add('otp-sent-state');
+        otpInput.value = generatedOtp;
+        otpInput.focus();
+      });
+
+      submitOtp.addEventListener('click', () => {
+        if (otpInput.value.trim() !== generatedOtp) {
+          otpInput.style.borderColor = '#e53e3e';
+          return;
+        }
+        otpRow.style.display = 'none';
+        btn.style.display = 'none';
+        badge.style.display = 'inline-flex';
+        const box = wrapper.querySelector('.email-input-box');
+        if (box) box.style.borderColor = '#38a169';
+        wrapper.classList.add('email-verified');
+      });
+
+      resendOtp.addEventListener('click', () => {
+        generatedOtp = String(Math.floor(100000 + Math.random() * 900000));
+        otpInput.value = generatedOtp;
+        otpInput.style.borderColor = '#c7d0f5';
+        btn.textContent = 'OTP Resent';
+        btn.classList.add('otp-sent-state');
+        otpInput.focus();
+      });
+
+      otpInput.addEventListener('input', () => {
+        otpInput.style.borderColor = '#d0d5dd';
+      });
+
+      const descEl = document.createElement('div');
+      descEl.className = 'verify-email-desc';
+      descEl.textContent = desc;
+      wrapper.appendChild(descEl);
+    });
+  }
+
+  setTimeout(setupVerifyEmailPanel, 1200);
+  setTimeout(setupVerifyEmailPanel, 2500);
+
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('button');
     if (!btn) return;
+    if (btn.classList.contains('verify-otp-submit') || btn.classList.contains('verify-otp-resend')) return;
     const txt = btn.textContent.trim().toLowerCase();
     if (!txt.includes('confirm') && !txt.includes('submit')) return;
     e.preventDefault();
@@ -1293,6 +1482,827 @@ function initWelcomePageIcons() {
   setTimeout(() => { injectIcons(); injectPhonePrefix(); }, 3000);
 }
 
+function initPersonalInfoPageHandlers() {
+  // SVG icon strings matched to UX design: person, ID card, contact form, home,
+  // office building, Indian rupee (₹), envelope, document/loan
+  const panelSvgIcons = {
+    // Customer Details – person silhouette
+    'field-personal-info': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    // Full Name as per PAN – ID card with name lines
+    'field-full-name-as-per-pan': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2"/><path d="M13 10h5M13 14h4"/></svg>',
+    // Personal Details – user with lines (contact record)
+    'field-personal-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    // Address Details – location pin
+    'field-address-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+    // Employer Details – office building
+    'field-employer-details-panel': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 21h18"/><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>',
+    // Income Details – wallet
+    'field-income-details-panel': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><circle cx="17" cy="15" r="1" fill="currentColor"/></svg>',
+    // Work Email ID – envelope
+    'field-work-email-id-panel': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+    // Type of Loan – bank / institution building
+    'field-type-of-loan-panel': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 22h18"/><path d="M2 7l10-5 10 5"/><rect x="5" y="7" width="2" height="13"/><rect x="11" y="7" width="2" height="13"/><rect x="17" y="7" width="2" height="13"/><line x1="2" y1="7" x2="22" y2="7"/></svg>',
+  };
+
+  const collapsiblePanels = [
+    'field-employer-details-panel',
+    'field-income-details-panel',
+    'field-work-email-id-panel',
+    'field-type-of-loan-panel',
+  ];
+
+  function run() {
+    if (!document.querySelector('.field-personal-info')) return;
+
+    // Add scoping class so CSS selectors are reliable (avoids :has() hydration timing issues)
+    const form = document.querySelector('.field-personal-info')?.closest('form');
+    if (form && !form.classList.contains('personal-info-form')) {
+      form.classList.add('personal-info-form');
+    }
+
+    // Pre-populate Customer Details name from sessionStorage (set during OTP verification).
+    // Fallback to mock so the field shows during direct-page testing.
+    const journeyData = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+    const offer = journeyData.offerDemogDetails || {};
+    const firstName = offer.customerFirstName || 'Ankit';
+    const lastName = offer.customerLastName || 'Enterprises';
+    const fullName = journeyData.customerName || [firstName, lastName].filter(Boolean).join(' ') || 'Ankit Enterprises';
+
+    // Inject a visible <span> for the name so the display is immune to AEM model re-renders.
+    // Also set input.value so the value is present for any form submission logic.
+    const fullNameWrapper = document.querySelector('.field-personal-info .field-customer-full-name');
+    if (fullNameWrapper && !fullNameWrapper.querySelector('.pi-display-name')) {
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'pi-display-name';
+      nameSpan.textContent = fullName;
+      const nameInput = fullNameWrapper.querySelector('input');
+      if (nameInput) {
+        nameInput.value = fullName;
+        nameInput.after(nameSpan);
+      } else {
+        fullNameWrapper.append(nameSpan);
+      }
+    }
+
+    // Pre-populate Full Name (As per PAN) first/last name fields
+    const panFirstInput = document.querySelector('.field-pan-first-name input');
+    const panLastInput = document.querySelector('.field-pan-last-name input');
+    if (panFirstInput && !panFirstInput.value) {
+      panFirstInput.value = firstName;
+      panFirstInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    if (panLastInput && !panLastInput.value) {
+      panLastInput.value = lastName;
+      panLastInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill PAN Number from what the user entered on the welcome page
+    const panNumberInput = document.querySelector('.field-personal-details .field-pan-number input');
+    const panNumber = journeyData.pan || '';
+    if (panNumberInput && !panNumberInput.value && panNumber) {
+      panNumberInput.value = panNumber;
+      panNumberInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Aadhaar address from journey/offer data (with mock fallbacks for direct page access)
+    const aadhaarAddressInput = document.querySelector('.field-address-details .field-aadhaar-address input, .field-address-details .field-aadhaar-address textarea');
+    if (aadhaarAddressInput && !aadhaarAddressInput.value) {
+      const addr1 = offer.customerAddress1 || 'B/H Fame Theatre 21, Shri Ram Bungalow, Kalpataru Nagar, Ashoka Colony, Kharar (West)';
+      const city = offer.customerCity || 'Mumbai';
+      const zip = offer.zipCode || '422022';
+      const fullAddress = `${addr1}, ${city} - ${zip}`;
+      aadhaarAddressInput.value = fullAddress;
+      aadhaarAddressInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Monthly Net Income (Salary) with mock fallback
+    const salaryInput = document.querySelector('.field-income-details-panel .field-monthly-net-income-salary input')
+      || document.querySelector('.field-income-details-panel .field-monthly-net-income input')
+      || document.querySelector('.field-income-details-panel .field-monthly-salary input')
+      || document.querySelector('.field-income-details-panel div.number-wrapper input, .field-income-details-panel div.text-wrapper input');
+    if (salaryInput && !salaryInput.value) {
+      salaryInput.value = offer.netMonthlyIncome || '50000';
+      salaryInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Ongoing EMIs with 0
+    const emiInput = document.querySelector('.field-income-details-panel .field-ongoing-emis input, .field-income-details-panel .field-ongoing-emis-if-any input');
+    if (emiInput && !emiInput.value) {
+      emiInput.value = offer.ongoingEmi !== undefined ? offer.ongoingEmi : '0';
+      emiInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Enter Employer/Company Name text input
+    // Try specific class names, then fall back to the first plain text input in the panel
+    const employerTextInput = document.querySelector('.field-employer-details-panel .field-enter-employer-company-name input')
+      || document.querySelector('.field-employer-details-panel .field-enter-company-name input')
+      || document.querySelector('.field-employer-details-panel .field-employer-name-text input')
+      || document.querySelector('.field-employer-details-panel div.text-wrapper input');
+    if (employerTextInput && !employerTextInput.value) {
+      employerTextInput.value = offer.employerName || 'Adobe Systems';
+      employerTextInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Industry Type — replace text input with a styled select dropdown
+    const industryWrapper = document.querySelector('.field-employer-details-panel .field-industry-type');
+    const industryTextInput = industryWrapper?.querySelector('input');
+    if (industryWrapper && industryTextInput && !industryWrapper.dataset.industrySetup) {
+      industryWrapper.dataset.industrySetup = '1';
+      const industryOptions = [
+        'IT / Software',
+        'Banking & Finance',
+        'Healthcare',
+        'Other',
+      ];
+      const select = document.createElement('select');
+      select.name = industryTextInput.name;
+      select.id = industryTextInput.id;
+      select.className = industryTextInput.className;
+      select.classList.add('industry-select');
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = '';
+      defaultOpt.textContent = 'Select Industry Type';
+      defaultOpt.disabled = true;
+      select.appendChild(defaultOpt);
+      industryOptions.forEach((opt) => {
+        const o = document.createElement('option');
+        o.value = opt;
+        o.textContent = opt;
+        select.appendChild(o);
+      });
+      const prefill = offer.industryType || 'IT / Software';
+      const match = industryOptions.find((o) => o.toLowerCase().includes(prefill.toLowerCase()));
+      select.value = match || industryOptions[0];
+      industryTextInput.replaceWith(select);
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    // Pre-fill Work Email ID
+    const workEmailInput = document.querySelector('.field-work-email-id-panel .field-work-email-id input');
+    if (workEmailInput && !workEmailInput.value) {
+      workEmailInput.value = offer.workEmail || 'ankit@adobe.com';
+      workEmailInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    // Pre-fill Type of Loan dropdown — select first non-placeholder option
+    const loanTypeSelect = document.querySelector('.field-type-of-loan-panel .field-type-of-loan select, .field-type-of-loan-panel .field-select-loan-type select')
+      || document.querySelector('.field-type-of-loan-panel div.drop-down-wrapper select');
+    if (loanTypeSelect && !loanTypeSelect.value) {
+      const firstOption = [...loanTypeSelect.options].find((o) => o.value && !o.disabled);
+      if (firstOption) {
+        loanTypeSelect.value = firstOption.value;
+        loanTypeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+
+    // "Leave blank if not available on PAN": move hint to bottom of Middle Name wrapper
+    // so it appears below the Middle Name input (right column), not beside Last Name.
+    const panPanel = document.querySelector('.field-full-name-as-per-pan');
+    if (panPanel && !panPanel.querySelector('.pi-pan-hint')) {
+      const descEl = panPanel.querySelector('.field-pan-last-name .field-description')
+        || panPanel.querySelector('.field-pan-middle-name .field-description');
+      const middleWrapper = panPanel.querySelector('.field-pan-middle-name');
+      if (descEl && middleWrapper) {
+        const hint = document.createElement('div');
+        hint.className = 'pi-pan-hint';
+        hint.textContent = descEl.textContent;
+        descEl.style.display = 'none';
+        middleWrapper.appendChild(hint);
+      }
+    }
+
+    // Inject icon badge into each panel's legend
+    Object.entries(panelSvgIcons).forEach(([cls, svgHtml]) => {
+      const panel = document.querySelector(`.${cls}`);
+      const legend = panel?.querySelector(':scope > legend');
+      if (!legend || legend.querySelector('.panel-icon')) return;
+      const iconEl = document.createElement('span');
+      iconEl.className = 'panel-icon';
+      iconEl.innerHTML = svgHtml;
+      legend.insertBefore(iconEl, legend.firstChild);
+    });
+
+    // Inject ℹ info circle after the title text on non-collapsible, non-external-header panels
+    const infoIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+    ['field-full-name-as-per-pan'].forEach((cls) => {
+      const panel = document.querySelector(`.${cls}`);
+      const legend = panel?.querySelector(':scope > legend');
+      if (!legend || legend.querySelector('.pi-info-icon')) return;
+      const infoEl = document.createElement('span');
+      infoEl.className = 'pi-info-icon';
+      infoEl.innerHTML = infoIconSvg;
+      legend.appendChild(infoEl);
+    });
+
+    // Move Verify button inside email wrapper so it appears as an inline action
+    const emailWrapper = document.querySelector('.field-personal-details .field-personal-email');
+    const verifyWrapper = document.querySelector('.field-personal-details .field-verify-personal-email');
+    if (emailWrapper && verifyWrapper && !emailWrapper.querySelector('.verify-inline-btn')) {
+      const btn = verifyWrapper.querySelector('button');
+      if (btn) {
+        btn.classList.add('verify-inline-btn');
+        emailWrapper.appendChild(btn);
+        verifyWrapper.style.display = 'none';
+      }
+    }
+
+    // Move Work Email Verify button inline (same pattern as personal email)
+    const workEmailWrapper = document.querySelector('.field-work-email-id-panel .field-work-email-id');
+    const workVerifyWrapper = document.querySelector('.field-work-email-id-panel .field-verify-work-email-button');
+    if (workEmailWrapper && workVerifyWrapper && !workEmailWrapper.querySelector('.verify-inline-btn')) {
+      const workBtn = workVerifyWrapper.querySelector('button');
+      if (workBtn) {
+        workBtn.classList.add('verify-inline-btn');
+        workEmailWrapper.appendChild(workBtn);
+        workVerifyWrapper.style.display = 'none';
+      }
+    }
+
+    // Wrap email chips in a single flex div so they sit side-by-side without the grid column gap
+    const gmailChip = document.querySelector('.field-email-chip-gmail');
+    const outlookChip = document.querySelector('.field-email-chip-outlook');
+    const yahooChip = document.querySelector('.field-email-chip-yahoo');
+    if (gmailChip && outlookChip && yahooChip && !document.querySelector('.email-chips-row')) {
+      const chipsRow = document.createElement('div');
+      chipsRow.className = 'email-chips-row';
+      gmailChip.parentNode.insertBefore(chipsRow, gmailChip);
+      chipsRow.appendChild(gmailChip);
+      chipsRow.appendChild(outlookChip);
+      chipsRow.appendChild(yahooChip);
+    }
+
+    // ---- Email verification flow ----
+    (function initEmailVerification() {
+      const personalEmailWrapper = document.querySelector('.field-personal-details .field-personal-email');
+      if (!personalEmailWrapper || personalEmailWrapper.dataset.emailSetup) return;
+      personalEmailWrapper.dataset.emailSetup = '1';
+
+      const emailInput = personalEmailWrapper.querySelector('input');
+      const verifyBtn = personalEmailWrapper.querySelector('.verify-inline-btn');
+      if (!emailInput || !verifyBtn) return;
+
+      // Pre-fill with <firstName>@gmail.com by default
+      if (!emailInput.value) {
+        const jd = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+        const fn = (jd.offerDemogDetails?.customerFirstName || 'ankit').toLowerCase();
+        emailInput.value = `${fn}@gmail.com`;
+        emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
+      function resetVerified() {
+        personalEmailWrapper.classList.remove('email-verified');
+        verifyBtn.style.display = '';
+        personalEmailWrapper.querySelector('.pi-email-check')?.remove();
+        document.querySelector('.pi-email-success')?.remove();
+      }
+
+      function markVerified() {
+        personalEmailWrapper.classList.add('email-verified');
+        verifyBtn.style.display = 'none';
+        if (!personalEmailWrapper.querySelector('.pi-email-check')) {
+          const check = document.createElement('span');
+          check.className = 'pi-email-check';
+          check.textContent = 'Verified';
+          personalEmailWrapper.appendChild(check);
+        }
+        try { const jd = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}'); jd.personalEmailVerified = true; sessionStorage.setItem('loanJourneyData', JSON.stringify(jd)); } catch (e) { /* ignore */ }
+      }
+
+      function showSuccess() {
+        document.querySelector('.pi-email-success')?.remove();
+        const msg = document.createElement('div');
+        msg.className = 'pi-email-success';
+        msg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Email sent successfully';
+        const chipsRow = document.querySelector('.email-chips-row');
+        (chipsRow || personalEmailWrapper).insertAdjacentElement('afterend', msg);
+        setTimeout(() => msg?.remove(), 4000);
+      }
+
+      let personalOtp = '';
+
+      const chipsRow = document.querySelector('.email-chips-row');
+
+      function showOtpRow() {
+        let otpRow = personalEmailWrapper.parentElement.querySelector('.pi-otp-row');
+        if (otpRow) { otpRow.style.display = 'flex'; return; }
+        otpRow = document.createElement('div');
+        otpRow.className = 'pi-otp-row';
+
+        const otpInput = document.createElement('input');
+        otpInput.type = 'text';
+        otpInput.maxLength = 6;
+        otpInput.className = 'pi-otp-input';
+        otpInput.inputMode = 'numeric';
+        otpInput.placeholder = 'Enter OTP';
+
+        const confirmBtn = document.createElement('button');
+        confirmBtn.type = 'button';
+        confirmBtn.className = 'pi-otp-confirm';
+        confirmBtn.textContent = 'Confirm OTP';
+
+        const resendBtn = document.createElement('button');
+        resendBtn.type = 'button';
+        resendBtn.className = 'pi-otp-resend';
+        resendBtn.textContent = 'Resend';
+
+        otpRow.appendChild(otpInput);
+        otpRow.appendChild(confirmBtn);
+        otpRow.appendChild(resendBtn);
+        // Insert after chips row so order is: email input → chips → OTP row (no overlap)
+        const anchor = chipsRow || personalEmailWrapper;
+        anchor.insertAdjacentElement('afterend', otpRow);
+
+        confirmBtn.addEventListener('click', () => {
+          if (otpInput.value.trim() !== personalOtp) {
+            otpInput.style.borderColor = '#e53e3e';
+            return;
+          }
+          otpRow.style.display = 'none';
+          verifyBtn.textContent = 'OTP Sent';
+          verifyBtn.classList.add('otp-sent-state');
+          markVerified();
+          showSuccess();
+        });
+
+        resendBtn.addEventListener('click', () => {
+          personalOtp = String(Math.floor(100000 + Math.random() * 900000));
+          otpInput.value = personalOtp;
+          otpInput.style.borderColor = '#c7d0f5';
+          verifyBtn.textContent = 'OTP Resent';
+        });
+
+        otpInput.addEventListener('input', () => { otpInput.style.borderColor = '#c7d0f5'; });
+      }
+
+      verifyBtn.addEventListener('click', () => {
+        const val = emailInput.value.trim();
+        if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return;
+        personalOtp = String(Math.floor(100000 + Math.random() * 900000));
+        verifyBtn.textContent = 'OTP Sent';
+        verifyBtn.classList.add('otp-sent-state');
+        showOtpRow();
+        const otpInput = personalEmailWrapper.parentElement.querySelector('.pi-otp-input');
+        if (otpInput) otpInput.value = personalOtp;
+      });
+
+      emailInput.addEventListener('input', resetVerified);
+
+      // Chip clicks: swap domain, keep local part
+      document.querySelectorAll('.field-email-chip-gmail p, .field-email-chip-outlook p, .field-email-chip-yahoo p')
+        .forEach((chip) => {
+          chip.addEventListener('click', () => {
+            const domain = chip.textContent.trim().replace('@', '');
+            const local = emailInput.value.split('@')[0] || 'user';
+            emailInput.value = `${local}@${domain}`;
+            emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+            resetVerified();
+          });
+        });
+    }());
+
+    // ---- Work Email verification flow (same pattern as personal email) ----
+    (function initWorkEmailVerification() {
+      const workEmailWrap = document.querySelector('.field-work-email-id-panel .field-work-email-id');
+      if (!workEmailWrap || workEmailWrap.dataset.workEmailSetup) return;
+      workEmailWrap.dataset.workEmailSetup = '1';
+
+      const workInput = workEmailWrap.querySelector('input');
+      const workVerifyBtn = workEmailWrap.querySelector('.verify-inline-btn');
+      if (!workInput || !workVerifyBtn) return;
+
+      function resetWorkVerified() {
+        workEmailWrap.classList.remove('email-verified');
+        workVerifyBtn.style.display = '';
+        workEmailWrap.querySelector('.pi-email-check')?.remove();
+        document.querySelector('.pi-work-email-success')?.remove();
+      }
+
+      function markWorkVerified() {
+        workEmailWrap.classList.add('email-verified');
+        workVerifyBtn.style.display = 'none';
+        if (!workEmailWrap.querySelector('.pi-email-check')) {
+          const check = document.createElement('span');
+          check.className = 'pi-email-check';
+          check.textContent = 'Verified';
+          workEmailWrap.appendChild(check);
+        }
+        try { const jd = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}'); jd.workEmailVerified = true; sessionStorage.setItem('loanJourneyData', JSON.stringify(jd)); } catch (e) { /* ignore */ }
+      }
+
+      function showWorkSuccess() {
+        document.querySelector('.pi-work-email-success')?.remove();
+        const msg = document.createElement('div');
+        msg.className = 'pi-work-email-success';
+        msg.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg> Email sent successfully';
+        workEmailWrap.insertAdjacentElement('afterend', msg);
+        setTimeout(() => msg?.remove(), 4000);
+      }
+
+      let workOtp = '';
+
+      function showWorkOtpRow() {
+        let otpRow = workEmailWrap.parentElement.querySelector('.pi-otp-row');
+        if (otpRow) { otpRow.style.display = 'flex'; return; }
+        otpRow = document.createElement('div');
+        otpRow.className = 'pi-otp-row';
+
+        const otpInput = document.createElement('input');
+        otpInput.type = 'text';
+        otpInput.maxLength = 6;
+        otpInput.className = 'pi-otp-input';
+        otpInput.inputMode = 'numeric';
+        otpInput.placeholder = 'Enter OTP';
+
+        const confirmBtn = document.createElement('button');
+        confirmBtn.type = 'button';
+        confirmBtn.className = 'pi-otp-confirm';
+        confirmBtn.textContent = 'Confirm OTP';
+
+        const resendBtn = document.createElement('button');
+        resendBtn.type = 'button';
+        resendBtn.className = 'pi-otp-resend';
+        resendBtn.textContent = 'Resend';
+
+        otpRow.appendChild(otpInput);
+        otpRow.appendChild(confirmBtn);
+        otpRow.appendChild(resendBtn);
+        workEmailWrap.insertAdjacentElement('afterend', otpRow);
+
+        confirmBtn.addEventListener('click', () => {
+          if (otpInput.value.trim() !== workOtp) {
+            otpInput.style.borderColor = '#e53e3e';
+            return;
+          }
+          otpRow.style.display = 'none';
+          workVerifyBtn.textContent = 'OTP Sent';
+          workVerifyBtn.classList.add('otp-sent-state');
+          markWorkVerified();
+          showWorkSuccess();
+        });
+
+        resendBtn.addEventListener('click', () => {
+          workOtp = String(Math.floor(100000 + Math.random() * 900000));
+          otpInput.value = workOtp;
+          otpInput.style.borderColor = '#c7d0f5';
+          workVerifyBtn.textContent = 'OTP Resent';
+        });
+
+        otpInput.addEventListener('input', () => { otpInput.style.borderColor = '#c7d0f5'; });
+      }
+
+      workVerifyBtn.addEventListener('click', () => {
+        const val = workInput.value.trim();
+        if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) return;
+        workOtp = String(Math.floor(100000 + Math.random() * 900000));
+        workVerifyBtn.textContent = 'OTP Sent';
+        workVerifyBtn.classList.add('otp-sent-state');
+        showWorkOtpRow();
+        const otpInput = workEmailWrap.parentElement.querySelector('.pi-otp-input');
+        if (otpInput) otpInput.value = workOtp;
+      });
+
+      workInput.addEventListener('input', resetWorkVerified);
+    }());
+
+    // Customer Details: external header div placed BEFORE the fieldset (above the card)
+    ['field-personal-info'].forEach((cls) => {
+      const panel = document.querySelector(`.${cls}`);
+      if (!panel || panel.previousElementSibling?.classList.contains('panel-external-header')) return;
+      const legend = panel.querySelector(':scope > legend');
+      if (!legend) return;
+
+      const header = document.createElement('div');
+      header.className = 'panel-external-header';
+      header.innerHTML = legend.innerHTML;
+      panel.parentNode.insertBefore(header, panel);
+      legend.hidden = true;
+    });
+
+    // Address Details: internal header div inserted as FIRST CHILD inside the card
+    // (<legend> always renders above the fieldset border — a div stays inside)
+    // Build from scratch so we always use our own icon regardless of what AEM put in the legend
+    const addrPanel = document.querySelector('.field-address-details');
+    if (addrPanel && !addrPanel.querySelector('.panel-internal-header')) {
+      const addrLegend = addrPanel.querySelector(':scope > legend');
+      if (addrLegend) {
+        const internalHeader = document.createElement('div');
+        internalHeader.className = 'panel-internal-header';
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'panel-icon';
+        iconSpan.innerHTML = panelSvgIcons['field-address-details'];
+        internalHeader.appendChild(iconSpan);
+        const legendClone = addrLegend.cloneNode(true);
+        legendClone.querySelector('.panel-icon')?.remove();
+        internalHeader.appendChild(document.createTextNode(legendClone.textContent.trim()));
+        addrPanel.insertBefore(internalHeader, addrPanel.firstChild);
+        addrLegend.hidden = true;
+      }
+    }
+
+    // Wire collapsible toggle behaviour
+    collapsiblePanels.forEach((cls) => {
+      const panel = document.querySelector(`.${cls}`);
+      if (!panel) return;
+      panel.classList.add('collapsible');
+      const legend = panel.querySelector(':scope > legend');
+      if (!legend) return;
+      legend.addEventListener('click', () => {
+        const isCollapsed = panel.getAttribute('data-collapsed') === 'true';
+        panel.setAttribute('data-collapsed', String(!isCollapsed));
+      });
+    });
+
+    // Move Back + Confirm buttons outside the Type of Loan panel so they sit at form level
+    const typeOfLoanPanel = document.querySelector('.field-type-of-loan-panel');
+    const confirmBtnWrapper = document.querySelector('.field-confirm-button');
+    const backBtnWrapper = document.querySelector('.field-back-button');
+    if (typeOfLoanPanel && confirmBtnWrapper && typeOfLoanPanel.contains(confirmBtnWrapper)) {
+      if (backBtnWrapper) {
+        typeOfLoanPanel.insertAdjacentElement('afterend', backBtnWrapper);
+        backBtnWrapper.insertAdjacentElement('afterend', confirmBtnWrapper);
+      } else {
+        typeOfLoanPanel.insertAdjacentElement('afterend', confirmBtnWrapper);
+      }
+    }
+
+    // Confirm button → navigate to Get Bureau page
+    const confirmBtn = document.querySelector('.field-confirm-button button');
+    if (confirmBtn && !confirmBtn.dataset.infoSetup) {
+      confirmBtn.dataset.infoSetup = '1';
+      confirmBtn.type = 'button';
+      confirmBtn.addEventListener('click', () => {
+        const personalVerified = document.querySelector('.field-personal-details .field-personal-email.email-verified');
+        const workVerified = document.querySelector('.field-work-email-id-panel .field-work-email-id.email-verified');
+
+        let errEl = document.querySelector('.email-verify-error');
+        if (!errEl) {
+          errEl = document.createElement('p');
+          errEl.className = 'email-verify-error';
+          errEl.style.cssText = 'color:#e53e3e;font-size:0.82rem;margin:0.5rem 0 0;font-weight:500;';
+          confirmBtn.closest('.field-confirm-button').insertAdjacentElement('beforebegin', errEl);
+        }
+
+        if (!personalVerified && !workVerified) {
+          errEl.textContent = 'Please verify both Personal Email and Work Email before proceeding.';
+          errEl.style.display = 'block';
+          return;
+        }
+        if (!personalVerified) {
+          errEl.textContent = 'Please verify your Personal Email before proceeding.';
+          errEl.style.display = 'block';
+          return;
+        }
+        if (!workVerified) {
+          errEl.textContent = 'Please verify your Work Email before proceeding.';
+          errEl.style.display = 'block';
+          return;
+        }
+
+        errEl.style.display = 'none';
+        window.location.href = getEDSUrl('/get-bureau');
+      });
+    }
+  }
+
+  // Run as soon as the form fieldset appears — avoids the 1.5 s FOUC from a fixed timeout
+  const target = document.querySelector('.field-personal-info');
+  if (target) {
+    run();
+    return;
+  }
+  const obs = new MutationObserver(() => {
+    if (document.querySelector('.field-personal-info')) {
+      obs.disconnect();
+      run();
+    }
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+  // Safety fallback in case the observer never fires
+  setTimeout(() => { obs.disconnect(); run(); }, 3000);
+}
+
+function initGetBureauPageHandlers() {
+  if (!window.location.pathname.includes('get-bureau')) return;
+
+  // Colored brand tiles — short brand text inside box, full name stays in label below
+  const bankTiles = {
+    hdfc: '/icons/hdfc.png',
+    icici: '/icons/icic.png',
+    axis: '/icons/axis.png',
+    kotak: '/icons/kotak.png',
+    sbi: '/icons/sbi.png',
+    bob: '/icons/baroda.png',
+    idfc: '/icons/idfc.png',
+  };
+
+  const methodDescriptions = {
+    account_aggregator: 'Instant & secure, processed via RBI-regulated partner.',
+    login_salary_account: 'Quick & hassle-free, processed via NetBanking.',
+    upload_bank_statement: 'Processed via uploading bank statement of the last 6 months.',
+  };
+
+  const bankIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 22h18"/><path d="M2 7l10-5 10 5"/><rect x="5" y="7" width="2" height="13"/><rect x="11" y="7" width="2" height="13"/><rect x="17" y="7" width="2" height="13"/><line x1="2" y1="7" x2="22" y2="7"/></svg>';
+  const incomeVerifyIconSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>';
+  const checkSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const arrowSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;vertical-align:middle"><polyline points="9 18 15 12 9 6"/></svg>';
+
+  function addLegendIcon(panel, svgHtml) {
+    const legend = panel.querySelector(':scope > legend');
+    if (!legend || legend.querySelector('.bureau-panel-icon')) return;
+    const icon = document.createElement('span');
+    icon.className = 'bureau-panel-icon';
+    icon.innerHTML = svgHtml;
+    legend.prepend(icon);
+  }
+
+  function setupBankCards() {
+    const bankGroup = document.querySelector('.field-bank-selection');
+    if (!bankGroup || bankGroup.dataset.bureauBankSetup) return;
+    bankGroup.dataset.bureauBankSetup = '1';
+
+    bankGroup.querySelectorAll('.radio-wrapper').forEach((wrapper) => {
+      const input = wrapper.querySelector('input[type="radio"]');
+      const label = wrapper.querySelector('label');
+      if (!input || !label) return;
+      const val = input.value;
+
+      if (val === 'other') {
+        wrapper.classList.add('other-bank-wrapper');
+        if (!wrapper.querySelector('.other-bank-dropdown')) {
+          const otherBankList = ['Union Bank of India', 'Punjab National Bank'];
+
+          const dropdown = document.createElement('div');
+          dropdown.className = 'other-bank-dropdown';
+
+          const trigger = document.createElement('div');
+          trigger.className = 'other-bank-trigger';
+          trigger.innerHTML = `<span class="other-bank-text">Other Bank</span><span class="other-bank-chevron"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>`;
+
+          const menu = document.createElement('ul');
+          menu.className = 'other-bank-menu';
+          otherBankList.forEach((name) => {
+            const li = document.createElement('li');
+            li.className = 'other-bank-option';
+            li.textContent = name;
+            li.addEventListener('click', (e) => {
+              e.stopPropagation();
+              trigger.querySelector('.other-bank-text').textContent = name;
+              dropdown.classList.remove('open');
+              input.value = name.toLowerCase().replace(/\s+/g, '_');
+            });
+            menu.appendChild(li);
+          });
+
+          trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+          });
+
+          document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+          dropdown.appendChild(trigger);
+          dropdown.appendChild(menu);
+          label.textContent = '';
+          label.style.display = 'none';
+          wrapper.appendChild(dropdown);
+        }
+        return;
+      }
+
+      if (!wrapper.querySelector('.bank-logo-icon')) {
+        const logoSrc = bankTiles[val];
+        const bankNameText = label.textContent.trim();
+
+        const iconEl = document.createElement('span');
+        iconEl.className = 'bank-logo-icon';
+
+        if (logoSrc) {
+          const img = document.createElement('img');
+          img.src = logoSrc;
+          img.alt = bankNameText;
+          img.onerror = () => {
+            img.remove();
+            iconEl.textContent = bankNameText.slice(0, 4).toUpperCase();
+            iconEl.style.fontSize = '0.65rem';
+            iconEl.style.fontWeight = '700';
+            iconEl.style.color = '#374151';
+          };
+          iconEl.appendChild(img);
+        } else {
+          iconEl.textContent = bankNameText.slice(0, 4).toUpperCase();
+        }
+
+        label.textContent = '';
+        label.appendChild(iconEl);
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'bank-name';
+        nameEl.textContent = bankNameText;
+        nameEl.addEventListener('click', () => input.click());
+        wrapper.appendChild(nameEl);
+      }
+
+      if (!wrapper.querySelector('.bank-check-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'bank-check-badge';
+        badge.innerHTML = checkSvg;
+        const lbl = wrapper.querySelector('label');
+        if (lbl) lbl.appendChild(badge);
+      }
+    });
+  }
+
+  function setupIncomeCards() {
+    const methodGroup = document.querySelector('.field-income-verification-method');
+    if (!methodGroup || methodGroup.dataset.bureauIncomeSetup) return;
+    methodGroup.dataset.bureauIncomeSetup = '1';
+
+    methodGroup.querySelectorAll('.radio-wrapper').forEach((wrapper) => {
+      const input = wrapper.querySelector('input[type="radio"]');
+      const label = wrapper.querySelector('label');
+      if (!input || !label) return;
+      const val = input.value;
+
+      if (!wrapper.querySelector('.card-title')) {
+        const titleText = label.textContent.trim();
+        label.textContent = '';
+        const title = document.createElement('span');
+        title.className = 'card-title';
+        title.textContent = titleText;
+        label.appendChild(title);
+      }
+
+      if (!wrapper.querySelector('.card-desc')) {
+        const descEl = document.createElement('p');
+        descEl.className = 'card-desc';
+        descEl.textContent = methodDescriptions[val] || '';
+        wrapper.appendChild(descEl);
+      }
+
+      if (val === 'account_aggregator' && !wrapper.querySelector('.card-recommended')) {
+        const badge = document.createElement('div');
+        badge.className = 'card-recommended';
+        badge.textContent = 'Recommended';
+        wrapper.appendChild(badge);
+      }
+    });
+
+    const aaInput = methodGroup.querySelector('input[value="account_aggregator"]');
+    if (aaInput && !aaInput.checked) {
+      aaInput.checked = true;
+    }
+  }
+
+  function setupContinueButton() {
+    const btn = document.querySelector('.field-continue-button button');
+    if (!btn || btn.dataset.bureauSetup) return;
+    btn.dataset.bureauSetup = '1';
+    // eslint-disable-next-line no-param-reassign
+    btn.type = 'button';
+    btn.innerHTML = `Continue ${arrowSvg}`;
+    btn.addEventListener('click', () => {
+      const selectedBank = document.querySelector('input[name="bank_selection"]:checked')?.value;
+      const selectedMethod = document.querySelector('input[name="income_verification_method"]:checked')?.value;
+      try {
+        const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+        data.selectedBank = selectedBank;
+        data.incomeVerificationMethod = selectedMethod;
+        sessionStorage.setItem('loanJourneyData', JSON.stringify(data));
+      } catch (err) { /* ignore */ }
+      window.location.href = getEDSUrl('/personal-loan-offer');
+    });
+  }
+
+  function run() {
+    const bankPanel = document.querySelector('.field-select-bank-panel');
+    if (!bankPanel) return;
+
+    const form = bankPanel.closest('form');
+    if (form && !form.classList.contains('get-bureau-form')) {
+      form.classList.add('get-bureau-form');
+    }
+
+    addLegendIcon(bankPanel, bankIconSvg);
+    const incomePanel = document.querySelector('.field-income-verification-panel');
+    if (incomePanel) addLegendIcon(incomePanel, incomeVerifyIconSvg);
+
+    setupBankCards();
+    setupIncomeCards();
+    setupContinueButton();
+  }
+
+  const initial = document.querySelector('.field-select-bank-panel');
+  if (initial) { run(); return; }
+  const obs = new MutationObserver(() => {
+    if (document.querySelector('.field-select-bank-panel')) {
+      obs.disconnect();
+      run();
+    }
+  });
+  obs.observe(document.body, { childList: true, subtree: true });
+  setTimeout(() => { obs.disconnect(); run(); }, 3000);
+}
+
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
@@ -1309,6 +2319,8 @@ async function loadPage() {
   initOTPLoginFragmentEnhancements();
   initWelcomePageIcons();
   initThankYouPageHandlers();
+  initPersonalInfoPageHandlers();
+  initGetBureauPageHandlers();
 }
 
 loadPage();
