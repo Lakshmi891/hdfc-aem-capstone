@@ -861,6 +861,15 @@ function initPreviewPageHandlers() {
 
   setTimeout(addScheduleChargesLink, 1500);
 
+  const previewPanelIcons = {
+    'field-loan-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>',
+    'field-personal-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    'field-salary-account-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/><circle cx="17" cy="15" r="1" fill="currentColor"/></svg>',
+    'field-office-address': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 21h18"/><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>',
+    'field-reference-details': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    'field-verify-email-id': '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+  };
+
   function initAccordion() {
     const panels = document.querySelectorAll([
       'fieldset.panel-wrapper.field-loan-details',
@@ -873,6 +882,14 @@ function initPreviewPageHandlers() {
     panels.forEach((panel) => {
       const legend = panel.querySelector(':scope > legend');
       if (!legend) return;
+      // Inject blue SVG icon
+      const cls = Array.from(panel.classList).find((c) => previewPanelIcons[c]);
+      if (cls && !legend.querySelector('.preview-panel-icon')) {
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'preview-panel-icon';
+        iconSpan.innerHTML = previewPanelIcons[cls];
+        legend.insertBefore(iconSpan, legend.firstChild);
+      }
       legend.addEventListener('click', () => {
         if (panel.hasAttribute('data-collapsed')) {
           panel.removeAttribute('data-collapsed');
@@ -894,14 +911,18 @@ function initPreviewPageHandlers() {
       {
         cls: '.field-preview-personal-email',
         desc: 'Mandatory: Verify using OTP for receiving loan updates & communications.',
+        verifiedKey: 'personalEmailVerified',
       },
       {
         cls: '.field-preview-work-email',
         desc: 'Verify using OTP for effortless process & to get instant approvals.',
+        verifiedKey: 'workEmailVerified',
       },
     ];
 
-    emailFields.forEach(({ cls, desc }) => {
+    const jd = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');
+
+    emailFields.forEach(({ cls, desc, verifiedKey }) => {
       const wrapper = panel.querySelector(cls);
       if (!wrapper || wrapper.querySelector('.verify-email-row')) return;
       const input = wrapper.querySelector('input');
@@ -960,6 +981,15 @@ function initPreviewPageHandlers() {
       badge.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="14" height="14"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Verified';
       badge.style.display = 'none';
       row.appendChild(badge);
+
+      // Auto-verify if already verified on Info page
+      if (jd[verifiedKey]) {
+        btn.style.display = 'none';
+        badge.style.display = 'inline-flex';
+        const box = wrapper.querySelector('.email-input-box');
+        if (box) box.style.borderColor = '#38a169';
+        wrapper.classList.add('email-verified');
+      }
 
       let generatedOtp = '';
 
@@ -1735,6 +1765,7 @@ function initPersonalInfoPageHandlers() {
           check.textContent = 'Verified';
           personalEmailWrapper.appendChild(check);
         }
+        try { const jd = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}'); jd.personalEmailVerified = true; sessionStorage.setItem('loanJourneyData', JSON.stringify(jd)); } catch (e) { /* ignore */ }
       }
 
       function showSuccess() {
@@ -1855,6 +1886,7 @@ function initPersonalInfoPageHandlers() {
           check.textContent = 'Verified';
           workEmailWrap.appendChild(check);
         }
+        try { const jd = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}'); jd.workEmailVerified = true; sessionStorage.setItem('loanJourneyData', JSON.stringify(jd)); } catch (e) { /* ignore */ }
       }
 
       function showWorkSuccess() {

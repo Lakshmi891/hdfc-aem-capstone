@@ -1206,6 +1206,7 @@ main .form form .phone-flag-prefix {
     flex-shrink: 0;
 }
 
+/* stylelint-disable no-descending-specificity */
 main .form form .phone-prefix-wrapper input {
     border: none !important;
     border-radius: 0 !important;
@@ -1699,9 +1700,9 @@ main .form form .field-offer-display-fragment .field-offer-summary div.plain-tex
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details,
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details {
     background: #fff;
-    border: none;
-    box-shadow: 0 0 0 1px #dde0f5;
-    border-radius: 10px;
+    border: 1px solid #cdd3ec;
+    box-shadow: 0 1px 4px rgb(0 0 80 / 7%);
+    border-radius: 17px;
     padding: 0 1rem 1rem;
     gap: 0.75rem 1.25rem;
     overflow: hidden;
@@ -1709,32 +1710,48 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-per
 
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend,
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend {
-    background: #eef0fb;
-    border-radius: 10px 10px 0 0;
-    padding: 0.875rem 1.25rem;
-    margin: 0 -1rem 0;
-    width: calc(100% + 2rem);
-    float: none;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #131313;
+    grid-column: 1 / -1;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    float: none;
+    width: calc(100% + 34px);
+    margin-left: -17px;
+    padding: 0.875rem 1.25rem;
+    background: #eef0fb;
+    border: 1px solid #cdd3ec;
+    border-bottom: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+    border-radius: 14px 14px 0 0;
     cursor: pointer;
     user-select: none;
 }
 
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend::before {
-    content: "💼";
-    font-size: 1rem;
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper > legend::before {
+    content: none;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper > legend .preview-panel-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
     flex-shrink: 0;
 }
 
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details > legend::before {
-    content: "👤";
-    font-size: 1rem;
-    flex-shrink: 0;
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper > legend .preview-panel-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details > legend::after,
@@ -1763,6 +1780,13 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loa
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed] {
     padding-bottom: 0;
     overflow: hidden;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-loan-details[data-collapsed] > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-personal-details[data-collapsed] > legend {
+    margin-bottom: 0;
+    border-radius: 17px;
+    border-bottom: none;
 }
 
 
@@ -1912,9 +1936,9 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-off
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details,
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id {
     background: #fff;
-    border: none;
-    box-shadow: 0 0 0 1px #dde0f5;
-    border-radius: 10px;
+    border: 1px solid #cdd3ec;
+    box-shadow: 0 1px 4px rgb(0 0 80 / 7%);
+    border-radius: 17px;
     padding: 0 1rem 1rem;
     gap: 0.75rem 1.25rem;
     overflow: hidden;
@@ -1925,9 +1949,11 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-off
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details > legend,
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id > legend {
     background: #eef0fb;
-    border-radius: 10px 10px 0 0;
+    border-radius: 17px 17px 0 0;
+    border: 1px solid #cdd3ec;
+    border-bottom: none;
     padding: 0.875rem 1.25rem;
-    margin: 0 -1rem 0;
+    margin: 0 -1rem 14px;
     width: calc(100% + 2rem);
     float: none;
     font-size: 1rem;
@@ -1940,29 +1966,6 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-ver
     user-select: none;
 }
 
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details > legend::before {
-    content: "🏦";
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address > legend::before {
-    content: "📍";
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details > legend::before {
-    content: "👥";
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id > legend::before {
-    content: "✉️";
-    font-size: 1rem;
-    flex-shrink: 0;
-}
 
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details > legend::after,
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address > legend::after,
@@ -2000,6 +2003,15 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-off
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details[data-collapsed],
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] {
     padding-bottom: 0;
+}
+
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-salary-account-details[data-collapsed] > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-office-address[data-collapsed] > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-reference-details[data-collapsed] > legend,
+body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id[data-collapsed] > legend {
+    margin-bottom: 0;
+    border-radius: 17px;
+    border-bottom: none;
 }
 
 /* Fields — salary account (3 cols each), office/reference full-width */
@@ -2083,10 +2095,6 @@ body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-ver
     align-items: center;
     gap: 10px;
     margin-top: 0.25rem;
-}
-
-body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-email-row {
-    align-items: center;
 }
 
 body.page-personal-loan-preview main .form form fieldset.panel-wrapper.field-verify-email-id .verify-email-btn {
@@ -2563,6 +2571,7 @@ main .form form .field-wrapper .wv-field-error {
     color: var(--form-error-color);
     font-size: 0.8rem;
     font-weight: 600;
+
     /* margin-top: 0.3rem; */
     margin-bottom: -1.9rem;
     display: none;
@@ -2592,7 +2601,6 @@ main .form form button:disabled {
     pointer-events: none;
 }
 
-/* stylelint-disable no-descending-specificity */
 /* ============================================================
    Personal Loan Info Page – Section Panel Cards
    Scoped via JS-added class  .personal-info-form  on <form>
@@ -2607,6 +2615,7 @@ main .form form.personal-info-form {
 main .form form.personal-info-form > fieldset.panel-wrapper {
     border: 1px solid #cdd3ec;
     border-radius: 17px;
+
     /* background: #fff; */
     padding: 0 19px 20px;
     grid-column: span 12;
@@ -2638,10 +2647,10 @@ main .form form.personal-info-form .field-address-details .panel-internal-header
     grid-column: 1 / -1;
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-weight: 700;
+    gap: 0.5rem;
+    font-weight: 600;
     font-size: 1rem;
-    color: #1e2f6e;
+    color: #131313;
     padding-bottom: 8px;
 }
 
@@ -2655,9 +2664,9 @@ main .form form.personal-info-form .field-address-details .panel-internal-header
 }
 
 main .form form.personal-info-form .field-address-details .panel-internal-header .panel-icon svg {
-    width: 16px;
-    height: 16px;
-    stroke: #1e2f6e;
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
     fill: none;
     stroke-width: 1.75;
     stroke-linecap: round;
@@ -2668,11 +2677,11 @@ main .form form.personal-info-form .field-address-details .panel-internal-header
 main .form form.personal-info-form .panel-external-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.5rem;
     padding: 0 4px 8px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #1e2f6e;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #131313;
     grid-column: span 12;
 }
 
@@ -2686,34 +2695,36 @@ main .form form.personal-info-form .panel-external-header .panel-icon {
 }
 
 main .form form.personal-info-form .panel-external-header .panel-icon svg {
-    width: 16px;
-    height: 16px;
-    stroke: #1e2f6e;
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
     fill: none;
     stroke-width: 1.75;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
 
-/* ---- Panel header strip (legend) ----
-   grid-column: 1 / -1 is critical — without it the legend occupies only
-   1 auto column and width: calc(100% + 40px) expands just that tiny cell. */
+/* ---- Panel header strip (legend) ---- */
 main .form form.personal-info-form > fieldset.panel-wrapper > legend {
     grid-column: 1 / -1;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     float: none;
-    width: calc(100% + 40px);   /* breakout of 20px side padding on each side */
+    width: calc(100% + 40px);
     margin-left: -20px;
-    padding: 12px 20px;
-    background: #e2e8f8;   /* slightly darker header strip over lavender card */
-    border-bottom: 1px solid #cdd3ec;
-    font-size: 0.9rem;
+    padding: 0.875rem 1.25rem;
+    background: #eef0fb;
+    border: 1px solid #cdd3ec;
+    border-bottom: none;
+    font-size: 1rem;
     font-weight: 600;
-    color: #1e2f6e;
+    color: #131313;
     margin-bottom: 14px;
     box-sizing: border-box;
+    border-radius: 14px 14px 0 0;
+    cursor: pointer;
+    user-select: none;
 }
 
 /* ---- Icon badge injected by JS inside each legend ---- */
@@ -2727,9 +2738,9 @@ main .form form.personal-info-form > fieldset.panel-wrapper > legend .panel-icon
 }
 
 main .form form.personal-info-form > fieldset.panel-wrapper > legend .panel-icon svg {
-    width: 16px;
-    height: 16px;
-    stroke: #1e2f6e;
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
     fill: none;
     stroke-width: 1.75;
     stroke-linecap: round;
@@ -2759,6 +2770,16 @@ main .form form.personal-info-form > fieldset.panel-wrapper.collapsible[data-col
 /* Hide all panel content when collapsed (legend stays visible) */
 main .form form.personal-info-form > fieldset.panel-wrapper.collapsible[data-collapsed="true"] > *:not(legend) {
     display: none !important;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper.collapsible[data-collapsed="true"] {
+    padding-bottom: 0;
+}
+
+main .form form.personal-info-form > fieldset.panel-wrapper.collapsible[data-collapsed="true"] > legend {
+    margin-bottom: 0;
+    border-radius: 14px;
+    border-bottom: none;
 }
 
 /* ---- Inputs & labels within info panels ---- */
@@ -3353,10 +3374,7 @@ main .form form.personal-info-form .field-confirm-button button::after {
 main .form form.personal-info-form .field-back-button {
     display: none !important;
 }
-/* stylelint-enable no-descending-specificity */
-
 /* ======================== GET BUREAU PAGE ======================== */
-/* stylelint-disable no-descending-specificity */
 
 main .form form.get-bureau-form {
     display: flex;
@@ -3382,12 +3400,12 @@ main .form form.get-bureau-form .field-select-bank-panel > legend,
 main .form form.get-bureau-form .field-income-verification-panel > legend {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-weight: 700;
+    gap: 0.5rem;
+    font-weight: 600;
     font-size: 1rem;
-    color: #1e2f6e;
-    background: #eef0ff;
-    padding: 16px 24px;
+    color: #131313;
+    background: #eef0fb;
+    padding: 0.875rem 1.25rem;
     width: 100%;
     float: left;
     box-sizing: border-box;
@@ -3402,9 +3420,9 @@ main .form form.get-bureau-form .field-income-verification-panel::after {
 }
 
 main .form form.get-bureau-form .bureau-panel-icon svg {
-    width: 20px;
-    height: 20px;
-    stroke: #1e2f6e;
+    width: 18px;
+    height: 18px;
+    stroke: #3b5bdb;
     fill: none;
     stroke-width: 1.75;
     stroke-linecap: round;
