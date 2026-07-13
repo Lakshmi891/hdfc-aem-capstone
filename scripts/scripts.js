@@ -2260,8 +2260,29 @@ function initGetBureauPageHandlers() {
     // eslint-disable-next-line no-param-reassign
     btn.type = 'button';
     btn.innerHTML = `Continue ${arrowSvg}`;
+
+    const bankGroup = document.querySelector('.field-bank-selection');
+    let bankError = bankGroup?.querySelector('.bank-error-msg');
+    if (bankGroup && !bankError) {
+      bankError = document.createElement('p');
+      bankError.className = 'bank-error-msg';
+      bankError.textContent = 'Please select a bank to continue.';
+      bankError.style.display = 'none';
+      bankGroup.after(bankError);
+    }
+
+    bankGroup?.addEventListener('change', () => {
+      if (bankError) bankError.style.display = 'none';
+    });
+
     btn.addEventListener('click', () => {
       const selectedBank = document.querySelector('input[name="bank_selection"]:checked')?.value;
+      if (!selectedBank) {
+        if (bankError) bankError.style.display = 'flex';
+        bankGroup?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      if (bankError) bankError.style.display = 'none';
       const selectedMethod = document.querySelector('input[name="income_verification_method"]:checked')?.value;
       try {
         const data = JSON.parse(sessionStorage.getItem('loanJourneyData') || '{}');

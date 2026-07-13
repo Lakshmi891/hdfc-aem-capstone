@@ -3787,6 +3787,21 @@ main .form form.get-bureau-form .field-upload-bank-statement-info {
     display: none !important;
 }
 
+/* Bank selection error */
+main .form form.get-bureau-form .bank-error-msg {
+    display: none;
+    color: #b91c1c;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 8px 1rem 1rem;
+    padding: 10px 14px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 4px solid #dc2626;
+    border-radius: 8px;
+}
+
+
 /* Continue button */
 main .form form.get-bureau-form .field-continue-button {
     grid-column: 1 / -1;
