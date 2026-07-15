@@ -2148,6 +2148,8 @@ function initGetBureauPageHandlers() {
               trigger.querySelector('.other-bank-text').textContent = name;
               dropdown.classList.remove('open');
               input.value = name.toLowerCase().replace(/\s+/g, '_');
+              input.checked = true;
+              input.dispatchEvent(new Event('change', { bubbles: true }));
             });
             menu.appendChild(li);
           });
